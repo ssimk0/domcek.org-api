@@ -11,7 +11,7 @@
 |
 */
 
-$router->group(['prefix' => env('API_PREFIX', '/')], function () use ($router) {
+$router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], function () use ($router) {
     $router->group(
         ['prefix' => 'auth', 'middleware' => 'cors'],
         function () use ($router) {
@@ -40,8 +40,4 @@ $router->group(['prefix' => env('API_PREFIX', '/')], function () use ($router) {
         ['prefix' => 'secure', 'middleware' => ['cors', 'auth:api']], function () use ($router) {
 
     });
-});
-
-$router->optional('*', function () {
-    return response();
 });

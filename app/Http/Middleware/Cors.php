@@ -45,7 +45,7 @@ class Cors
     protected function setOrigin($rsp)
     {
         if (!($rsp instanceof BinaryFileResponse)) {
-            $rsp->header('Access-Control-Allow-Origin', getenv('SERVER_DOMAIN'));
+            $rsp->header('Access-Control-Allow-Origin', '*');
         }
     }
 
