@@ -45,11 +45,13 @@ class NewsRepository extends Repository
             ->first();
     }
 
-    function updateViewed($slug)
+    function updateViewed($slug, $viewed)
     {
-        return DB::table('news_items')
+        DB::table('news_items')
             ->where('status', NewsConstant::PUBLISHED)
             ->where('slug', $slug)
-            ->first();
+            ->update([
+                'viewed' => $viewed
+            ]);
     }
 }
