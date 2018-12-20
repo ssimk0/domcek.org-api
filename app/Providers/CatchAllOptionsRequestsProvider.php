@@ -9,11 +9,11 @@ use Illuminate\Support\ServiceProvider;
  */
 class CatchAllOptionsRequestsProvider extends ServiceProvider
 {
-    public function register()
+    public function boot()
     {
-        $request = app('request');
+        $request = $this->app['request'];
         if ($request->isMethod('OPTIONS')) {
-            app()->options($request->path(), function () {
+            app()->router->options($request->path(),['middleware' => 'cors'], function () {
                 return response('', 200);
             });
         }
