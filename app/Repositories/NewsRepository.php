@@ -14,7 +14,7 @@ class NewsRepository extends Repository
         return DB::table('news_items')
             ->where('status', NewsConstant::PUBLISHED)
             ->orderBy('created_at', 'desc')
-            ->offset($offset)
+            ->skip($offset)
             ->paginate($size);
     }
 
@@ -23,7 +23,7 @@ class NewsRepository extends Repository
         return DB::table('news_items')
             ->where('status', NewsConstant::PUBLISHED)
             ->orderBy('viewed', 'desc')
-            ->offset($offset)
+            ->skip($offset)
             ->paginate($size);
     }
 
@@ -33,7 +33,7 @@ class NewsRepository extends Repository
             ->where('status', NewsConstant::PUBLISHED)
             ->where('is_featured', true)
             ->orderBy('created_at', 'desc')
-            ->offset($offset)
+            ->skip($offset)
             ->paginate($size);
     }
 
