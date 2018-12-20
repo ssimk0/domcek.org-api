@@ -41,3 +41,7 @@ $router->group(['prefix' => env('API_PREFIX', '/')], function () use ($router) {
 
     });
 });
+
+$router->optional('*', function () {
+    return response();
+});
