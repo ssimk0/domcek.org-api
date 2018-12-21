@@ -1,12 +1,11 @@
 <?php
-
-
 namespace App\Http\Controllers\Secure;
 
 
+use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
 use App\Services\NewsService;
-use Laravel\Lumen\Http\Request;
+use  Illuminate\Http\Request;
 
 class NewsController extends Controller
 {
@@ -23,15 +22,19 @@ class NewsController extends Controller
             'title' => 'required|string',
             'body' => 'required|string',
             'short' => 'required|string|max:200',
-            'image' => 'required|image',
+            'image' => 'required|url',
             'status' => 'required|in:draft,archived,published'
         ]);
 
-        $image = request()->file( 'image' );
-        $path = $image->store( 'news', 's3' );
-        $data['image'] = $path;
+        $result = $this->service->create($data);
+        if ($result) {
+            return $this->jsonResponse([
+                'success' => true,
+                'news' => $result
+            ], 201);
+        }
 
-        $this->service->create($data);
+        return ErrorMessagesConstant::badAttempt();
     }
 
     function edit($slug, Request $request)
@@ -43,12 +46,6 @@ class NewsController extends Controller
             'image' => 'image',
             'status' => 'required|in:draft,archived,published'
         ]);
-
-        if (array_get($data, 'image', false)) {
-            $image = request()->file('image');
-            $path = $image->store('news', 's3');
-            $data['image'] = $path;
-        }
 
         $this->service->edit($data, $slug);
     }

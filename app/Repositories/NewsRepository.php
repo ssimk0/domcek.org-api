@@ -60,6 +60,7 @@ class NewsRepository extends Repository
     {
         $newsItem = new NewsItem($data);
         $newsItem->save();
+        return $newsItem;
     }
 
     function edit(array $data, $slug)

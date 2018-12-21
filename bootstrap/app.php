@@ -28,6 +28,7 @@ $app = new Laravel\Lumen\Application(
 $app->instance('path.config', app()->basePath() . DIRECTORY_SEPARATOR . 'config');
 $app->instance('path.storage', app()->basePath() . DIRECTORY_SEPARATOR . 'storage');
 $app->configure('auth');
+$app->configure('sluggable');
 $app->configure('services');
 $app->configure('mail');
 $app->configure('app');
@@ -63,6 +64,13 @@ $app->singleton('Illuminate\Contracts\Routing\ResponseFactory', function ($app)
 {
     return new ResponseFactory($app['Illuminate\Contracts\View\Factory'], $app['Illuminate\Routing\Redirector']);
 });
+
+$app->singleton(
+    Illuminate\Contracts\Filesystem\Factory::class,
+    function ($app) {
+        return new Illuminate\Filesystem\FilesystemManager($app);
+    }
+);
 
 /*
 |--------------------------------------------------------------------------

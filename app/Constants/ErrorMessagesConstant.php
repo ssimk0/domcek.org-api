@@ -6,6 +6,7 @@ namespace App\Constants;
 class ErrorMessagesConstant
 {
     const BAD_REQUEST = 'BAD_REQUEST';
+    const BAD_ATTEMPT = 'BAD_ATTEMPT';
     const NO_DATA = 'NO_DATA';
     const HTTP_FORBIDDEN = 'HTTP_FORBIDDEN';
     const HTTP_UNAUTHORIZED = 'HTTP_UNAUTHORIZED';
@@ -22,6 +23,10 @@ class ErrorMessagesConstant
 
     static public function badRequest() {
         return static::error(400, self::BAD_REQUEST);
+    }
+
+    static public function badAttempt() {
+        return static::error(400, self::BAD_ATTEMPT);
     }
 
     static public function forbidden() {

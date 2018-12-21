@@ -29,11 +29,16 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
 
     $router->group(
         ['prefix' => '/', 'middleware' => 'cors'], function () use ($router) {
-        $router->get('media/upload', 'Unsecure\MediaController@upload');
+        $router->group(['prefix' => '/', 'middleware' => 'optimizeImages'], function () use ($router) {
+            $router->post('media/upload', 'Unsecure\MediaController@upload');
+        });
         $router->get('pages/', 'Unsecure\PageController@menuPages');
         $router->get('pages/{slug}', 'Unsecure\PageController@page');
         $router->get('news/', 'Unsecure\NewsController@list');
-        $router->get('news/{slug}', 'Unsecure\NewsController@news');
+        $router->get('news/{slug}', [
+            'uses' => 'Unsecure\NewsController@news',
+            'as' => 'news.detail'
+        ]);
         $router->get('slider-images/', 'Unsecure\SliderImagesController@list');
     });
 
