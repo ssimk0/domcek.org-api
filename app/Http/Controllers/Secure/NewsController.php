@@ -23,7 +23,8 @@ class NewsController extends Controller
             'body' => 'required|string',
             'short' => 'required|string|max:200',
             'image' => 'required|url',
-            'status' => 'required|in:draft,archived,published'
+            'status' => 'required|in:draft,archived,published',
+            'is_featured' => 'required|boolean'
         ]);
 
         $result = $this->service->create($data);
@@ -43,10 +44,20 @@ class NewsController extends Controller
             'title' => 'required|string',
             'body' => 'required|string',
             'short' => 'required|string|max:200',
-            'image' => 'image',
-            'status' => 'required|in:draft,archived,published'
+            'image' => 'required|url',
+            'status' => 'required|in:draft,archived,published',
+            'is_featured' => 'required|boolean'
         ]);
 
-        $this->service->edit($data, $slug);
+        $result = $this->service->edit($data, $slug);
+
+        if ($result) {
+            return $this->jsonResponse([
+                'success' => true,
+                'news' => $result
+            ], 201);
+        }
+
+        return ErrorMessagesConstant::badAttempt();
     }
 }

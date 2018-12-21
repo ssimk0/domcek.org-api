@@ -55,8 +55,7 @@ class NewsService extends Service
     function edit(array $data, $slug)
     {
         try {
-            $this->repository->edit($data, $slug);
-            return true;
+            return $this->repository->edit($data, $slug);
         }catch (\Exception $e) {
             // this error can be ignored
             $this->logWarning("Problem with creating news");

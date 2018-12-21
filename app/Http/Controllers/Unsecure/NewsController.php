@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Unsecure;
 
 
 
+use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
 use App\Services\NewsService;
 use Illuminate\Http\Request;
@@ -34,6 +35,10 @@ class NewsController extends Controller
 
     function news($slug) {
         $newsDetail = $this->service->getNewsBySlug($slug);
-        return $this->jsonResponse($newsDetail);
+        if ($newsDetail) {
+            return $this->jsonResponse($newsDetail);
+        } else {
+            return ErrorMessagesConstant::notFound();
+        }
     }
 }

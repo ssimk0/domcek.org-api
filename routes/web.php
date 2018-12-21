@@ -44,9 +44,7 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
 
     $router->group(
         ['prefix' => 'secure', 'middleware' => ['cors', 'auth:api']], function () use ($router) {
-            $router->group(['prefix' => '/', 'middleware' => 'optimizeImages'], function () use ($router) {
-                $router->post('news', 'Secure\NewsController@create');
-                $router->put('news', 'Secure\NewsController@edit');
-            });
+        $router->post('news', 'Secure\NewsController@create');
+        $router->put('news/{slug}', 'Secure\NewsController@edit');
     });
 });

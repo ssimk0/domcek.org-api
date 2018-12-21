@@ -65,7 +65,7 @@ class NewsRepository extends Repository
 
     function edit(array $data, $slug)
     {
-        NewsItem::where('slug', $slug)
-            ->update($data);
+        NewsItem::where('slug', $slug)->update($data);
+        return $this->findNewsDetail($slug);
     }
 }
