@@ -1,5 +1,7 @@
 <?php
 
+use Laravel\Lumen\Http\ResponseFactory;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 try {
@@ -28,6 +30,7 @@ $app->instance('path.storage', app()->basePath() . DIRECTORY_SEPARATOR . 'storag
 $app->configure('auth');
 $app->configure('mail');
 $app->configure('app');
+$app->configure('filesystems');
 
 
 $app->withFacades();
@@ -55,6 +58,11 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
+$app->singleton('Illuminate\Contracts\Routing\ResponseFactory', function ($app)
+{
+    return new ResponseFactory($app['Illuminate\Contracts\View\Factory'], $app['Illuminate\Routing\Redirector']);
+});
+
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -69,6 +77,7 @@ $app->singleton(
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
     'cors' => App\Http\Middleware\Cors::class,
+    'optimizeImages' => \Spatie\LaravelImageOptimizer\Middlewares\OptimizeImages::class
 ]);
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\ErrorMessagesConstant;
 use App\Logging\Logger;
 use Laravel\Lumen\Routing\Controller as BaseController;
 

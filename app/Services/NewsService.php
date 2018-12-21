@@ -38,4 +38,30 @@ class NewsService extends Service
 
         return $news;
     }
+
+    function create(array $data)
+    {
+        try {
+            $this->repository->create($data);
+            return true;
+        }catch (\Exception $e) {
+            // this error can be ignored
+            $this->logWarning("Problem with creating news");
+        }
+
+        return false;
+    }
+
+    function edit(array $data, $slug)
+    {
+        try {
+            $this->repository->edit($data, $slug);
+            return true;
+        }catch (\Exception $e) {
+            // this error can be ignored
+            $this->logWarning("Problem with creating news");
+        }
+
+        return false;
+    }
 }

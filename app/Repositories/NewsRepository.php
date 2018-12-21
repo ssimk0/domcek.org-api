@@ -5,6 +5,7 @@ namespace App\Repositories;
 
 
 use App\Constants\NewsConstant;
+use App\Models\NewsItem;
 use Illuminate\Support\Facades\DB;
 
 class NewsRepository extends Repository
@@ -53,5 +54,17 @@ class NewsRepository extends Repository
             ->update([
                 'viewed' => $viewed
             ]);
+    }
+
+    public function create(array $data)
+    {
+        $newsItem = new NewsItem($data);
+        $newsItem->save();
+    }
+
+    function edit(array $data, $slug)
+    {
+        NewsItem::where('slug', $slug)
+            ->update($data);
     }
 }
