@@ -29,6 +29,7 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
 
     $router->group(
         ['prefix' => '/', 'middleware' => 'cors'], function () use ($router) {
+        $router->get('media/upload', 'Unsecure\MediaController@upload');
         $router->get('pages/', 'Unsecure\PageController@menuPages');
         $router->get('pages/{slug}', 'Unsecure\PageController@page');
         $router->get('news/', 'Unsecure\NewsController@list');

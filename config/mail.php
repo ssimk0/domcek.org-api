@@ -13,7 +13,7 @@ return [
     |            "sparkpost", "log", "array"
     |
     */
-    'driver'     => env('MAIL_DRIVER', 'sendmail'),
+    'driver'     => env('MAIL_DRIVER', 'ses'),
     /*
     |--------------------------------------------------------------------------
     | Global "From" Address

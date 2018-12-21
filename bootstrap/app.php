@@ -28,6 +28,7 @@ $app = new Laravel\Lumen\Application(
 $app->instance('path.config', app()->basePath() . DIRECTORY_SEPARATOR . 'config');
 $app->instance('path.storage', app()->basePath() . DIRECTORY_SEPARATOR . 'storage');
 $app->configure('auth');
+$app->configure('services');
 $app->configure('mail');
 $app->configure('app');
 $app->configure('filesystems');
