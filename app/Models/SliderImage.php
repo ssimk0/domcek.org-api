@@ -1,21 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use Codesleeve\Stapler\ORM\EloquentTrait;
-use Codesleeve\Stapler\ORM\StaplerableInterface;
 use Illuminate\Database\Eloquent\Model;
 
-class SliderImage extends Model implements StaplerableInterface
+class SliderImage extends Model
 {
-    use EloquentTrait;
-
-    public function __construct(array $attributes = array()) {
-        $this->hasAttachedFile('image');
-
-        parent::__construct($attributes);
-    }
-
     protected $fillable = [
         'image', 'title', 'text', 'order'
     ];

@@ -14,6 +14,38 @@
 $factory->define(App\User::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->name,
-        'email' => $faker->email,
+        'emails' => $faker->email,
+    ];
+});
+
+
+$factory->define(App\Models\Page::class, function (Faker\Generator $faker) {
+    return [
+        'title' => $faker->sentence,
+        'body' => $faker->text,
+        'image' => $faker->imageUrl(),
+        'order' => $faker->randomDigit,
+        'active' => 1,
+    ];
+});
+
+
+$factory->define(App\Models\NewsItem::class, function (Faker\Generator $faker) {
+    return [
+        'title' => $faker->sentence,
+        'body' => $faker->text,
+        'short' => $faker->sentence,
+        'image' => $faker->imageUrl(),
+        'status' => \App\Constants\NewsConstant::PUBLISHED,
+        'is_featured' => 0,
+    ];
+});
+
+$factory->define(App\Models\SliderImage::class, function (Faker\Generator $faker) {
+    return [
+        'title' => $faker->sentence,
+        'text' => $faker->text,
+        'image' => $faker->imageUrl(),
+        'order' => $faker->randomDigit,
     ];
 });

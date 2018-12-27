@@ -22,7 +22,7 @@ class CreateNewsTables extends Migration
             $table->increments('id');
             $table->string('slug', 200)->unique();
             $table->string('title', 200);
-            $table->text('excerpt');
+            $table->text('short');
             $table->longText('body');
 
             $table->string('image', 255)->nullable();

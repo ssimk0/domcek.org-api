@@ -4,9 +4,10 @@
 namespace App\Http\Controllers\Unsecure;
 
 
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 
-class MediaController
+class MediaController extends Controller
 {
     public function upload()
     {
@@ -21,6 +22,7 @@ class MediaController
                 'location' => $path, # duplicate for TinyMCE
             ], 201);
         } catch (\Exception $e) {
+            $this->logWarning("Problem with upload image end withn error " . $e);
             return response()->json([], 404);
         }
     }

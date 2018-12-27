@@ -46,6 +46,13 @@ class NewsRepository extends Repository
             ->first();
     }
 
+    function findNewsBySlug($slug)
+    {
+        return DB::table('news_items')
+            ->where('slug', $slug)
+            ->first();
+    }
+
     function updateViewed($slug, $viewed)
     {
         DB::table('news_items')
@@ -66,6 +73,15 @@ class NewsRepository extends Repository
     function edit(array $data, $slug)
     {
         NewsItem::where('slug', $slug)->update($data);
-        return $this->findNewsDetail($slug);
+        return $this->findNewsBySlug($slug);
+    }
+
+    function unpublished($size)
+    {
+        return DB::table('news_items')
+            ->where('status', "!=", NewsConstant::PUBLISHED)
+            ->where('is_featured', true)
+            ->orderBy('created_at', 'desc')
+            ->paginate($size);
     }
 }

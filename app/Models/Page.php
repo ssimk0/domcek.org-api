@@ -1,11 +1,15 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use Terranet\Pages\Models\Page as GenericPage;
+use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Model;
 
-class Page extends GenericPage
+class Page extends Model
 {
+
+    use Sluggable;
+
 
     protected $fillable = ['title', 'slug', 'body', 'active', 'parent_id', 'order'];
 
@@ -19,8 +23,14 @@ class Page extends GenericPage
         return route('pages.show', ['slug' => $this->getAttribute('slug')]);
     }
 
-    public function getRouteKeyName()
+    public function sluggable()
     {
-        return 'slug';
+        return [
+            'slug' => [
+                'source' => 'title',
+                'onUpdate' => true,
+                'separator' => '-'
+            ]
+        ];
     }
 }

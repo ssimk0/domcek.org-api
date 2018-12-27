@@ -51,6 +51,29 @@ class PageService extends Service
         return null;
     }
 
+    function create(array $data) {
+        try {
+            $page = $this->repository->create($data);
+            return $page;
+        } catch (\Exception $e) {
+            // this error can be ignored
+            $this->logWarning("Problem with creating news");
+        }
+
+        return false;
+    }
+
+    function edit(array $data, $slug) {
+        try {
+            return $this->repository->edit($data, $slug);
+        } catch (\Exception $e) {
+            // this error can be ignored
+            $this->logWarning("Problem with creating news");
+        }
+
+        return false;
+    }
+
     private function findPageChildren($page, $pages)
     {
         $children = [];
@@ -64,5 +87,17 @@ class PageService extends Service
         $page->children = $children;
 
         return $page;
+    }
+
+    function detail($slug)
+    {
+        try {
+            return $this->repository->findPageBySlug($slug);
+        } catch (\Exception $e) {
+            // this error can be ignored
+            $this->logWarning("Problem with creating news");
+        }
+
+        return false;
     }
 }

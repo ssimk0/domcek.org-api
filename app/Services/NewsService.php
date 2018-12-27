@@ -23,7 +23,7 @@ class NewsService extends Service
             return $this->repository->findAllLatestFeaturedPublishedNews($size, $offset);
         }
 
-        return $this->repository->findAllLatestPublishedNews( $size, $offset);
+        return $this->repository->findAllLatestPublishedNews($size, $offset);
     }
 
     function getNewsBySlug($slug)
@@ -31,7 +31,7 @@ class NewsService extends Service
         $news = $this->repository->findNewsDetail($slug);
         try {
             $this->repository->updateViewed($slug, $news->viewed + 1);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             // this error can be ignored
             $this->logWarning("Problem with updating news with slug: $slug");
         }
@@ -41,13 +41,13 @@ class NewsService extends Service
 
     function create(array $data)
     {
-//        try {
+        try {
             $news = $this->repository->create($data);
             return $news;
-//        }catch (\Exception $e) {
-//            // this error can be ignored
-//            $this->logWarning("Problem with creating news");
-//        }
+        } catch (\Exception $e) {
+            // this error can be ignored
+            $this->logWarning("Problem with creating news");
+        }
 
         return false;
     }
@@ -56,11 +56,22 @@ class NewsService extends Service
     {
         try {
             return $this->repository->edit($data, $slug);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
+            var_dump($e);
             // this error can be ignored
-            $this->logWarning("Problem with creating news");
+            $this->logError("Problem with creating news with error: " . $e);
         }
 
         return false;
+    }
+
+    function unpublished($size)
+    {
+        return $this->repository->unpublished($size);
+    }
+
+    function unpublishedDetail($slug)
+    {
+        return $this->repository->findNewsBySlug($slug);
     }
 }

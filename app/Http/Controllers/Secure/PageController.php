@@ -1,18 +1,19 @@
 <?php
 
+
 namespace App\Http\Controllers\Secure;
 
 
 use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
-use App\Services\NewsService;
+use App\Services\PageService;
 use Illuminate\Http\Request;
 
-class NewsController extends Controller
+class PageController extends Controller
 {
     private $service;
 
-    public function __construct(NewsService $service)
+    public function __construct(PageService $service)
     {
         $this->service = $service;
     }
@@ -22,17 +23,16 @@ class NewsController extends Controller
         $data = $this->validate($request, [
             'title' => 'required|string',
             'body' => 'required|string',
-            'short' => 'required|string|max:200',
-            'image' => 'required|url',
-            'status' => 'required|in:draft,archived,published',
-            'is_featured' => 'required|boolean'
+            'order' => 'required|integer',
+            'parent_id' => 'required|integer',
+            'active' => 'required|boolean'
         ]);
 
         $result = $this->service->create($data);
         if ($result) {
             return $this->jsonResponse([
                 'success' => true,
-                'news' => $result
+                'page' => $result
             ], 201);
         }
 
@@ -44,10 +44,9 @@ class NewsController extends Controller
         $data = $this->validate($request, [
             'title' => 'required|string',
             'body' => 'required|string',
-            'short' => 'required|string|max:200',
-            'image' => 'required|url',
-            'status' => 'required|in:draft,archived,published',
-            'is_featured' => 'required|boolean'
+            'order' => 'required|integer',
+            'parent_id' => 'required|integer',
+            'active' => 'required|boolean'
         ]);
 
         $result = $this->service->edit($data, $slug);
@@ -55,28 +54,21 @@ class NewsController extends Controller
         if ($result) {
             return $this->jsonResponse([
                 'success' => true,
-                'news' => $result
+                'page' => $result
             ], 200);
         }
 
         return ErrorMessagesConstant::badAttempt();
     }
 
-    function listUnpublished(Request $request)
+    function detail($slug)
     {
-        $data = $this->validate($request, [
-            'order' => 'in:best,featured',
-            'size' => 'integer'
-        ]);
+       $result =  $this->service->detail($slug);
 
-        return $this->service->unpublished(
-            array_get($data, 'size', 5)
-        );
-    }
+        if ($result) {
+            return $this->jsonResponse($result, 200);
+        }
 
-    function unpublished($slug)
-    {
-        $news = $this->service->unpublishedDetail($slug);
-        return $this->jsonResponse($news);
+        return ErrorMessagesConstant::notFound();
     }
 }

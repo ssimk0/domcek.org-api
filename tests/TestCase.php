@@ -1,5 +1,8 @@
 <?php
 
+use App\User;
+use Illuminate\Support\Facades\Auth;
+
 abstract class TestCase extends Laravel\Lumen\Testing\TestCase
 {
     /**
@@ -9,6 +12,12 @@ abstract class TestCase extends Laravel\Lumen\Testing\TestCase
      */
     public function createApplication()
     {
-        return require __DIR__.'/../bootstrap/app.php';
+        return require __DIR__ . '/../bootstrap/app.php';
+    }
+
+    function login()
+    {
+        $user = new User();
+        return Auth::login($user);
     }
 }

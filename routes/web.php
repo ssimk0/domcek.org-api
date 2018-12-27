@@ -19,8 +19,6 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
 
             $router->post('forgot-password/', 'Auth\AuthController@forgotPassword');
 
-            $router->post('check-reset-password-token/', 'Auth\AuthController@checkResetPasswordToken');
-
             $router->post('reset-password/', 'Auth\AuthController@resetPassword');
 
             $router->get('logout/', 'Auth\AuthController@logout');
@@ -32,19 +30,31 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
         $router->group(['prefix' => '/', 'middleware' => 'optimizeImages'], function () use ($router) {
             $router->post('media/upload', 'Unsecure\MediaController@upload');
         });
-        $router->get('pages/', 'Unsecure\PageController@menuPages');
+        $router->get('pages', 'Unsecure\PageController@menuPages');
         $router->get('pages/{slug}', 'Unsecure\PageController@page');
-        $router->get('news/', 'Unsecure\NewsController@list');
+        $router->get('news', 'Unsecure\NewsController@list');
         $router->get('news/{slug}', [
             'uses' => 'Unsecure\NewsController@news',
             'as' => 'news.detail'
         ]);
-        $router->get('slider-images/', 'Unsecure\SliderImagesController@list');
+        $router->get('slider-images', 'Unsecure\SliderImagesController@list');
     });
 
     $router->group(
-        ['prefix' => 'secure', 'middleware' => ['cors', 'auth:api']], function () use ($router) {
+        ['prefix' => 'secure', 'middleware' => ['cors', 'auth:api', 'optimizeImages']], function () use ($router) {
+        $router->get('news', 'Secure\NewsController@listUnpublished');
         $router->post('news', 'Secure\NewsController@create');
         $router->put('news/{slug}', 'Secure\NewsController@edit');
+        $router->get('news/{slug}', 'Secure\NewsController@unpublished');
+
+        $router->post('pages', 'Secure\PageController@create');
+        $router->put('pages/{slug}', 'Secure\PageController@edit');
+        $router->get('pages/{slug}', 'Secure\PageController@detail');
+
+        $router->post('slider-images', 'Secure\SliderImagesController@create');
+        $router->put('slider-images/{id}', 'Secure\SliderImagesController@edit');
+        $router->delete('slider-images/{id}', 'Secure\SliderImagesController@detail');
+
+        $router->get('user', 'Secure\AuthController@userDetail');
     });
 });

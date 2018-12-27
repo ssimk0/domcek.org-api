@@ -7,7 +7,6 @@ namespace App\Http\Controllers\Unsecure;
 use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
 use App\Services\PageService;
-use Laravel\Lumen\Http\Request;
 
 class PageController extends Controller
 {
