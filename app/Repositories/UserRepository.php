@@ -18,7 +18,7 @@ class UserRepository extends Repository
     }
 
     function findResetPasswordToken($token) {
-        return DB::table('password_resets')->where('token', $token);
+        return DB::table('password_resets')->where('token', $token)->first();
     }
 
     function updateUser($data, $id) {
