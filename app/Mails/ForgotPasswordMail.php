@@ -27,7 +27,7 @@ class ForgotPasswordMail extends Mailable
     public function build()
     {
         return $this->markdown('emails.forgot-password')->with([
-            'url' => env('APP_URL') . '/reset-password?token' . $this->token
+            'url' => env('APP_URL') . '/reset-password?token=' . $this->token
         ]);
     }
 }

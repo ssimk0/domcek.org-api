@@ -43,9 +43,9 @@ class UserService extends Service
     function resetPassword($token, $password)
     {
         try {
-            $token = $this->repository->findResetPasswordToken($token);
+            $tokenResult = $this->repository->findResetPasswordToken($token);
             $now = Carbon::now()->addHour(2);
-            if ($token && $now->greaterThanOrEqualTo($token->created_at)) {
+            if ($tokenResult && $now->greaterThanOrEqualTo($tokenResult->created_at)) {
                 $this->repository->updateUser([
                     'password' => Hash::make($password)
                 ], request()->user()->id);
@@ -53,7 +53,7 @@ class UserService extends Service
                 return true;
             }
         } catch (\Exception $e) {
-            $this->logWarning('Problem pri updatovani použivateľovho hesla pre token' . $token);
+            $this->logWarning('Problem pri updatovani použivateľovho hesla pre token' . $token . 's errorom ' . $e );
         }
 
         return false;
