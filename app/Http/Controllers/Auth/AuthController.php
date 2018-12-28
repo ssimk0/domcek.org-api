@@ -34,7 +34,7 @@ class AuthController extends Controller
         }
 
         $token = Auth::attempt([
-            'emails' => $data['username'],
+            'email' => $data['username'],
             'password' => $data['password'],
         ]);
 
@@ -65,10 +65,10 @@ class AuthController extends Controller
 
     function forgotPassword(Request $request) {
         $data = $this->validate($request, [
-            'emails' => 'required|email'
+            'email' => 'required|email'
         ]);
 
-        $this->service->createResetPasswordToken($data['emails']);
+        $this->service->forgotPassword($data['email']);
 
         return $this->successResponse();
     }
@@ -79,11 +79,13 @@ class AuthController extends Controller
             'password' => 'required|string|confirmed|min:6'
         ]);
 
-        $valid = $this->service->checkResetPasswordToken($data['token']);
+        $result = $this->service->resetPassword($data['token'], $data['password']);
 
-        $this->jsonResponse([
-            'valid' =>  $valid
-        ]);
+        if ($result) {
+            return $this->successResponse();
+        }
+
+        return ErrorMessagesConstant::badAttempt();
     }
 
     protected function respondWithToken($token)

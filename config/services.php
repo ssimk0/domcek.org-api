@@ -15,6 +15,6 @@ return [
         //'key'    => env('SES_KEY'),
         'key'    => env('SES_KEY'),
         'secret' => env("SES_SECRET"),
-        'region' => env('SES_REGION', 'us-east-1'),
+        'region' => env('SES_REGION', 'eu-west-1'),
     ],
 ];

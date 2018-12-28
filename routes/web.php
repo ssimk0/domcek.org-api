@@ -41,20 +41,23 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
     });
 
     $router->group(
-        ['prefix' => 'secure', 'middleware' => ['cors', 'auth:api', 'optimizeImages']], function () use ($router) {
-        $router->get('news', 'Secure\NewsController@listUnpublished');
-        $router->post('news', 'Secure\NewsController@create');
-        $router->put('news/{slug}', 'Secure\NewsController@edit');
-        $router->get('news/{slug}', 'Secure\NewsController@unpublished');
+        ['prefix' => 'secure', 'middleware' => ['cors', 'auth:api']], function () use ($router) {
 
-        $router->post('pages', 'Secure\PageController@create');
-        $router->put('pages/{slug}', 'Secure\PageController@edit');
-        $router->get('pages/{slug}', 'Secure\PageController@detail');
+        $router->group(['prefix' => '/', 'middleware' => 'optimizeImages', 'perm:editor'], function () use ($router) {
+            $router->get('news', 'Secure\NewsController@listUnpublished');
+            $router->post('news', 'Secure\NewsController@create');
+            $router->put('news/{slug}', 'Secure\NewsController@edit');
+            $router->get('news/{slug}', 'Secure\NewsController@unpublished');
 
-        $router->post('slider-images', 'Secure\SliderImagesController@create');
-        $router->put('slider-images/{id}', 'Secure\SliderImagesController@edit');
-        $router->delete('slider-images/{id}', 'Secure\SliderImagesController@detail');
+            $router->post('pages', 'Secure\PageController@create');
+            $router->put('pages/{slug}', 'Secure\PageController@edit');
+            $router->get('pages/{slug}', 'Secure\PageController@detail');
 
-        $router->get('user', 'Secure\AuthController@userDetail');
+            $router->post('slider-images', 'Secure\SliderImagesController@create');
+            $router->put('slider-images/{id}', 'Secure\SliderImagesController@edit');
+            $router->delete('slider-images/{id}', 'Secure\SliderImagesController@detail');
+        });
+
+        $router->get('user', 'Secure\UserController@userDetail');
     });
 });

@@ -34,4 +34,9 @@ class UserRepository extends Repository
     {
         return User::where('email', $email)->first();
     }
+
+    function getUserProfile($id)
+    {
+        return Profile::where('user_id', $id)->first();
+    }
 }

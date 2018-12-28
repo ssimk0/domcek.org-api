@@ -87,6 +87,7 @@ $app->singleton(
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
     'cors' => App\Http\Middleware\Cors::class,
+    'perm' => App\Http\Middleware\Permission::class,
     'optimizeImages' => \Spatie\LaravelImageOptimizer\Middlewares\OptimizeImages::class
 ]);
 
