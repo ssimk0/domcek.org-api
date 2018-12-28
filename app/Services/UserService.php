@@ -40,7 +40,7 @@ class UserService extends Service
         }
     }
 
-    function resetPassword($token, $password)
+    function resetPassword($token, $password, $id)
     {
         try {
             $tokenResult = $this->repository->findResetPasswordToken($token);
@@ -48,7 +48,7 @@ class UserService extends Service
             if ($tokenResult && $now->greaterThanOrEqualTo($tokenResult->created_at)) {
                 $this->repository->updateUser([
                     'password' => Hash::make($password)
-                ], request()->user()->id);
+                ], $id);
 
                 return true;
             }
