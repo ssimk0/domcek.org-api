@@ -8,8 +8,10 @@
         Reset Hesla
     @endcomponent
 
-    Pekný deň praje team,<br>
+    Pekný deň praje team,
+
     {{ config('app.name') }}
 
-    ##### V prípade ak si nežiadal o resetovanie hesla môžeš tento email ignorovať
+------
+######V prípade ak si nežiadal o resetovanie hesla môžeš tento email ignorovať
 @endcomponent
