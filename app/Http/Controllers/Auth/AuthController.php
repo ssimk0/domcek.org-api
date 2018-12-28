@@ -78,8 +78,8 @@ class AuthController extends Controller
             'token' => 'required|string',
             'password' => 'required|string|confirmed|min:6'
         ]);
-        $id = $request->user()->id;
-        $result = $this->service->resetPassword($data['token'], $data['password'], $id);
+
+        $result = $this->service->resetPassword($data['token'], $data['password']);
 
         if ($result) {
             return $this->successResponse();

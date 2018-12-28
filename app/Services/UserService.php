@@ -40,15 +40,16 @@ class UserService extends Service
         }
     }
 
-    function resetPassword($token, $password, $id)
+    function resetPassword($token, $password)
     {
         try {
             $tokenResult = $this->repository->findResetPasswordToken($token);
             $now = Carbon::now()->addHour(2);
             if ($tokenResult && $now->greaterThanOrEqualTo($tokenResult->created_at)) {
+                $user = $this->repository->findUserByEmail($tokenResult->email);
                 $this->repository->updateUser([
                     'password' => Hash::make($password)
-                ], $id);
+                ], $user->id);
 
                 return true;
             }
