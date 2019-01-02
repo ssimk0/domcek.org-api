@@ -18,6 +18,12 @@ class SliderImagesController extends Controller
         $this->service = $service;
     }
 
+    function list() {
+        return $this->jsonResponse(
+            $this->service->getSliderImages()
+        );
+    }
+
     function create(Request $request) {
         $data = $this->validate($request, [
             'image' => 'required|url',

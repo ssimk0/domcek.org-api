@@ -20,6 +20,10 @@ class SliderImageService extends Service
         return $this->repository->findAllSliderImages();
     }
 
+    function getActiveSliderImages() {
+        return $this->repository->findAllActiveSliderImages();
+    }
+
     function create(array $data)
     {
         try {

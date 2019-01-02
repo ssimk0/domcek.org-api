@@ -12,6 +12,14 @@ class SliderImageRepository extends Repository
     function findAllSliderImages()
     {
         return DB::table("slider_images")
+            ->orderBy('order')
+            ->get()
+            ->all();
+    }
+
+    function findAllActiveSliderImages()
+    {
+        return DB::table("slider_images")
             ->where('active', true)
             ->orderBy('order')
             ->get()
