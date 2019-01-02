@@ -55,7 +55,7 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
 
             $router->post('slider-images', 'Secure\SliderImagesController@create');
             $router->put('slider-images/{id}', 'Secure\SliderImagesController@edit');
-            $router->delete('slider-images/{id}', 'Secure\SliderImagesController@detail');
+            $router->delete('slider-images/{id}', 'Secure\SliderImagesController@delete');
         });
 
         $router->get('user', 'Secure\UserController@userDetail');

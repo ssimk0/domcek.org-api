@@ -25,7 +25,6 @@ class SliderImageService extends Service
         try {
             return $this->repository->create($data);
         } catch (\Exception $e) {
-            var_dump($e);
             // this error can be ignored
             $this->logError("Problem with creating slider image with error: " . $e);
         }
@@ -38,7 +37,6 @@ class SliderImageService extends Service
         try {
             return $this->repository->edit($data, $id);
         } catch (\Exception $e) {
-            var_dump($e);
             // this error can be ignored
             $this->logError("Problem with editing slider image with error: " . $e);
         }
@@ -51,7 +49,6 @@ class SliderImageService extends Service
         try {
             return $this->repository->delete($id);
         } catch (\Exception $e) {
-            var_dump($e);
             // this error can be ignored
             $this->logError("Problem with deleting slider image with error: " . $e);
         }

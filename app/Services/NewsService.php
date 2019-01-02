@@ -57,7 +57,6 @@ class NewsService extends Service
         try {
             return $this->repository->edit($data, $slug);
         } catch (\Exception $e) {
-            var_dump($e);
             // this error can be ignored
             $this->logError("Problem with creating news with error: " . $e);
         }

@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Secure;
 
 
+use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
 use App\Services\SliderImageService;
 use Illuminate\Http\Request;
@@ -26,6 +27,11 @@ class SliderImagesController extends Controller
         ]);
 
         $result = $this->service->create($data);
+        if ($result) {
+            return $this->jsonResponse($result, 201);
+        }
+
+        return ErrorMessagesConstant::badAttempt();
     }
 
     function edit($id, Request $request) {
@@ -37,9 +43,21 @@ class SliderImagesController extends Controller
         ]);
 
         $result = $this->service->edit($id, $data);
+
+        if ($result) {
+            return $this->jsonResponse($result);
+        }
+
+        return ErrorMessagesConstant::badAttempt();
     }
 
     function delete($id) {
         $result = $this->service->delete($id);
+
+        if ($result) {
+            return $this->successResponse();
+        }
+
+        return ErrorMessagesConstant::badAttempt();
     }
 }
