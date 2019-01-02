@@ -29,7 +29,7 @@ class SliderImagesController extends Controller
             'image' => 'required|url',
             'title' => 'required|string',
             'text' => 'required|string',
-            'order' => 'required|string'
+            'order' => 'required|integer'
         ]);
 
         $result = $this->service->create($data);
@@ -45,7 +45,7 @@ class SliderImagesController extends Controller
             'image' => 'required|url',
             'title' => 'required|string',
             'text' => 'required|string',
-            'order' => 'required|string'
+            'order' => 'required|integer'
         ]);
 
         $result = $this->service->edit($id, $data);
