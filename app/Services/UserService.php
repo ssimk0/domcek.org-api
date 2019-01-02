@@ -73,12 +73,12 @@ class UserService extends Service
 
     function checkPermission($perm, $user)
     {
-        $admin = $user->is_admin === 1;
+        $admin = $user->is_admin == 1;
 
         if ($perm === 'editor') {
-            return $user->is_writer === 1 || $admin;
+            return $user->is_writer == 1 || $admin;
         } else if ($perm === 'registration') {
-            return $user->is_registration === 1 || $admin;
+            return $user->is_registration == 1 || $admin;
         } else {
             return $admin;
         }
