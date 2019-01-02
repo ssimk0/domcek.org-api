@@ -22,7 +22,7 @@ class SliderImagesController extends Controller
         $data = $this->validate($request, [
             'image' => 'required|url',
             'title' => 'required|string',
-            'body' => 'required|string',
+            'text' => 'required|string',
             'order' => 'required|string'
         ]);
 
@@ -38,7 +38,7 @@ class SliderImagesController extends Controller
         $data = $this->validate($request, [
             'image' => 'required|url',
             'title' => 'required|string',
-            'body' => 'required|string',
+            'text' => 'required|string',
             'order' => 'required|string'
         ]);
 
