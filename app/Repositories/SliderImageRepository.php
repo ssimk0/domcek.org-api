@@ -50,8 +50,6 @@ class SliderImageRepository extends Repository
     {
         return DB::table("slider_images")
             ->where('id', $id)
-            ->update([
-                'active' => false
-            ]);
+            ->delete();
     }
 }
