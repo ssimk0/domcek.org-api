@@ -43,7 +43,7 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
     $router->group(
         ['prefix' => 'secure', 'middleware' => ['cors', 'auth:api']], function () use ($router) {
 
-        $router->group(['prefix' => '/', 'middleware' => 'optimizeImages', 'perm:editor'], function () use ($router) {
+        $router->group(['prefix' => '/', 'middleware' => 'perm:editor'], function () use ($router) {
             $router->get('news', 'Secure\NewsController@listUnpublished');
             $router->post('news', 'Secure\NewsController@create');
             $router->put('news/{slug}', 'Secure\NewsController@edit');
@@ -54,6 +54,7 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
             $router->get('pages/{slug}', 'Secure\PageController@detail');
 
             $router->post('slider-images', 'Secure\SliderImagesController@create');
+            $router->get('slider-images', 'Secure\SliderImagesController@list');
             $router->put('slider-images/{id}', 'Secure\SliderImagesController@edit');
             $router->delete('slider-images/{id}', 'Secure\SliderImagesController@delete');
         });
