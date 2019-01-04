@@ -8,6 +8,7 @@ use App\Mails\ForgotPasswordMail;
 use App\Repositories\UserRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -54,7 +55,7 @@ class UserService extends Service
                 return true;
             }
         } catch (\Exception $e) {
-            $this->logWarning('Problem pri updatovani použivateľovho hesla pre token' . $token . 's errorom ' . $e );
+            $this->logWarning('Problem pri updatovani použivateľovho hesla pre token' . $token . 's errorom ' . $e);
         }
 
         return false;
@@ -82,6 +83,59 @@ class UserService extends Service
         } else {
             return $admin;
         }
+    }
+
+    function updateUserProfile($profile)
+    {
+        try {
+            $this->repository->updateUserProfile($profile, $this->userId());
+            return true;
+        } catch (\Exception $e) {
+            $this->logWarning('Problem pri updatovani použivateľovho hesla s errorom' . $e);
+        }
+
+        return false;
+    }
+
+    function updateUserPassword($password)
+    {
+        try {
+            $this->repository->updateUser([
+                'password' => Hash::make($password)
+            ], $this->userId());
+            return true;
+        } catch (\Exception $e) {
+            $this->logWarning('Problem pri updatovani použivateľovho hesla s errorom' . $e);
+        }
+
+        return false;
+    }
+
+    function createUser($data)
+    {
+        try {
+            $userData = [
+                'email' => $data['email'],
+                'avatar' => array_get($data, 'avatar', null),
+                'password' =>  Hash::make($data['password']),
+            ];
+            Log::info(implode($userData, ','));
+            $user = $this->repository->createUser($userData);
+
+            $profileData = [
+                'first_name' => $data['firstName'],
+                'last_name' => $data['lastName'],
+                'city' => $data['city'],
+                'phone' => $data['phone'],
+                'user_id' => $user->id
+            ];
+            $this->repository->createUserProfile($profileData);
+            return true;
+        } catch (\Exception $e) {
+            $this->logWarning('Problem pri vytvarani použivateľa s errorom' . $e);
+        }
+
+        return false;
     }
 
 }

@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Secure;
 
 
+use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -25,5 +26,35 @@ class UserController extends Controller
         return $this->jsonResponse($detail);
     }
 
+    function changePassword(Request $request)
+    {
+        $data = $this->validate($request, [
+            'password' => 'required|string|confirmed|min:6'
+        ]);
 
+        $result = $this->service->updateUserPassword($data['password']);
+
+        if ($result) {
+            $this->successResponse();
+        }
+
+        ErrorMessagesConstant::badAttempt();
+    }
+
+    function updateProfile(Request $request)
+    {
+        $data = $this->validate($request, [
+            'city' => 'required|string',
+            'phone' => 'required|string',
+            'last_name' => 'required|string'
+        ]);
+
+        $result = $this->service->updateUserProfile($data);
+
+        if ($result) {
+            $this->successResponse();
+        }
+
+        ErrorMessagesConstant::badAttempt();
+    }
 }

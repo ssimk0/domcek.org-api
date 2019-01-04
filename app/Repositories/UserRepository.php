@@ -39,4 +39,21 @@ class UserRepository extends Repository
     {
         return Profile::where('user_id', $id)->first();
     }
+
+    function createUser(array $data)
+    {
+        $user = new User();
+        $user->email = $data['email'];
+        $user->password = $data['password'];
+        $user->avatar = $data['avatar'];
+        $user->save();
+        return $user;
+    }
+
+    function createUserProfile(array $profileData)
+    {
+        $profile = new Profile($profileData);
+
+        $profile->save();
+    }
 }

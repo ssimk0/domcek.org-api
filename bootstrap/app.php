@@ -109,6 +109,7 @@ $app->register(App\Providers\EventServiceProvider::class);
 $app->register(\Illuminate\Mail\MailServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 $app->register(App\Providers\CatchAllOptionsRequestsProvider::class);
+$app->register(AlbertCht\InvisibleReCaptcha\InvisibleReCaptchaServiceProvider::class);
 
 
 /*
