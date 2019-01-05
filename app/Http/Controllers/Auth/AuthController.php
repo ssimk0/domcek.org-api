@@ -92,18 +92,7 @@ class AuthController extends Controller
 
         return ErrorMessagesConstant::badAttempt();
     }
-//         'email' => $data['email'],
-//                'avatar' => $data['avatar'],
-//                'password' =>  Hash::make($data['password']),
-//            ];
-//            $user = $this->repository->createUser($userData);
-//
-//            $profileData = [
-//                'first_name' => $data['firstName'],
-//                'last_name' => $data['lastName'],
-//                'city' => $data['city'],
-//                'phone' => $data['phone'],
-//                'user_id' => $user->id
+
     function registerUser(Request $request)
     {
         $data = $this->validate($request, [
@@ -111,6 +100,7 @@ class AuthController extends Controller
             'password' => 'required|string|confirmed|min:6',
             'firstName' => 'required|string',
             'lastName' => 'required|string',
+            'birthDate' => 'required|date_format:Y-m-d',
             'city' => 'required|string',
             'phone' => 'required|string',
             'email' => 'required|email',

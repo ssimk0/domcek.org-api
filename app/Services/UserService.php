@@ -64,6 +64,7 @@ class UserService extends Service
     function userDetail($user)
     {
         return [
+            'email' => $user->email,
             'admin' => $user->is_admin,
             'editor' => $user->is_writer,
             'registration' => $user->is_registration,
@@ -127,7 +128,8 @@ class UserService extends Service
                 'last_name' => $data['lastName'],
                 'city' => $data['city'],
                 'phone' => $data['phone'],
-                'user_id' => $user->id
+                'user_id' => $user->id,
+                'birth_date' => $data['birthDate'],
             ];
             $this->repository->createUserProfile($profileData);
             return true;
