@@ -45,7 +45,7 @@ class EventService extends Service
 
             return true;
         } catch (\Exception $e) {
-            $this->logError("Problem with createing event with error: " . $e);
+            $this->logError("Problem with creating event with error: " . $e);
         }
 
         return false;

@@ -45,4 +45,9 @@ class VolunteersRepository extends Repository
     {
         return DB::table('volunteer_types')->get();
     }
+
+    public function create(array $array, $eventId)
+    {
+
+    }
 }
