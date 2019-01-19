@@ -1,4 +1,4 @@
-image: php:7.2-fpm
+image: prooph/composer:7.2
 
 stages:
   - test
