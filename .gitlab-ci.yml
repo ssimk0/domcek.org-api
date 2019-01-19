@@ -7,5 +7,6 @@ unit_test:
   stage: test
   script:
     - cp .env.example .env
+    - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && php composer-setup.php --filename=composer --install-dir=/usr/local/bin
     - composer install
     - vendor/bin/phpunit
