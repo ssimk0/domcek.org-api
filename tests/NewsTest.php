@@ -1,12 +1,12 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Support\Facades\Log;
-use Laravel\Lumen\Testing\DatabaseTransactions;
+use Laravel\Lumen\Testing\DatabaseMigrations;
 
 class NewsTest extends TestCase
 {
-    use DatabaseTransactions;
+    use DatabaseMigrations;
     /**
      * A basic test example.
      *
@@ -37,7 +37,7 @@ class NewsTest extends TestCase
 
     public function testUpdateNews()
     {
-        $token = $this->login();
+        $token = $this->login(false, true);
 
         $s = factory(App\Models\NewsItem::class, 1)->create()[0];
 

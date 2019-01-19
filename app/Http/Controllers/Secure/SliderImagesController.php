@@ -20,7 +20,7 @@ class SliderImagesController extends Controller
 
     function list() {
         return $this->jsonResponse(
-            $this->service->getSliderImages()
+            $this->service->sliderImages()
         );
     }
 

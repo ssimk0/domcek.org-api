@@ -15,11 +15,22 @@ class CleanupSliderImages extends Migration
     {
         Schema::table('slider_images', function (Blueprint $table) {
             $table->dropColumn('image_file_name');
-            $table->dropColumn('image_file_size');
-            $table->dropColumn('image_content_type');
-            $table->dropColumn('image_updated_at');
             $table->boolean('active')->default(true);
         });
+
+        Schema::table('slider_images', function (Blueprint $table) {
+            $table->dropColumn('image_updated_at');
+        });
+
+        Schema::table('slider_images', function (Blueprint $table) {
+            $table->dropColumn('image_content_type');
+        });
+
+        Schema::table('slider_images', function (Blueprint $table) {
+            $table->dropColumn('image_file_size');
+        });
+
+
     }
 
     /**

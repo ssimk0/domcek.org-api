@@ -49,3 +49,80 @@ $factory->define(App\Models\SliderImage::class, function (Faker\Generator $faker
         'order' => $faker->randomDigit,
     ];
 });
+
+
+$factory->define(App\Models\Event::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->sentence,
+        'theme' => $faker->sentence,
+        'start_date' => \Carbon\Carbon::now()->addYear(1)->format('Y-m-d'),
+        'end_date' => $faker->date(),
+        'start_registration' => $faker->date(),
+        'end_registration' => $faker->date(),
+        'end_volunteer_registration' => $faker->date(),
+    ];
+});
+
+
+$factory->define(App\Models\VolunteerType::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->sentence,
+    ];
+});
+
+$factory->define(App\Models\Participant::class, function (Faker\Generator $faker) {
+    return [
+        'note' => $faker->sentence,
+        'event_id' => function () {
+            return factory(App\Models\Event::class)->create()->id;
+        },
+        'user_id' => function () {
+            return factory(App\User::class)->create()->id;
+        }
+    ];
+});
+
+$factory->define(App\Models\Volunteer::class, function (Faker\Generator $faker) {
+    return [
+        'event_id' => function () {
+            return factory(App\Models\Event::class)->create()->id;
+        },
+        'user_id' => function () {
+            return factory(App\User::class)->create()->id;
+        },
+        'volunteer_type_id' => function () {
+            return factory(App\Models\VolunteerType::class)->create()->id;
+        },
+        'is_leader' => 0
+    ];
+});
+
+$factory->define(App\Models\Payment::class, function (Faker\Generator $faker) {
+    return [
+        'payment_number' => $faker->randomNumber(8),
+        'user_id' => function () {
+            return factory(App\User::class)->create()->id;
+        },
+        'bus' => $faker->randomNumber(1),
+        'deposit' => $faker->randomNumber(1),
+        'on_registration' => $faker->randomNumber(1),
+        'need_pay' => $faker->randomNumber(2)
+    ];
+});
+
+
+$factory->define(App\Models\Group::class, function (Faker\Generator $faker) {
+    return [
+        'group_name' => $faker->randomNumber(8),
+        'user_id' => function () {
+            return factory(App\User::class)->create()->id;
+        },
+        'event_id' => function () {
+            return factory(App\Models\Event::class)->create()->id;
+        },
+        'participant_id' => function () {
+            return factory(App\Models\Participant::class)->create()->id;
+        },
+    ];
+});
+

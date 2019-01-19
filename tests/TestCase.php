@@ -15,9 +15,12 @@ abstract class TestCase extends Laravel\Lumen\Testing\TestCase
         return require __DIR__ . '/../bootstrap/app.php';
     }
 
-    function login()
+    function login($admin = false, $editor = false, $reg = false)
     {
         $user = new User();
+        $user->is_admin = $admin;
+        $user->is_writer = $editor;
+        $user->is_registration = $reg;
         return Auth::login($user);
     }
 }

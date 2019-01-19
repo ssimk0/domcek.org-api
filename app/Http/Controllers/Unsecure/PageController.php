@@ -18,11 +18,11 @@ class PageController extends Controller
     }
 
     function menuPages() {
-        return $this->service->getMenuPages();
+        return $this->service->menuPages();
     }
 
     function page($slug) {
-        $page = $this->service->getPageBySlug($slug);
+        $page = $this->service->pageBySlug($slug);
         if ($page) {
             return $this->jsonResponse($page);
         } else {

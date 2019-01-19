@@ -1,0 +1,52 @@
+<?php
+
+
+namespace App\Repositories;
+
+
+use App\Models\Event;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+
+class EventRepository extends Repository
+{
+    public function create(array $data)
+    {
+        $event = new Event($data);
+
+        $success = $event->save();
+        if ($success) {
+            return $event;
+        } else {
+            return null;
+        }
+    }
+
+    public function list($size)
+    {
+        return DB::table('events')
+            ->where('startDate', '>', Carbon::now()->format('Y-m-d'))
+            ->orderBy('startDate')
+            ->paginate($size);
+    }
+
+    public function edit(array $data, $eventId)
+    {
+        DB::table('events')
+            ->where('id', $eventId)
+            ->update($data);
+    }
+
+    public function detail($eventId)
+    {
+        return DB::table('events')
+        ->where('id', $eventId)
+        ->first();
+    }
+
+    public function delete($eventId)
+    {
+        return DB::table('events')
+            ->delete($eventId);
+    }
+}

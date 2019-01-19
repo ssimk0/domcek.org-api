@@ -61,6 +61,14 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
             $router->delete('slider-images/{id}', 'Secure\SliderImagesController@delete');
         });
 
+        $router->group(['prefix' => '/admin', 'middleware' => 'perm:admin'], function () use ($router) {
+            $router->post('event', 'Secure\EventController@create');
+            $router->get('event', 'Secure\EventController@list');
+            $router->put('event/{id}', 'Secure\EventController@edit');
+            $router->delete('event/{id}', 'Secure\EventController@delete');
+            $router->get('event/{id}', 'Secure\EventController@detail');
+        });
+
         $router->get('user', 'Secure\UserController@userDetail');
         $router->put('user', 'Secure\UserController@updateProfile');
         $router->put('user/change-password', 'Secure\UserController@changePassword');

@@ -15,7 +15,7 @@ class PageService extends Service
         $this->repository = $pageRepository;
     }
 
-    function getMenuPages()
+    function menuPages()
     {
         $menuPages = $this->repository->findPagesWithoutParent();
 
@@ -26,7 +26,7 @@ class PageService extends Service
         return $menuPages;
     }
 
-    function getPageBySlug($slug)
+    function pageBySlug($slug)
     {
         $pages = $this->repository->findAllActivePages();
         $page = array_filter($pages, function ($page) use ($slug) {

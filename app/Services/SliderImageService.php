@@ -15,12 +15,12 @@ class SliderImageService extends Service
         $this->repository = $repository;
     }
 
-    function getSliderImages()
+    function sliderImages()
     {
         return $this->repository->findAllSliderImages();
     }
 
-    function getActiveSliderImages() {
+    function activeSliderImages() {
         return $this->repository->findAllActiveSliderImages();
     }
 

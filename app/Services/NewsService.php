@@ -15,7 +15,7 @@ class NewsService extends Service
         $this->repository = $repository;
     }
 
-    function getNewsList($order, $size, $offset)
+    function newsList($order, $size, $offset)
     {
         if ($order === 'best') {
             return $this->repository->findAllMostViewedPublishedNews($size, $offset);
@@ -26,7 +26,7 @@ class NewsService extends Service
         return $this->repository->findAllLatestPublishedNews($size, $offset);
     }
 
-    function getNewsBySlug($slug)
+    function newsBySlug($slug)
     {
         $news = $this->repository->findNewsDetail($slug);
         try {

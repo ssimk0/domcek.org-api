@@ -1,0 +1,11 @@
+image: php:7.2
+
+stages:
+  - test
+
+unit_test:
+  stage: test
+  script:
+    - cp .env.example .env
+    - composer install
+    - vendor/bin/phpunit

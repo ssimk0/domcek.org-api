@@ -15,8 +15,17 @@ class RemoveNewsImageNecessaryProps extends Migration
     {
         Schema::table('news_items', function (Blueprint $table) {
             $table->dropColumn('image_file_name');
+        });
+
+        Schema::table('news_items', function (Blueprint $table) {
             $table->dropColumn('image_file_size');
+        });
+
+        Schema::table('news_items', function (Blueprint $table) {
             $table->dropColumn('image_content_type');
+        });
+
+        Schema::table('news_items', function (Blueprint $table) {
             $table->dropColumn('image_updated_at');
         });
 

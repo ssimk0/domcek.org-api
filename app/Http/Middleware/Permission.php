@@ -20,9 +20,11 @@ class Permission
         if ($request->user()) {
             if ($this->service->checkPermission($perm, $request->user())) {
                 return $next($request);
+            } else {
+                return response('', 403);
             };
         }
 
-        return response('Unauthorized.', 401);
+        return response('', 401);
     }
 }

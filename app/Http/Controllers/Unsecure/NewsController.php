@@ -24,7 +24,7 @@ class NewsController extends Controller
             'offset' => 'integer'
         ]);
 
-        $news = $this->service->getNewsList(
+        $news = $this->service->newsList(
             array_get($data, 'order'),
             array_get($data, 'size', 3),
             array_get($data, 'offset', 0)
@@ -34,7 +34,7 @@ class NewsController extends Controller
     }
 
     function news($slug) {
-        $newsDetail = $this->service->getNewsBySlug($slug);
+        $newsDetail = $this->service->newsBySlug($slug);
         if ($newsDetail) {
             return $this->jsonResponse($newsDetail);
         } else {

@@ -21,13 +21,22 @@ class CleanupTables extends Migration
 
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('avatar_file_name');
-            $table->dropColumn('avatar_file_size');
-            $table->dropColumn('avatar_content_type');
-            $table->dropColumn('avatar_updated_at');
             $table->boolean('is_admin')->default(false);
             $table->boolean('is_writer')->default(false);
             $table->boolean('is_registration')->default(false);
         });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('avatar_file_size');
+        });
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('avatar_content_type');
+        });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('avatar_updated_at');
+        });
+
     }
 
     /**

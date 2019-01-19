@@ -15,7 +15,11 @@ class CleanupProfiles extends Migration
     {
         Schema::table('profiles', function (Blueprint $table) {
             $table->dropColumn('street');
+        });
+        Schema::table('profiles', function (Blueprint $table) {
             $table->dropColumn('street_number');
+        });
+        Schema::table('profiles', function (Blueprint $table) {
             $table->dropColumn('post_code');
         });
     }
