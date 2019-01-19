@@ -25,8 +25,8 @@ class EventRepository extends Repository
     public function list($size)
     {
         return DB::table('events')
-            ->where('startDate', '>', Carbon::now()->format('Y-m-d'))
-            ->orderBy('startDate')
+            ->where('start_date', '>', Carbon::now()->format('Y-m-d'))
+            ->orderBy('start_date')
             ->paginate($size);
     }
 

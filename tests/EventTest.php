@@ -51,7 +51,7 @@ class EventTest extends TestCase
         $content = json_decode($this->response->getContent());
 
         $this->assertCount(10, $content->data);
-        $this->assertCount(5, $content->data[0]->eventTypes);
+        $this->assertCount(5, $content->data[0]->volunteerTypes);
     }
 
 

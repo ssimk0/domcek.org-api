@@ -67,6 +67,11 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
             $router->put('event/{id}', 'Secure\EventController@edit');
             $router->delete('event/{id}', 'Secure\EventController@delete');
             $router->get('event/{id}', 'Secure\EventController@detail');
+            $router->get('event/{eventId}/volunteer', 'Secure\VolunteerController@list');
+
+            $router->get('volunteer/types', 'Secure\VolunteerController@types');
+            $router->put('volunteer/{id}', 'Secure\VolunteerController@edit');
+            $router->get('volunteer/{id}', 'Secure\VolunteerController@detail');
         });
 
         $router->get('user', 'Secure\UserController@userDetail');

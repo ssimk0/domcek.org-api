@@ -13,8 +13,22 @@
 
 $factory->define(App\User::class, function (Faker\Generator $faker) {
     return [
-        'name' => $faker->name,
-        'emails' => $faker->email,
+        'password' => $faker->password,
+        'avatar' => $faker->imageUrl(),
+        'email' => $faker->email,
+    ];
+});
+
+$factory->define(App\Models\Profile::class, function (Faker\Generator $faker) {
+    return [
+        'user_id' => function () {
+            return factory(App\User::class)->create()->id;
+        },
+        'first_name' => $faker->name,
+        'last_name' => $faker->name,
+        'city' => $faker->word,
+        'birth_date' => \Carbon\Carbon::now()->subYear(18)->format('Y-m-d'),
+        'phone' => $faker->phoneNumber,
     ];
 });
 
@@ -77,7 +91,7 @@ $factory->define(App\Models\Participant::class, function (Faker\Generator $faker
             return factory(App\Models\Event::class)->create()->id;
         },
         'user_id' => function () {
-            return factory(App\User::class)->create()->id;
+            return factory(App\Models\Profile::class)->create()->user_id;
         }
     ];
 });
@@ -85,10 +99,10 @@ $factory->define(App\Models\Participant::class, function (Faker\Generator $faker
 $factory->define(App\Models\Volunteer::class, function (Faker\Generator $faker) {
     return [
         'event_id' => function () {
-            return factory(App\Models\Event::class)->create()->id;
+            return 1;
         },
         'user_id' => function () {
-            return factory(App\User::class)->create()->id;
+            return factory(App\Models\Profile::class)->create()->user_id;
         },
         'volunteer_type_id' => function () {
             return factory(App\Models\VolunteerType::class)->create()->id;
@@ -101,7 +115,7 @@ $factory->define(App\Models\Payment::class, function (Faker\Generator $faker) {
     return [
         'payment_number' => $faker->randomNumber(8),
         'user_id' => function () {
-            return factory(App\User::class)->create()->id;
+            return factory(App\Models\Profile::class)->create()->user_id;
         },
         'bus' => $faker->randomNumber(1),
         'deposit' => $faker->randomNumber(1),
@@ -115,7 +129,7 @@ $factory->define(App\Models\Group::class, function (Faker\Generator $faker) {
     return [
         'group_name' => $faker->randomNumber(8),
         'user_id' => function () {
-            return factory(App\User::class)->create()->id;
+            return factory(App\Models\Profile::class)->create()->user_id;
         },
         'event_id' => function () {
             return factory(App\Models\Event::class)->create()->id;

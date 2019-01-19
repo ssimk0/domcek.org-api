@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Secure;
 
 
+use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
 use App\Services\VolunteerService;
 use Illuminate\Http\Request;
@@ -17,34 +18,48 @@ class VolunteerController extends Controller
         $this->service = $service;
     }
 
-    // TODO: finish
-    public function edit($volunteerId, Request $request)
+    public function edit(Request $request, $volunteerId)
     {
         $data = $this->validate($request, [
             'volunteerTypeId' => 'integer',
             'isLeader' => 'boolean'
         ]);
 
-        $result = $this->service->edit($data, $volunteerId);
+        $result = $this->service->editVolunteer($data, $volunteerId);
 
         if ($result) {
             return $this->successResponse();
         }
-        return null;
+        return ErrorMessagesConstant::badAttempt();
     }
 
-    // TODO: finish
+
     public function list($eventId)
     {
         $list = $this->service->volunteerList($eventId);
 
-        $this->jsonResponse($list);
+        return $this->jsonResponse($list);
     }
-    // TODO: finish
+
     public function detail($volunteerId)
     {
         $detail = $this->service->volunteerDetail($volunteerId);
 
-        $this->jsonResponse($detail);
+        if ($detail) {
+            return $this->jsonResponse($detail);
+        }
+
+        return ErrorMessagesConstant::notFound();
+    }
+
+    public function types()
+    {
+        $types = $this->service->volunteerTypes();
+
+        if ($types) {
+            return $this->jsonResponse($types);
+        }
+
+        return ErrorMessagesConstant::notFound();
     }
 }

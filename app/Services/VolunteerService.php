@@ -5,7 +5,6 @@ namespace App\Services;
 
 
 use App\Repositories\VolunteersRepository;
-use Illuminate\Support\Facades\Log;
 
 class VolunteerService extends Service
 {
@@ -19,11 +18,16 @@ class VolunteerService extends Service
 
     public function editVolunteer(array $data, $volunteerId)
     {
+        $data = [
+            'volunteer_type_id' => array_get($data, 'volunteerTypeId', false),
+            'is_leader' => array_get($data, 'isLeader', false)
+        ];
+
         try {
-            $this->repository->edit($data, $volunteerId);
+            $this->repository->edit(array_filter($data), $volunteerId);
             return true;
         } catch (\Exception $e) {
-            Log::debug("Problem while editing volunteer ${$e}");
+           $this->logError("Problem while editing volunteer ". $e->getMessage());
         }
 
         return false;
@@ -35,13 +39,20 @@ class VolunteerService extends Service
         return $this->repository->list($eventId);
     }
 
-    public function volunteerDetail($volunteerId) {
+    public function volunteerDetail($volunteerId)
+    {
         try {
             return $this->repository->detail($volunteerId);
         } catch (\Exception $e) {
-            Log::debug("Problem while getting volunteer detail ${$e}");
+            $this->logError("Problem while getting volunteer detail " . $e->getMessage());
         }
 
         return null;
     }
+
+    public function volunteerTypes()
+    {
+        return $this->repository->types();
+    }
+
 }

@@ -24,16 +24,18 @@ class EventService extends Service
 
     public function createEvent(array $data)
     {
+        $createData = [
+            'name' => $data['name'],
+            'theme' => array_get($data, 'theme', null),
+            'start_date' => array_get($data, 'startDate', false),
+            'end_date' => array_get($data, 'endDate', false),
+            'start_registration' => array_get($data, 'startRegistration', false),
+            'end_registration' => array_get($data, 'endRegistration', false),
+            'end_volunteer_registration' => array_get($data, 'endVolunteerRegistration', false),
+        ];
+
         try {
-            $event = $this->event->create([
-                'name' => $data['name'],
-                'theme' => array_get($data, 'theme'),
-                'start_date' => array_get($data, 'startDate'),
-                'end_date' => array_get($data, 'endDate'),
-                'start_registration' => array_get($data, 'startRegistration'),
-                'end_registration' => array_get($data, 'endRegistration'),
-                'end_volunteer_registration' => array_get($data, 'endVolunteerRegistration'),
-            ]);
+            $event = $this->event->create(array_filter($createData));
 
             if (empty($event)) {
                 return false;
@@ -55,7 +57,7 @@ class EventService extends Service
         $events = $this->event->list($size);
 
         foreach ($events as $event) {
-            $event->eventTypes = $this->eventVolunteer->eventTypes($event->id);
+            $event->volunteerTypes = $this->eventVolunteer->eventVolunteerTypes($event->id);
         }
 
         return $events;
@@ -64,16 +66,18 @@ class EventService extends Service
 
     public function editEvent(array $data, $eventId)
     {
+        $editData = [
+            'name' => $data['name'],
+            'theme' => array_get($data, 'theme', false),
+            'start_date' => array_get($data, 'startDate', false),
+            'end_date' => array_get($data, 'endDate', false),
+            'start_registration' => array_get($data, 'startRegistration', false),
+            'end_registration' => array_get($data, 'endRegistration', false),
+            'end_volunteer_registration' => array_get($data, 'endVolunteerRegistration', false),
+        ];
+
         try {
-            $this->event->edit([
-                'name' => $data['name'],
-                'theme' => array_get($data, 'theme'),
-                'start_date' => array_get($data, 'startDate'),
-                'end_date' => array_get($data, 'endDate'),
-                'start_registration' => array_get($data, 'startRegistration'),
-                'end_registration' => array_get($data, 'endRegistration'),
-                'end_volunteer_registration' => array_get($data, 'endVolunteerRegistration'),
-            ], $eventId);
+            $this->event->edit(array_filter($editData), $eventId);
 
             return true;
         } catch (\Exception $e) {
