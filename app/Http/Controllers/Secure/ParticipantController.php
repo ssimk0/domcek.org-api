@@ -28,7 +28,7 @@ class ParticipantController extends Controller
         $result = $this->service->create($data, $eventId);
 
         if ($result) {
-            return $this->successResponse();
+            return $this->successResponse(201);
         }
 
         return ErrorMessagesConstant::badAttempt();
@@ -45,15 +45,28 @@ class ParticipantController extends Controller
         return ErrorMessagesConstant::notFound();
     }
 
-    function edit(Request $request, $participantId)
+    function adminDetail($eventId, $userId)
+    {
+        $detail = $this->service->adminDetail($eventId, $userId);
+
+        if ($detail) {
+            return $this->jsonResponse($detail);
+        }
+
+        return ErrorMessagesConstant::notFound();
+    }
+
+    function edit(Request $request, $eventId, $participantId)
     {
         $data = $this->validate($request, [
             'volunteerTypeId' => 'integer',
             'registrationUserId' => 'integer',
-            'isLeader' => 'integer',
+            'paid' => 'integer',
+            'userId' => 'integer',
+            'isLeader' => 'bool',
         ]);
 
-        $result = $this->service->edit($data, $participantId);
+        $result = $this->service->edit($data, $eventId, $participantId);
 
         if ($result) {
             return $this->successResponse();

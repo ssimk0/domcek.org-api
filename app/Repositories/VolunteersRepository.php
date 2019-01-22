@@ -4,6 +4,7 @@
 namespace App\Repositories;
 
 use App\Constants\TableConstants;
+use App\Models\Volunteer;
 use Illuminate\Support\Facades\DB;
 
 class VolunteersRepository extends Repository
@@ -21,6 +22,26 @@ class VolunteersRepository extends Repository
         DB::table(TableConstants::VOLUNTEERS)
             ->where('id', $volunteerId)
             ->update($data);
+    }
+
+    public function editByUserAndEventId(array $data, $userId, $eventId)
+    {
+        $volunteer = DB::table(TableConstants::VOLUNTEERS)
+            ->where('user_id', $userId)
+            ->where('event_id', $eventId)
+            ->first();
+        if ($volunteer) {
+            DB::table(TableConstants::VOLUNTEERS)
+                ->where('user_id', $userId)
+                ->where('event_id', $eventId)
+                ->update($data);
+        } else {
+            $this->create(array_merge([
+
+                'event_id' => $eventId,
+                'user_id' => $userId
+            ], $data));
+        }
     }
 
     public function list($eventId)
@@ -46,8 +67,11 @@ class VolunteersRepository extends Repository
         return DB::table('volunteer_types')->get();
     }
 
-    public function create(array $array, $eventId)
+    public function create(array $data)
     {
+        $volunteer = new Volunteer($data);
+        $volunteer->save();
 
+        return $volunteer;
     }
 }

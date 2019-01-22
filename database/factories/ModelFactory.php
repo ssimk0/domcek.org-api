@@ -64,11 +64,19 @@ $factory->define(App\Models\SliderImage::class, function (Faker\Generator $faker
     ];
 });
 
+$factory->define(App\Models\TransportType::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->word,
+    ];
+});
+
 
 $factory->define(App\Models\Event::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->sentence,
         'theme' => $faker->sentence,
+        'need_pay' => $faker->randomDigit,
+        'deposit' => $faker->randomDigit,
         'start_date' => \Carbon\Carbon::now()->addYear(1)->format('Y-m-d'),
         'end_date' => $faker->date(),
         'start_registration' => $faker->date(),
@@ -87,9 +95,7 @@ $factory->define(App\Models\VolunteerType::class, function (Faker\Generator $fak
 $factory->define(App\Models\Participant::class, function (Faker\Generator $faker) {
     return [
         'note' => $faker->sentence,
-        'event_id' => function () {
-            return factory(App\Models\Event::class)->create()->id;
-        },
+        'event_id' => 1,
         'user_id' => function () {
             return factory(App\Models\Profile::class)->create()->user_id;
         }

@@ -12,7 +12,7 @@ class VolunteerTest extends TestCase
     {
         factory(App\Models\VolunteerType::class, 11)->create();
 
-        $this->get('/api/secure/admin/volunteer/types', [
+        $this->get('/api/secure/admin/volunteers/types', [
             'Authorization' => 'Bearer ' . $this->login(true)
         ]);
 
@@ -27,7 +27,7 @@ class VolunteerTest extends TestCase
         factory(App\Models\Event::class, 2)->create();
         $volunteers = factory(App\Models\Volunteer::class, 11)->create();
 
-        $this->get('/api/secure/admin/event/' . $volunteers[0]->event_id . '/volunteer', [
+        $this->get('/api/secure/admin/events/' . $volunteers[0]->event_id . '/volunteers', [
             'Authorization' => 'Bearer ' . $this->login(true)
         ]);
 
@@ -43,7 +43,7 @@ class VolunteerTest extends TestCase
         factory(App\Models\Event::class, 2)->create();
         $volunteers = factory(App\Models\Volunteer::class, 1)->create();
 
-        $this->get('/api/secure/admin/volunteer/' . $volunteers[0]->id, [
+        $this->get('/api/secure/admin/volunteers/' . $volunteers[0]->id, [
             'Authorization' => 'Bearer ' . $this->login(true)
         ]);
 
@@ -52,7 +52,7 @@ class VolunteerTest extends TestCase
 
     function testNotFoundVolunteerDetailList()
     {
-        $this->get('/api/secure/admin/volunteer/1', [
+        $this->get('/api/secure/admin/volunteers/1', [
             'Authorization' => 'Bearer ' . $this->login(true)
         ]);
 
@@ -64,7 +64,7 @@ class VolunteerTest extends TestCase
         factory(App\Models\Event::class, 2)->create();
         $volunteers = factory(App\Models\Volunteer::class, 1)->create();
 
-        $this->put('/api/secure/admin/volunteer/' . $volunteers[0]->id, [
+        $this->put('/api/secure/admin/volunteers/' . $volunteers[0]->id, [
             'isLeader' => true
         ], [
             'Authorization' => 'Bearer ' . $this->login(true)
