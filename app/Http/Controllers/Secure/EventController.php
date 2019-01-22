@@ -23,13 +23,18 @@ class EventController extends Controller
         $data = $this->validate($request, [
             'name' => 'required|string',
             'theme' => 'string',
+            'needPay' => 'required|integer',
+            'deposit' => 'required|integer',
             'startDate' => 'required|date_format:Y-m-d',
             'endDate' => 'required|date_format:Y-m-d',
             'startRegistration' => 'required|date_format:Y-m-d',
             'endRegistration' => 'required|date_format:Y-m-d',
             'endVolunteerRegistration' => 'required|date_format:Y-m-d',
             'volunteerTypes' => 'required|array',
-            'volunteerTypes.*' => 'required|integer'
+            'volunteerTypes.*' => 'required|integer',
+            'eventTransportTypes' => 'required|array',
+            'eventTransportTypes.*' => 'required|integer',
+            'eventTransportTypeTimes' => 'required|array',
         ]);
 
         $result = $this->service->createEvent($data);
@@ -42,7 +47,6 @@ class EventController extends Controller
 
     }
 
-    // TODO: finish  test
     public function edit( Request $request, $eventId)
     {
         $data = $this->validate($request, [
@@ -52,7 +56,9 @@ class EventController extends Controller
             'endDate' => 'required|date_format:Y-m-d',
             'startRegistration' => 'required|date_format:Y-m-d',
             'endRegistration' => 'required|date_format:Y-m-d',
-            'endVolunteerRegistration' => 'required|date_format:Y-m-d'
+            'endVolunteerRegistration' => 'required|date_format:Y-m-d',
+            'volunteerTypes' => 'array',
+            'volunteerTypes.*' => 'integer'
         ]);
 
         $result = $this->service->editEvent($data, $eventId);

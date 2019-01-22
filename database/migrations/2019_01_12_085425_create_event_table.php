@@ -22,6 +22,8 @@ class CreateEventTable extends Migration
             $table->date('start_registration');
             $table->date('end_registration');
             $table->date('end_volunteer_registration');
+            $table->integer('need_pay');
+            $table->integer('deposit');
 
             $table->unique(['start_date', 'end_date']);
             $table->timestamps();
@@ -68,14 +70,14 @@ class CreateEventTable extends Migration
             $table->text('note');
             $table->unsignedInteger('event_id')->index();
             $table->unsignedInteger('user_id')->index();
-            $table->unsignedInteger('registration_user_id');
-            $table->unsignedInteger('changed_by_user_id');
-            $table->date('registration_date');
+            $table->unsignedInteger('register_by_user_id')->nullable();
+            $table->unsignedInteger('changed_by_user_id')->nullable();
+            $table->date('registration_date')->nullable();
 
             $table->unique(['event_id', 'user_id']);
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('registration_user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('register_by_user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('changed_by_user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
 
             $table->timestamps();
@@ -84,9 +86,8 @@ class CreateEventTable extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->unsignedInteger('user_id')->index();
             $table->integer('payment_number')->index();
-            $table->integer('deposit');
-            $table->integer('on_registration');
-            $table->integer('bus');
+            $table->integer('paid');
+            $table->integer('on_registration')->nullable();
             $table->integer('need_pay');
             $table->unsignedInteger('event_id');
 

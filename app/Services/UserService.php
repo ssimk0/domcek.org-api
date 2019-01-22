@@ -118,15 +118,15 @@ class UserService extends Service
             $userData = [
                 'email' => $data['email'],
                 'avatar' => array_get($data, 'avatar', null),
-                'password' =>  Hash::make($data['password']),
+                'password' => Hash::make($data['password']),
             ];
             Log::info(implode($userData, ','));
             $user = $this->repository->createUser($userData);
 
             $profileData = [
-                'first_name' => $data['firstName'],
-                'last_name' => $data['lastName'],
-                'city' => $data['city'],
+                'first_name' => ucfirst($data['firstName']),
+                'last_name' => ucfirst($data['lastName']),
+                'city' => ucfirst($data['city']),
                 'phone' => $data['phone'],
                 'user_id' => $user->id,
                 'birth_date' => $data['birthDate'],
@@ -134,7 +134,7 @@ class UserService extends Service
             $this->repository->createUserProfile($profileData);
             return true;
         } catch (\Exception $e) {
-            $this->logWarning('Problem pri vytvarani použivateľa s errorom' . $e);
+            $this->logWarning('Problem pri vytvarani použivateľa s errorom ' . $e);
         }
 
         return false;

@@ -40,13 +40,17 @@ class EventRepository extends Repository
     public function detail($eventId)
     {
         return DB::table('events')
-        ->where('id', $eventId)
-        ->first();
+        ->find( $eventId);
     }
 
     public function delete($eventId)
     {
         return DB::table('events')
             ->delete($eventId);
+    }
+
+    public function instance($eventId)
+    {
+        return Event::find($eventId);
     }
 }

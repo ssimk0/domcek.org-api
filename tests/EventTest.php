@@ -1,7 +1,7 @@
 <?php
 
 
-use Illuminate\Support\Facades\DB;
+use App\Models\Event;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 
 class EventTest extends TestCase
@@ -10,7 +10,7 @@ class EventTest extends TestCase
 
     function testAuthEvent()
     {
-        $this->post('/api/secure/admin/event', [], [
+        $this->post('/api/secure/admin/events', [], [
             'Authorization' => 'Bearer ' . $this->login()
         ]);
 
@@ -19,19 +19,32 @@ class EventTest extends TestCase
 
     function testCreateEvent()
     {
-        $this->post('/api/secure/admin/event', [
+        $types = factory(App\Models\TransportType::class, 5)->create();
+
+        $this->post('/api/secure/admin/events', [
             "name" => "81. Púť radosti",
+            "needPay" => 10,
+            "deposit" => 5,
             "startDate" => "2019-02-03",
             "endDate" => "2019-02-04",
             "startRegistration" => "2019-01-15",
             "endRegistration" => "2019-01-25",
             "endVolunteerRegistration" => "2019-01-20",
-            "volunteerTypes" => [1]
+            "volunteerTypes" => [1],
+            "eventTransportTypes" => [$types[0]->id, $types[1]->id],
+            "eventTransportTypeTimes" => [$types[0]->id => '10:00']
         ], [
             'Authorization' => 'Bearer ' . $this->login(true)
         ]);
 
+        $event = Event::where('name', "81. Púť radosti")->first();
+        $types = $event->transportTypes()->get();
+
         $this->assertResponseStatus(201);
+        $this->assertCount(2, $types);
+
+        $this->assertEquals('10:00', $types[0]->pivot->time);
+        $this->assertEquals(null, $types[1]->pivot->time);
     }
 
     function testEventList()
@@ -43,7 +56,7 @@ class EventTest extends TestCase
             $event->volunteerTypes()->attach($types);
         }
 
-        $this->get('/api/secure/admin/event', [
+        $this->get('/api/secure/admin/events', [
             'Authorization' => 'Bearer ' . $this->login(true)
         ]);
 
@@ -64,7 +77,7 @@ class EventTest extends TestCase
             $event->volunteerTypes()->attach($types);
         }
 
-        $this->get('/api/secure/admin/event/' . $events[0]->id, [
+        $this->get('/api/secure/admin/events/' . $events[0]->id, [
             'Authorization' => 'Bearer ' . $this->login(true)
         ]);
 
@@ -77,7 +90,7 @@ class EventTest extends TestCase
     function testEventDetailNotFound()
     {
 
-        $this->get('/api/secure/admin/event/notFound', [
+        $this->get('/api/secure/admin/events/notFound', [
             'Authorization' => 'Bearer ' . $this->login(true)
         ]);
 
@@ -93,7 +106,7 @@ class EventTest extends TestCase
             $event->volunteerTypes()->attach($types);
         }
 
-        $this->delete('/api/secure/admin/event/' . $events[0]->id, [
+        $this->delete('/api/secure/admin/events/' . $events[0]->id, [
             'Authorization' => 'Bearer ' . $this->login(true)
         ]);
 
@@ -102,7 +115,7 @@ class EventTest extends TestCase
 
     function testEventDeleteNotFound()
     {
-        $this->delete('/api/secure/admin/event/notFound', [
+        $this->delete('/api/secure/admin/events/notFound', [
             'Authorization' => 'Bearer ' . $this->login(true)
         ]);
 
@@ -116,24 +129,28 @@ class EventTest extends TestCase
         $events = factory(App\Models\Event::class, 1)->create();
 
         foreach ($events as $event) {
-            $event->volunteerTypes()->attach($types);
+            $event->volunteerTypes()->attach([$types[1]]);
         }
 
-        $this->put('/api/secure/admin/event/' . $events[0]->id, [
+        $this->put('/api/secure/admin/events/' . $events[0]->id, [
             "name" => "81. Púť radosti",
             'theme' => 'test',
             "startDate" => "2019-02-03",
             "endDate" => "2019-02-04",
             "startRegistration" => "2019-01-15",
             "endRegistration" => "2019-01-25",
-            "endVolunteerRegistration" => "2019-01-20"
+            "endVolunteerRegistration" => "2019-01-20",
+            "volunteerTypes" => [$types[0]->id]
         ], [
             'Authorization' => 'Bearer ' . $this->login(true)
         ]);
 
         $this->assertResponseStatus(200);
-        $event = DB::table('events')->where('id', $events[0]->id)->first();
+        $event = Event::find($events[0]->id);
+        $volunteerTypes = $event->volunteerTypes()->get();
 
         $this->assertEquals("81. Púť radosti", $event->name);
+        $this->assertNotEquals($types[1]->id, $volunteerTypes[0]->id);
+        $this->assertCount(1, $volunteerTypes);
     }
 }

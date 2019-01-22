@@ -29,8 +29,7 @@ class SliderImageRepository extends Repository
     function findById($id)
     {
         return DB::table("slider_images")
-            ->where('id', $id)
-            ->first();
+            ->find($id);
     }
 
     function create(array $data)

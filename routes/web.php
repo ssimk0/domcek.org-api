@@ -62,20 +62,29 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
         });
 
         $router->group(['prefix' => '/admin', 'middleware' => 'perm:admin'], function () use ($router) {
-            $router->post('event', 'Secure\EventController@create');
-            $router->get('event', 'Secure\EventController@list');
-            $router->put('event/{id}', 'Secure\EventController@edit');
-            $router->delete('event/{id}', 'Secure\EventController@delete');
-            $router->get('event/{id}', 'Secure\EventController@detail');
-            $router->get('event/{eventId}/volunteer', 'Secure\VolunteerController@list');
+            $router->post('events', 'Secure\EventController@create');
+            $router->get('events', 'Secure\EventController@list');
+            $router->put('events/{id}', 'Secure\EventController@edit');
+            $router->delete('events/{id}', 'Secure\EventController@delete');
+            $router->get('events/{id}', 'Secure\EventController@detail');
+            $router->get('events/{eventId}/volunteers', 'Secure\VolunteerController@list');
 
-            $router->get('volunteer/types', 'Secure\VolunteerController@types');
-            $router->put('volunteer/{id}', 'Secure\VolunteerController@edit');
-            $router->get('volunteer/{id}', 'Secure\VolunteerController@detail');
+            $router->get('volunteers/types', 'Secure\VolunteerController@types');
+            $router->put('volunteers/{id}', 'Secure\VolunteerController@edit');
+            $router->get('volunteers/{id}', 'Secure\VolunteerController@detail');
+
+            $router->put('volunteers/{id}', 'Secure\VolunteerController@edit');
+            $router->get('volunteers/{id}', 'Secure\VolunteerController@detail');
+
+            $router->get('events/{id}/participants', 'Secure\ParticipantController@list');
+            $router->put('events/{id}/participants/{participantId}', 'Secure\ParticipantController@edit');
+            $router->get('events/{eventId}/participants/{userId}', 'Secure\ParticipantController@adminDetail');
         });
 
         $router->get('user', 'Secure\UserController@userDetail');
         $router->put('user', 'Secure\UserController@updateProfile');
         $router->put('user/change-password', 'Secure\UserController@changePassword');
+        $router->post('events/{id}/register', 'Secure\ParticipantController@create');
+        $router->get('events/{id}/status', 'Secure\ParticipantController@detail');
     });
 });

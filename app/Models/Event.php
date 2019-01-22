@@ -15,4 +15,9 @@ class Event extends Model
     {
         return $this->belongsToMany('App\Models\VolunteerType', 'event_volunteer_types', 'event_id', 'volunteer_type_id');
     }
+
+    public function transportTypes()
+    {
+        return $this->belongsToMany('App\Models\TransportType', 'event_transport_types', 'event_id', 'transport_type_id')->withPivot('time');
+    }
 }
