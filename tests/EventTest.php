@@ -30,13 +30,17 @@ class EventTest extends TestCase
             "endRegistration" => "2019-01-25",
             "endVolunteerRegistration" => "2019-01-20",
             "volunteerTypes" => [1],
-            "transportTimes" => ['10:00', '11:00']
+            "transportTimesIn" => ['10:00', '11:00'],
+            "transportTimesOut" => ['10:01', '11:01']
         ], [
             'Authorization' => 'Bearer ' . $this->login(true)
         ]);
 
         $event = Event::where('name', "81. Púť radosti")->first();
-        $times = DB::table('event_transport_times')->where('event_id', $event->id)->get();
+        $times = DB::table('event_transport_times')
+            ->where('event_id', $event->id)
+            ->where('type', 'in')
+            ->get();
 
         $this->assertResponseStatus(201);
         $this->assertCount(2, $times);

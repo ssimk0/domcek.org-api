@@ -25,7 +25,6 @@ class EventRepository extends Repository
     public function list($size)
     {
         return DB::table('events')
-            ->where('start_date', '>', Carbon::now()->format('Y-m-d'))
             ->orderBy('start_date')
             ->paginate($size);
     }
@@ -54,10 +53,11 @@ class EventRepository extends Repository
         return Event::find($eventId);
     }
 
-    public function createEventTransportTime($eventId, $time) {
+    public function createEventTransportTime($eventId, $time, $type) {
         DB::table('event_transport_times')->insert([
             'event_id' => $eventId,
-            'time' => $time
+            'time' => $time,
+            'type' => $type
         ]);
     }
 

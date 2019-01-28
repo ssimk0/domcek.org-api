@@ -50,6 +50,7 @@ class VolunteersRepository extends Repository
             ->join(TableConstants::USERS, TableConstants::USERS . ".id", TableConstants::VOLUNTEERS . ".user_id")
             ->join(TableConstants::PROFILES, TableConstants::USERS . ".id", TableConstants::PROFILES . ".user_id")
             ->where('event_id', $eventId)
+            ->where('active', true)
             ->select([TableConstants::VOLUNTEERS . '.*', TableConstants::USERS . '.email', TableConstants::PROFILES . '.*'])
             ->paginate(10);
     }

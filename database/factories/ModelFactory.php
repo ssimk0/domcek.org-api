@@ -89,6 +89,7 @@ $factory->define(App\Models\Event::class, function (Faker\Generator $faker) {
 $factory->define(App\Models\VolunteerType::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->sentence,
+        'active' => true
     ];
 });
 

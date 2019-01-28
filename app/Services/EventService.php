@@ -34,7 +34,8 @@ class EventService extends Service
             'deposit' => array_get($data, 'deposit', false),
         ];
 
-        $times = array_get($data, 'transportTimes', []);
+        $timesIn = array_get($data, 'transportTimesIn', []);
+        $timesOut = array_get($data, 'transportTimesOut', []);
         $volunteerTypes = array_get($data, 'volunteerTypes', []);
 
         try {
@@ -48,8 +49,12 @@ class EventService extends Service
                 $event->volunteerTypes()->attach($volunteerTypes);
             }
 
-            foreach ($times as $time) {
-                $this->event->createEventTransportTime($event->id, $time);
+            foreach ($timesIn as $time) {
+                $this->event->createEventTransportTime($event->id, $time, 'in');
+            }
+
+            foreach ($timesOut as $time) {
+                $this->event->createEventTransportTime($event->id, $time, 'out');
             }
 
             return true;

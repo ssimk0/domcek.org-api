@@ -32,7 +32,8 @@ class EventController extends Controller
             'endVolunteerRegistration' => 'required|date_format:Y-m-d',
             'volunteerTypes' => 'required|array',
             'volunteerTypes.*' => 'required|integer',
-            'transportTimes' => 'required|array',
+            'transportTimesIn' => 'array',
+            'transportTimesOut' => 'array',
         ]);
 
         $result = $this->service->createEvent($data);
