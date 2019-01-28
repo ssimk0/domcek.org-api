@@ -37,7 +37,7 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
         $router->get('news', 'Unsecure\NewsController@list');
         $router->get('news/{slug}', [
             'uses' => 'Unsecure\NewsController@news',
-            'as' => 'news.detail'
+            'as' => 'news.detail',
         ]);
         $router->get('slider-images', 'Unsecure\SliderImagesController@list');
     });
@@ -75,6 +75,8 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
 
             $router->put('volunteers/{id}', 'Secure\VolunteerController@edit');
             $router->get('volunteers/{id}', 'Secure\VolunteerController@detail');
+
+            $router->get('transport-types', 'Secure\TransportTypesController@typesList');
 
             $router->get('events/{id}/participants', 'Secure\ParticipantController@list');
             $router->put('events/{id}/participants/{participantId}', 'Secure\ParticipantController@edit');

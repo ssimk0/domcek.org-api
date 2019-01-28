@@ -11,10 +11,9 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject
 {
-
     use Authenticatable, Authorizable;
 
-    public function __construct(array $attributes = array())
+    public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
     }
@@ -28,8 +27,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'emails', 'password', 'avatar'
     ];
 
-
-    protected $appends = array('canEdit');
+    protected $appends = ['canEdit'];
 
     /**
      * The attributes that should be hidden for arrays.

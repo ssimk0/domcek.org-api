@@ -1,12 +1,11 @@
 <?php
 
-
 namespace App\Services;
 
-
+use App\Models\TransportType;
 use App\Repositories\EventRepository;
-use App\Repositories\VolunteersRepository;
 use App\Repositories\ParticipantRepository;
+use App\Repositories\VolunteersRepository;
 
 class EventService extends Service
 {
@@ -20,7 +19,6 @@ class EventService extends Service
         $this->participant = $participant;
         $this->eventVolunteer = $eventVolunteer;
     }
-
 
     public function createEvent(array $data)
     {
@@ -49,19 +47,18 @@ class EventService extends Service
             $transportTypes = [];
 
             foreach ($data['eventTransportTypes'] as $type) {
-                $transportTypes [$type] = ['time' => array_get($times, $type, null)];
+                $transportTypes[$type] = ['time' => array_get($times, $type, null)];
             }
 
             $event->transportTypes()->attach($transportTypes);
 
             return true;
         } catch (\Exception $e) {
-            $this->logError("Problem with creating event with error: " . $e);
+            $this->logError('Problem with creating event with error: '.$e);
         }
 
         return false;
     }
-
 
     public function eventList($size)
     {
@@ -73,7 +70,6 @@ class EventService extends Service
 
         return $events;
     }
-
 
     public function editEvent(array $data, $eventId)
     {
@@ -94,9 +90,10 @@ class EventService extends Service
                 $event = $this->event->instance($eventId);
                 $event->volunteerTypes()->sync($volunteerTypes);
             }
+
             return true;
         } catch (\Exception $e) {
-            $this->logError("Problem with creating event with error: " . $e);
+            $this->logError('Problem with creating event with error: '.$e);
         }
 
         return false;
@@ -112,9 +109,14 @@ class EventService extends Service
         try {
             return $this->event->delete($eventId);
         } catch (\Exception $e) {
-            $this->logError("Problem with deleting event with error: " . $e);
+            $this->logError('Problem with deleting event with error: '.$e);
         }
 
         return false;
+    }
+
+    public function getTransportTypes()
+    {
+        return TransportType::all();
     }
 }
