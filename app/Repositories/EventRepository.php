@@ -25,7 +25,7 @@ class EventRepository extends Repository
     public function list($size)
     {
         return DB::table('events')
-            ->orderBy('start_date')
+            ->orderBy('start_date', 'desc')
             ->paginate($size);
     }
 
