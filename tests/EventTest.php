@@ -2,6 +2,7 @@
 
 
 use App\Models\Event;
+use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 
 class EventTest extends TestCase
@@ -19,8 +20,6 @@ class EventTest extends TestCase
 
     function testCreateEvent()
     {
-        $types = factory(App\Models\TransportType::class, 5)->create();
-
         $this->post('/api/secure/admin/events', [
             "name" => "81. Púť radosti",
             "needPay" => 10,
@@ -31,20 +30,18 @@ class EventTest extends TestCase
             "endRegistration" => "2019-01-25",
             "endVolunteerRegistration" => "2019-01-20",
             "volunteerTypes" => [1],
-            "eventTransportTypes" => [$types[0]->id, $types[1]->id],
-            "eventTransportTypeTimes" => [$types[0]->id => '10:00']
+            "transportTimes" => ['10:00', '11:00']
         ], [
             'Authorization' => 'Bearer ' . $this->login(true)
         ]);
 
         $event = Event::where('name', "81. Púť radosti")->first();
-        $types = $event->transportTypes()->get();
+        $times = DB::table('event_transport_times')->where('event_id', $event->id)->get();
 
         $this->assertResponseStatus(201);
-        $this->assertCount(2, $types);
+        $this->assertCount(2, $times);
 
-        $this->assertEquals('10:00', $types[0]->pivot->time);
-        $this->assertEquals(null, $types[1]->pivot->time);
+        $this->assertEquals('10:00', $times[0]->time);
     }
 
     function testEventList()

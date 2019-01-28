@@ -34,7 +34,8 @@ class EventService extends Service
             'deposit' => array_get($data, 'deposit', false),
         ];
 
-        $times = array_get($data, 'eventTransportTypeTimes', []);
+        $times = array_get($data, 'transportTimes', []);
+        $volunteerTypes = array_get($data, 'volunteerTypes', []);
 
         try {
             $event = $this->event->create(array_filter($createData));
@@ -43,18 +44,17 @@ class EventService extends Service
                 return false;
             }
 
-            $event->volunteerTypes()->attach($data['volunteerTypes']);
-            $transportTypes = [];
-
-            foreach ($data['eventTransportTypes'] as $type) {
-                $transportTypes[$type] = ['time' => array_get($times, $type, null)];
+            if (!empty($volunteerTypes)) {
+                $event->volunteerTypes()->attach($volunteerTypes);
             }
 
-            $event->transportTypes()->attach($transportTypes);
+            foreach ($times as $time) {
+                $this->event->createEventTransportTime($event->id, $time);
+            }
 
             return true;
         } catch (\Exception $e) {
-            $this->logError('Problem with creating event with error: '.$e);
+            $this->logError('Problem with creating event with error: ' . $e);
         }
 
         return false;
@@ -82,6 +82,7 @@ class EventService extends Service
             'end_registration' => array_get($data, 'endRegistration', false),
             'end_volunteer_registration' => array_get($data, 'endVolunteerRegistration', false),
         ];
+        $times = array_get($data, 'transportTimes', []);
 
         try {
             $this->event->edit(array_filter($editData), $eventId);
@@ -91,9 +92,14 @@ class EventService extends Service
                 $event->volunteerTypes()->sync($volunteerTypes);
             }
 
+            foreach ($times as $time) {
+                $this->event->deleteAllTransportTimesForEvent($event->id);
+                $this->event->createEventTransportTime($event->id, $time);
+            }
+
             return true;
         } catch (\Exception $e) {
-            $this->logError('Problem with creating event with error: '.$e);
+            $this->logError('Problem with creating event with error: ' . $e);
         }
 
         return false;
@@ -109,14 +115,10 @@ class EventService extends Service
         try {
             return $this->event->delete($eventId);
         } catch (\Exception $e) {
-            $this->logError('Problem with deleting event with error: '.$e);
+            $this->logError('Problem with deleting event with error: ' . $e);
         }
 
         return false;
     }
 
-    public function getTransportTypes()
-    {
-        return TransportType::all();
-    }
 }

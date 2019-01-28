@@ -53,4 +53,15 @@ class EventRepository extends Repository
     {
         return Event::find($eventId);
     }
+
+    public function createEventTransportTime($eventId, $time) {
+        DB::table('event_transport_times')->insert([
+            'event_id' => $eventId,
+            'time' => $time
+        ]);
+    }
+
+    public function deleteAllTransportTimesForEvent($eventId) {
+        DB::table('event_transport_times')->where('event_id', $eventId)->delete();
+    }
 }
