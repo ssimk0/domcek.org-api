@@ -46,7 +46,7 @@ class EventController extends Controller
 
     }
 
-    public function edit( Request $request, $eventId)
+    public function edit(Request $request, $eventId)
     {
         $data = $this->validate($request, [
             'name' => 'required|string',
@@ -75,8 +75,13 @@ class EventController extends Controller
     {
         $data = $this->validate($request, [
             'size' => 'integer',
+            'filter' => 'string'
         ]);
-        return $this->service->eventList(array_get($data, 'size', 10));
+
+        return $this->service->eventList(
+            array_get($data, 'size', 10),
+            array_get($data, 'filter', '%')
+        );
     }
 
     public function detail($eventId)

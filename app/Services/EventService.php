@@ -65,9 +65,9 @@ class EventService extends Service
         return false;
     }
 
-    public function eventList($size)
+    public function eventList($size, $filter)
     {
-        $events = $this->event->list($size);
+        $events = $this->event->list($size, $filter);
 
         foreach ($events as $event) {
             $event->volunteerTypes = $this->eventVolunteer->eventVolunteerTypes($event->id);

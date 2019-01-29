@@ -22,9 +22,12 @@ class EventRepository extends Repository
         }
     }
 
-    public function list($size)
+    public function list($size, $filter)
     {
-        return DB::table('events')
+        $query = DB::table('events')
+            ->where('name', 'like', $this->prepareStringForLikeFilter($filter));
+
+        return $this->addWhereForFilter($query, $filter, ['name', 'theme'])
             ->orderBy('start_date', 'desc')
             ->paginate($size);
     }
