@@ -162,6 +162,7 @@ class EventTest extends TestCase
         $this->setUpFaker();
 
         $types = factory(App\Models\VolunteerType::class, 5)->create();
+
         $eventAvailable = new App\Models\Event([
             'name' => $this->faker->sentence,
             'theme' => $this->faker->sentence,
@@ -173,6 +174,7 @@ class EventTest extends TestCase
             'end_registration' => \Carbon\Carbon::now()->addDays(5)->format('Y-m-d'),
             'end_volunteer_registration' => $this->faker->date(),
         ]);
+
 
         $eventNotAvailable = new App\Models\Event([
             'name' => $this->faker->sentence,
@@ -189,6 +191,14 @@ class EventTest extends TestCase
         $eventNotAvailable->save();
         $eventAvailable->save();
 
+        $participant = new App\Models\Participant([
+            'note' => $this->faker->sentence,
+            'event_id' => $eventAvailable->id,
+            'user_id' => 1
+        ]);
+
+        $participant->save();
+
         foreach ([$eventAvailable, $eventNotAvailable] as $event) {
             $event->volunteerTypes()->attach([$types[1]]);
         }
@@ -202,5 +212,6 @@ class EventTest extends TestCase
         $content = json_decode($this->response->getContent());
 
         $this->assertCount(1, $content);
+        $this->assertEquals(1, $content[0]->participantCount);
     }
 }

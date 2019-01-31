@@ -90,4 +90,11 @@ class ParticipantRepository extends Repository
             ->where('id', $participantId)
             ->update($data);
     }
+
+    public function getCountForEvent($event_id)
+    {
+        return DB::table(TableConstants::PARTICIPANTS)
+            ->where('event_id', $event_id)
+            ->count();
+    }
 }

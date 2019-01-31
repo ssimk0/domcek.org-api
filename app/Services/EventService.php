@@ -84,6 +84,10 @@ class EventService extends Service
             $event->volunteerTypes = $this->eventVolunteer->eventVolunteerTypes($event->id);
         }
 
+        foreach ($events as $event) {
+            $event->participantCount = $this->participant->getCountForEvent($event->id);
+        }
+
         return $events;
     }
 
