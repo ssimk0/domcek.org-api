@@ -40,6 +40,7 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
             'as' => 'news.detail',
         ]);
         $router->get('slider-images', 'Unsecure\SliderImagesController@list');
+        $router->get('events', 'Secure\EventController@availableEvents');
     });
 
     $router->group(
@@ -84,7 +85,6 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
         $router->get('user', 'Secure\UserController@userDetail');
         $router->put('user', 'Secure\UserController@updateProfile');
         $router->put('user/change-password', 'Secure\UserController@changePassword');
-        $router->get('events', 'Secure\EventController@availableEvents');
         $router->post('events/{id}/register', 'Secure\ParticipantController@create');
         $router->get('events/{id}/status', 'Secure\ParticipantController@detail');
     });

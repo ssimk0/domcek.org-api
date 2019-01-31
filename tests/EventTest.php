@@ -203,7 +203,7 @@ class EventTest extends TestCase
             $event->volunteerTypes()->attach([$types[1]]);
         }
 
-        $this->get('/api/secure/events', [
+        $this->get('/api/events', [
             'Authorization' => 'Bearer ' . $this->login(true)
         ]);
 
