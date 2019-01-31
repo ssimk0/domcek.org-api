@@ -4,10 +4,12 @@
 use App\Models\Event;
 use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\WithFaker;
 
 class EventTest extends TestCase
 {
     use DatabaseMigrations;
+    use WithFaker;
 
     function testAuthEvent()
     {
@@ -153,5 +155,52 @@ class EventTest extends TestCase
         $this->assertEquals("81. Púť radosti", $event->name);
         $this->assertNotEquals($types[1]->id, $volunteerTypes[0]->id);
         $this->assertCount(1, $volunteerTypes);
+    }
+
+    function testAvailableEvents()
+    {
+        $this->setUpFaker();
+
+        $types = factory(App\Models\VolunteerType::class, 5)->create();
+        $eventAvailable = new App\Models\Event([
+            'name' => $this->faker->sentence,
+            'theme' => $this->faker->sentence,
+            'need_pay' => $this->faker->randomDigit,
+            'deposit' => $this->faker->randomDigit,
+            'start_date' => \Carbon\Carbon::now()->addYear(1)->format('Y-m-d'),
+            'end_date' => $this->faker->date(),
+            'start_registration' => \Carbon\Carbon::now()->format('Y-m-d'),
+            'end_registration' => \Carbon\Carbon::now()->addDays(5)->format('Y-m-d'),
+            'end_volunteer_registration' => $this->faker->date(),
+        ]);
+
+        $eventNotAvailable = new App\Models\Event([
+            'name' => $this->faker->sentence,
+            'theme' => $this->faker->sentence,
+            'need_pay' => $this->faker->randomDigit,
+            'deposit' => $this->faker->randomDigit,
+            'start_date' => \Carbon\Carbon::now()->addYear(1)->format('Y-m-d'),
+            'end_date' => $this->faker->date(),
+            'start_registration' => \Carbon\Carbon::now()->addDay()->format('Y-m-d'),
+            'end_registration' => \Carbon\Carbon::now()->addDays(5)->format('Y-m-d'),
+            'end_volunteer_registration' => $this->faker->date(),
+        ]);
+
+        $eventNotAvailable->save();
+        $eventAvailable->save();
+
+        foreach ([$eventAvailable, $eventNotAvailable] as $event) {
+            $event->volunteerTypes()->attach([$types[1]]);
+        }
+
+        $this->get('/api/secure/events', [
+            'Authorization' => 'Bearer ' . $this->login(true)
+        ]);
+
+        $this->assertResponseStatus(200);
+
+        $content = json_decode($this->response->getContent());
+
+        $this->assertCount(1, $content);
     }
 }

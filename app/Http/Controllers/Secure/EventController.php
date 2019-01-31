@@ -84,6 +84,11 @@ class EventController extends Controller
         );
     }
 
+    public function availableEvents()
+    {
+        return $this->jsonResponse($this->service->availableEvents());
+    }
+
     public function detail($eventId)
     {
         $event = $this->service->eventDetail($eventId);

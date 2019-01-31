@@ -67,4 +67,14 @@ class EventRepository extends Repository
     public function deleteAllTransportTimesForEvent($eventId) {
         DB::table('event_transport_times')->where('event_id', $eventId)->delete();
     }
+
+    public function availableEvents()
+    {
+        $today = Carbon::now()->format('Y-m-d');
+        return DB::table('events')
+            ->whereDay('start_registration', '>=', $today)
+            ->whereDay('end_registration', '<=', $today)
+            ->orderBy('start_date', 'desc')
+            ->get();
+    }
 }

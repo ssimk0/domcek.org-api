@@ -76,6 +76,17 @@ class EventService extends Service
         return $events;
     }
 
+    public function availableEvents()
+    {
+        $events = $this->event->availableEvents();
+
+        foreach ($events as $event) {
+            $event->volunteerTypes = $this->eventVolunteer->eventVolunteerTypes($event->id);
+        }
+
+        return $events;
+    }
+
     public function editEvent(array $data, $eventId)
     {
         $editData = [
