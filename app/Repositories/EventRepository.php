@@ -71,9 +71,10 @@ class EventRepository extends Repository
     public function availableEvents()
     {
         $today = Carbon::now()->format('Y-m-d');
+
         return DB::table('events')
-            ->whereDay('start_registration', '>=', $today)
-            ->whereDay('end_registration', '<=', $today)
+            ->whereDate('start_registration', '<=', $today)
+            ->whereDate('end_registration', '>=', $today)
             ->orderBy('start_date', 'desc')
             ->get();
     }
