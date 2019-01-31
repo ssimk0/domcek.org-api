@@ -49,8 +49,7 @@ class VolunteersRepository extends Repository
         return DB::table(TableConstants::VOLUNTEERS)
             ->join(TableConstants::USERS, TableConstants::USERS . ".id", TableConstants::VOLUNTEERS . ".user_id")
             ->join(TableConstants::PROFILES, TableConstants::USERS . ".id", TableConstants::PROFILES . ".user_id")
-            ->where('event_id', $eventId)
-            ->where('active', true)
+            ->where(TableConstants::VOLUNTEERS . '.event_id', $eventId)
             ->select([TableConstants::VOLUNTEERS . '.*', TableConstants::USERS . '.email', TableConstants::PROFILES . '.*'])
             ->paginate(10);
     }
@@ -65,7 +64,7 @@ class VolunteersRepository extends Repository
 
     public function types()
     {
-        return DB::table('volunteer_types')->get();
+        return DB::table('volunteer_types')->where('active', true)->get();
     }
 
     public function create(array $data)
