@@ -72,6 +72,8 @@ class ParticipantService extends Service
 
             $this->repository->create([
                 'note' => array_get($data, 'note'),
+                'transport_in' => array_get($data, 'transportIn'),
+                'transport_out' => array_get($data, 'transportOut'),
                 'user_id' => $this->userId(),
                 'event_id' => $eventId
             ]);

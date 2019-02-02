@@ -22,7 +22,9 @@ class ParticipantController extends Controller
     {
         $data = $this->validate($request, [
             'volunteerTypeId' => 'integer',
-            'note' => 'string'
+            'note' => 'string',
+            'transportIn' => 'required|string',
+            'transportOut' => 'required|string'
         ]);
 
         $result = $this->service->create($data, $eventId);

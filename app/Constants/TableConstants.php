@@ -18,4 +18,5 @@ class TableConstants
     const NEWS_ITEMS = 'news_items';
     const GROUPS = 'groups';
     const PAYMENTS = 'payments';
+    const EVENT_TRANSPORT_TIMES = 'event_transport_times';
 }

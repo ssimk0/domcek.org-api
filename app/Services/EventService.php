@@ -88,6 +88,11 @@ class EventService extends Service
             $event->participantCount = $this->participant->getCountForEvent($event->id);
         }
 
+        foreach ($events as $event) {
+            $event->busInTimes = $this->event->getEventTransportTimes($event->id, 'in');
+            $event->busOutTimes = $this->event->getEventTransportTimes($event->id, 'out');
+        }
+
         return $events;
     }
 
