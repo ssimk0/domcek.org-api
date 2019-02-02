@@ -86,10 +86,22 @@ class UserService extends Service
         }
     }
 
-    function updateUserProfile($profile)
+    function updateUserProfile($data)
     {
         try {
-            $this->repository->updateUserProfile($profile, $this->userId());
+            $mappingProfile = [
+                'phone' => 'phone',
+                'lastName' => 'last_name',
+                'city' => 'city',
+            ];
+
+            $mappingUser = [
+                'email' => 'email',
+                'avatar' => 'avatar'
+            ];
+
+            $this->repository->updateUser($this->parseExistingData($data, $mappingUser), $this->userId());
+            $this->repository->updateUserProfile($this->parseExistingData($data, $mappingProfile), $this->userId());
             return true;
         } catch (\Exception $e) {
             $this->logWarning('Problem pri updatovani použivateľovho hesla s errorom' . $e);

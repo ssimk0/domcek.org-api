@@ -70,7 +70,7 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
             $router->get('events/{id}', 'Secure\EventController@detail');
             $router->get('events/{eventId}/volunteers', 'Secure\VolunteerController@list');
 
-            $router->get('volunteers/types', 'Secure\VolunteerController@types');
+            $router->get('volunteers-types', 'Secure\VolunteerController@types');
             $router->put('volunteers/{id}', 'Secure\VolunteerController@edit');
             $router->get('volunteers/{id}', 'Secure\VolunteerController@detail');
 

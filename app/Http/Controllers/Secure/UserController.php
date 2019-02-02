@@ -46,7 +46,9 @@ class UserController extends Controller
         $data = $this->validate($request, [
             'city' => 'required|string',
             'phone' => 'required|string',
-            'last_name' => 'required|string'
+            'email' => 'required|string',
+            'lastName' => 'required|string',
+            'avatar' => 'url'
         ]);
 
         $result = $this->service->updateUserProfile($data);
