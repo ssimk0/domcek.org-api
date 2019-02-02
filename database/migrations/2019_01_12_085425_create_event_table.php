@@ -85,7 +85,7 @@ class CreateEventTable extends Migration
 
         Schema::create('payments', function (Blueprint $table) {
             $table->unsignedInteger('user_id')->index();
-            $table->integer('payment_number')->index();
+            $table->bigInteger('payment_number')->index();
             $table->integer('paid');
             $table->integer('on_registration')->nullable();
             $table->integer('need_pay');

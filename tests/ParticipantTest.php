@@ -69,7 +69,9 @@ class ParticipantTest extends TestCase
 
         $event = factory(App\Models\Event::class, 1)->create()[0];
         $this->post('/api/secure/events/1/register', [
-            'note' => 'test'
+            'note' => 'test',
+            'transportIn' => 'test',
+            'transportOut' => 'test',
         ], [
             'Authorization' => 'Bearer ' . $this->login()
         ]);

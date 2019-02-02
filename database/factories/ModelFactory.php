@@ -97,6 +97,8 @@ $factory->define(App\Models\Participant::class, function (Faker\Generator $faker
     return [
         'note' => $faker->sentence,
         'event_id' => 1,
+        'transport_in' => 'test',
+        'transport_out' => 'test',
         'user_id' => function () {
             return factory(App\Models\Profile::class)->create()->user_id;
         }
