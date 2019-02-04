@@ -30,7 +30,6 @@ class EventRepository extends Repository
 
         return $this->addWhereForFilter($query, $filter, ['name', 'theme'])
             ->orderBy('start_date', 'desc')
-            ->select([''])
             ->paginate($size);
     }
 
