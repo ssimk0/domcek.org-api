@@ -12,7 +12,7 @@ class VolunteerTest extends TestCase
     {
         factory(App\Models\VolunteerType::class, 11)->create();
 
-        $this->get('/api/secure/admin/volunteers-types', [
+        $this->get('/api/secure/volunteers-types', [
             'Authorization' => 'Bearer ' . $this->login(true)
         ]);
 

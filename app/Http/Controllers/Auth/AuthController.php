@@ -23,10 +23,9 @@ class AuthController extends Controller
     {
         $errMessage = ErrorMessagesConstant::WRONG_CREDENTIALS;
         try {
-            $data = $this->validate($request, [
+            $data = $this->validateWithCaptcha($request, [
                 'username' => 'required',
-                'password' => 'required',
-                'recaptcha' => 'required|captcha'
+                'password' => 'required'
             ]);
         } catch (\Exception $e) {
             $this->logDebug("Validation exception for login user: " . $e->getMessage());
@@ -66,9 +65,8 @@ class AuthController extends Controller
 
     function forgotPassword(Request $request)
     {
-        $data = $this->validate($request, [
-            'email' => 'required|email',
-            'recaptcha' => 'required|captcha'
+        $data = $this->validateWithCaptcha($request, [
+            'email' => 'required|email'
         ]);
 
         $this->service->forgotPassword($data['email']);
@@ -78,10 +76,9 @@ class AuthController extends Controller
 
     function resetPassword(Request $request)
     {
-        $data = $this->validate($request, [
+        $data = $this->validateWithCaptcha($request, [
             'token' => 'required|string',
-            'password' => 'required|string|confirmed|min:6',
-            'recaptcha' => 'required|captcha'
+            'password' => 'required|string|confirmed|min:6'
         ]);
 
         $result = $this->service->resetPassword($data['token'], $data['password']);
@@ -95,7 +92,7 @@ class AuthController extends Controller
 
     function registerUser(Request $request)
     {
-        $data = $this->validate($request, [
+        $data = $this->validateWithCaptcha($request, [
             'avatar' => 'url',
             'password' => 'required|string|confirmed|min:6',
             'firstName' => 'required|string',
@@ -103,8 +100,7 @@ class AuthController extends Controller
             'birthDate' => 'required|date_format:Y-m-d',
             'city' => 'required|string',
             'phone' => 'required|string',
-            'email' => 'required|email',
-            'recaptcha' => 'required|captcha'
+            'email' => 'required|email'
         ]);
 
         $result = $this->service->createUser($data);

@@ -28,6 +28,11 @@ class ParticipantService extends Service
         return $this->repository->list($eventId);
     }
 
+    public function registrationList($eventId)
+    {
+        return $this->repository->registrationList($eventId);
+    }
+
     public function edit(array $data, $eventId, $participantId)
     {
         $userId = array_get($data, 'userId');
@@ -58,9 +63,15 @@ class ParticipantService extends Service
         }
     }
 
-    public function detail($eventId)
+    public function userEvents()
     {
-        return $this->adminDetail($eventId, $this->userId());
+        try {
+            return $this->repository->userEvents($this->userId());
+        } catch (\Exception $e) {
+            $this->logError("Problem with getting participant detail with error: " . $e);
+        }
+
+        return [];
     }
 
     public function create(array $data, $eventId)

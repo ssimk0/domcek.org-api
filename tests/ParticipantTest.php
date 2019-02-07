@@ -48,27 +48,12 @@ class ParticipantTest extends TestCase
         $this->assertEquals($participant->note, $content->note);
     }
 
-    function testDetailParticipant()
-    {
-
-        $participant = factory(App\Models\Participant::class, 1)->create()[0];
-        $this->get('/api/secure/events/1/status', [
-            'Authorization' => 'Bearer ' . $this->login()
-        ]);
-
-        $this->assertResponseOk();
-
-        $content = json_decode($this->response->getContent());
-
-        $this->assertEquals($participant->id, $content->id);
-        $this->assertEquals($participant->note, $content->note);
-    }
 
     function testRegisterParticipant()
     {
 
         $event = factory(App\Models\Event::class, 1)->create()[0];
-        $this->post('/api/secure/events/1/register', [
+        $this->post('/api/secure/user/events/1/register', [
             'note' => 'test',
             'transportIn' => 'test',
             'transportOut' => 'test',

@@ -5,6 +5,8 @@ namespace App\Services;
 
 
 use App\Mails\ForgotPasswordMail;
+use App\Repositories\EventRepository;
+use App\Repositories\ParticipantRepository;
 use App\Repositories\UserRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
@@ -15,10 +17,12 @@ use Illuminate\Support\Str;
 class UserService extends Service
 {
     private $repository;
+    private $participantRepository;
 
-    public function __construct(UserRepository $repository)
+    public function __construct(UserRepository $repository, ParticipantRepository $participantRepository)
     {
         $this->repository = $repository;
+        $this->participantRepository = $participantRepository;
     }
 
     function forgotPassword($email)
@@ -150,6 +154,11 @@ class UserService extends Service
         }
 
         return false;
+    }
+
+    public function userEvents()
+    {
+        return $this->participantRepository->userActiveEvents($this->userId());
     }
 
 }

@@ -7,7 +7,13 @@ namespace App\Http\Controllers\Secure;
 use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
 use App\Services\ParticipantService;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Response\QrCodeResponse;
+use Illuminate\Http\File;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ParticipantController extends Controller
 {
@@ -36,9 +42,24 @@ class ParticipantController extends Controller
         return ErrorMessagesConstant::badAttempt();
     }
 
-    function detail($eventId)
+    function eventQRCode(Request $request, $eventId)
     {
-        $detail = $this->service->detail($eventId);
+        $userId = $request->user()->id;
+        $path = "/tmp/qr-$userId.png";
+        $qrCode = new QrCode("secure/registration/events/$eventId/participants/$userId");
+        $qrCode->setSize(300);
+
+        $qrCode->writeFile($path);
+
+        $type = 'image/png';
+        $headers = ['Content-Type' => $type];
+        $response = new BinaryFileResponse($path, 200 , $headers);
+        return $response;
+    }
+
+    function userEvents()
+    {
+        $detail = $this->service->userEvents();
 
         if ($detail) {
             return $this->jsonResponse($detail);
@@ -80,6 +101,12 @@ class ParticipantController extends Controller
     function list($eventId)
     {
         $list = $this->service->list($eventId);
+
+        return $this->jsonResponse($list);
+    }
+
+    function registrationList($eventId) {
+        $list = $this->service->registrationList($eventId);
 
         return $this->jsonResponse($list);
     }

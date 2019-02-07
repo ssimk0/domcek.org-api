@@ -12,21 +12,18 @@
 */
 
 $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], function () use ($router) {
+    // AUTH
     $router->group(
         ['prefix' => 'auth', 'middleware' => 'cors'],
         function () use ($router) {
             $router->post('login/', 'Auth\AuthController@authenticate');
-
             $router->post('forgot-password/', 'Auth\AuthController@forgotPassword');
-
             $router->post('reset-password/', 'Auth\AuthController@resetPassword');
-
             $router->get('logout/', 'Auth\AuthController@logout');
             $router->get('refresh-token/', 'Auth\AuthController@refresh');
-
             $router->post('register-user', 'Auth\AuthController@registerUser');
         });
-
+    // PAGE UNSECURE
     $router->group(
         ['prefix' => '/', 'middleware' => 'cors'], function () use ($router) {
         $router->group(['prefix' => '/', 'middleware' => 'optimizeImages'], function () use ($router) {
@@ -43,9 +40,11 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
         $router->get('events', 'Secure\EventController@availableEvents');
     });
 
+    // PAGE SECURE
     $router->group(
         ['prefix' => 'secure', 'middleware' => ['cors', 'auth:api']], function () use ($router) {
 
+        // EDITOR
         $router->group(['prefix' => '/', 'middleware' => 'perm:editor'], function () use ($router) {
             $router->get('news', 'Secure\NewsController@listUnpublished');
             $router->post('news', 'Secure\NewsController@create');
@@ -62,6 +61,15 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
             $router->delete('slider-images/{id}', 'Secure\SliderImagesController@delete');
         });
 
+        // TODO: create new perm for registration valid while event duration only
+        // REGISTRATION
+        $router->group(['prefix' => '/registration', 'middleware' => 'perm:admin'], function () use ($router) {
+            $router->get('events/{id}/participants', 'Secure\ParticipantController@list');
+            $router->get('events/{id}/participants/sync', 'Secure\ParticipantController@registrationList');
+            $router->put('events/{id}/participants/sync', 'Secure\ParticipantController@sync');
+        });
+
+        // ADMIN
         $router->group(['prefix' => '/admin', 'middleware' => 'perm:admin'], function () use ($router) {
             $router->post('events', 'Secure\EventController@create');
             $router->get('events', 'Secure\EventController@list');
@@ -70,7 +78,6 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
             $router->get('events/{id}', 'Secure\EventController@detail');
             $router->get('events/{eventId}/volunteers', 'Secure\VolunteerController@list');
 
-            $router->get('volunteers-types', 'Secure\VolunteerController@types');
             $router->put('volunteers/{id}', 'Secure\VolunteerController@edit');
             $router->get('volunteers/{id}', 'Secure\VolunteerController@detail');
 
@@ -82,10 +89,14 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
             $router->get('events/{eventId}/participants/{userId}', 'Secure\ParticipantController@adminDetail');
         });
 
+        // USER
         $router->get('user', 'Secure\UserController@userDetail');
         $router->put('user', 'Secure\UserController@updateProfile');
+        $router->get('volunteers-types', 'Secure\VolunteerController@types');
+
         $router->put('user/change-password', 'Secure\UserController@changePassword');
-        $router->post('events/{id}/register', 'Secure\ParticipantController@create');
-        $router->get('events/{id}/status', 'Secure\ParticipantController@detail');
+        $router->get('user/events', 'Secure\ParticipantController@userEvents');
+        $router->post('user/events/{id}/register', 'Secure\ParticipantController@create');
+        $router->get('user/events/{id}/qr', 'Secure\ParticipantController@eventQRCode');
     });
 });
