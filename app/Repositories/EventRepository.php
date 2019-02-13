@@ -35,7 +35,7 @@ class EventRepository extends Repository
 
     public function edit(array $data, $eventId)
     {
-        DB::table('events')
+        DB::table(TableConstants::EVENTS)
             ->where('id', $eventId)
             ->update($data);
     }
@@ -48,7 +48,7 @@ class EventRepository extends Repository
 
     public function delete($eventId)
     {
-        return DB::table('events')
+        return DB::table(TableConstants::EVENTS)
             ->delete($eventId);
     }
 

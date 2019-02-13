@@ -107,7 +107,8 @@ class EventService extends Service
             'end_registration' => array_get($data, 'endRegistration', false),
             'end_volunteer_registration' => array_get($data, 'endVolunteerRegistration', false),
         ];
-        $times = array_get($data, 'transportTimes', []);
+        $timesIn = array_get($data, 'transportTimesIn', []);
+        $timesOut = array_get($data, 'transportTimesOut', []);
 
         try {
             $this->event->edit(array_filter($editData), $eventId);
@@ -116,10 +117,16 @@ class EventService extends Service
                 $event = $this->event->instance($eventId);
                 $event->volunteerTypes()->sync($volunteerTypes);
             }
-
-            foreach ($times as $time) {
+            if (!empty($timesIn) || !empty($timesOut)) {
                 $this->event->deleteAllTransportTimesForEvent($event->id);
-                $this->event->createEventTransportTime($event->id, $time);
+            }
+
+            foreach ($timesIn as $time) {
+                $this->event->createEventTransportTime($event->id, $time, 'in');
+            }
+
+            foreach ($timesOut as $time) {
+                $this->event->createEventTransportTime($event->id, $time, 'out');
             }
 
             return true;
@@ -132,7 +139,15 @@ class EventService extends Service
 
     public function eventDetail($eventId)
     {
-        return $this->event->detail($eventId);
+        $event = $this->event->detail($eventId);
+        if (empty($event)) return $event;
+
+        $event->busInTimes = $this->event->getEventTransportTimes($event->id, 'in');
+        $event->busOutTimes = $this->event->getEventTransportTimes($event->id, 'out');
+        $event->volunteerTypes = $this->eventVolunteer->eventVolunteerTypes($event->id);
+        $event->participantCount = $this->participant->getCountForEvent($event->id);
+
+        return $event;
     }
 
     public function delete($eventId)
