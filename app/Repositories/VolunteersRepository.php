@@ -37,7 +37,6 @@ class VolunteersRepository extends Repository
                 ->update($data);
         } else {
             $this->create(array_merge([
-
                 'event_id' => $eventId,
                 'user_id' => $userId
             ], $data));

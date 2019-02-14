@@ -75,7 +75,7 @@ class ParticipantController extends Controller
         return ErrorMessagesConstant::notFound();
     }
 
-    function edit(Request $request, $eventId, $participantId)
+    function edit(Request $request, $participantId, $eventId)
     {
         $data = $this->validate($request, [
             'volunteerTypeId' => 'integer',
