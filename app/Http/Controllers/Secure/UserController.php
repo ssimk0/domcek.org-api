@@ -59,4 +59,51 @@ class UserController extends Controller
 
         ErrorMessagesConstant::badAttempt();
     }
+
+    function list(Request $request) {
+        $data = $this->validate($request, [
+            'size' => 'integer',
+            'filter' => 'string'
+        ]);
+
+        $list = $this->service->list(
+            array_get($data, 'size', 10),
+            array_get($data, 'filter', '%')
+        );
+
+        return $this->jsonResponse($list);
+    }
+
+    function editUserAdmin(Request $request, $userId) {
+        $data = $this->validate($request, [
+            'firstName' => 'string',
+            'lastName' => 'string',
+            'city' => 'string',
+            'isAdmin' => 'string',
+            'isEditor' => 'string',
+            'phone' => 'string',
+            'email' => 'string',
+        ]);
+
+        $result = $this->service->editUser($data, $userId);
+
+        if ($result) {
+            return $this->successResponse();
+        }
+
+        return ErrorMessagesConstant::badAttempt();
+    }
+
+    function resetPassword($userId) {
+
+        $result = $this->service->generateNewPassword($userId);
+
+        if ($result) {
+            return $this->successResponse();
+        }
+
+        return ErrorMessagesConstant::badAttempt();
+    }
+
+
 }

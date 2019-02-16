@@ -78,10 +78,10 @@ class EventController extends Controller
             'filter' => 'string'
         ]);
 
-        return $this->service->eventList(
+        return $this->jsonResponse($this->service->eventList(
             array_get($data, 'size', 10),
             array_get($data, 'filter', '%')
-        );
+        ));
     }
 
     public function availableEvents()

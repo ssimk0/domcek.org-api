@@ -5,12 +5,12 @@ namespace App\Services;
 
 
 use App\Mails\ForgotPasswordMail;
-use App\Repositories\EventRepository;
+use App\Mails\ResetPasswordMail;
 use App\Repositories\ParticipantRepository;
 use App\Repositories\UserRepository;
+use App\Repositories\VolunteersRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -18,11 +18,16 @@ class UserService extends Service
 {
     private $repository;
     private $participantRepository;
+    private $volunteersRepository;
 
-    public function __construct(UserRepository $repository, ParticipantRepository $participantRepository)
-    {
+    public function __construct(
+        UserRepository $repository,
+        ParticipantRepository $participantRepository,
+        VolunteersRepository $volunteersRepository
+    ) {
         $this->repository = $repository;
         $this->participantRepository = $participantRepository;
+        $this->volunteersRepository = $volunteersRepository;
     }
 
     function forgotPassword($email)
@@ -32,16 +37,19 @@ class UserService extends Service
             $user = $this->repository->findUserByEmail($email);
             if ($user) {
 
-                $result = $this->repository->saveResetPasswordToken($token, $email);
+                $result = $this->repository->saveResetPasswordToken($token,
+                    $email);
 
                 if ($result) {
                     Mail::to($email)->send(new ForgotPasswordMail($token));
                 } else {
-                    $this->logError('Nepodarilo sa ulozit token do databazy pre email ' . $email);
+                    $this->logError('Nepodarilo sa ulozit token do databazy pre email '
+                        .$email);
                 }
             }
         } catch (\Exception $e) {
-            $this->logWarning('Problem pri reset passworde pre ' . $email . 's error ' . $e);
+            $this->logWarning('Problem pri reset passworde pre '.$email
+                .'s error '.$e);
         }
     }
 
@@ -50,16 +58,17 @@ class UserService extends Service
         try {
             $tokenResult = $this->repository->findResetPasswordToken($token);
             $now = Carbon::now()->addHour(2);
-            if ($tokenResult && $now->greaterThanOrEqualTo($tokenResult->created_at)) {
+            if ($tokenResult
+                && $now->greaterThanOrEqualTo($tokenResult->created_at)
+            ) {
                 $user = $this->repository->findUserByEmail($tokenResult->email);
-                $this->repository->updateUser([
-                    'password' => Hash::make($password)
-                ], $user->id);
+                $this->updateUserPassword($password, $user->id);
 
                 return true;
             }
         } catch (\Exception $e) {
-            $this->logWarning('Problem pri updatovani použivateľovho hesla pre token' . $token . 's errorom ' . $e);
+            $this->logWarning('Problem pri updatovani použivateľovho hesla pre token'
+                .$token.'s errorom '.$e);
         }
 
         return false;
@@ -68,12 +77,12 @@ class UserService extends Service
     function userDetail($user)
     {
         return [
-            'email' => $user->email,
-            'admin' => $user->is_admin,
-            'editor' => $user->is_writer,
+            'email'        => $user->email,
+            'admin'        => $user->is_admin,
+            'editor'       => $user->is_writer,
             'registration' => $user->is_registration,
-            'avatar' => $user->avatar,
-            'profile' => $this->repository->getUserProfile($user->id)
+            'avatar'       => $user->avatar,
+            'profile'      => $this->repository->getUserProfile($user->id),
         ];
     }
 
@@ -83,10 +92,12 @@ class UserService extends Service
 
         if ($perm === 'editor') {
             return $user->is_writer == 1 || $admin;
-        } else if ($perm === 'registration') {
-            return $user->is_registration == 1 || $admin;
         } else {
-            return $admin;
+            if ($perm === 'registration') {
+                return $user->is_registration == 1 || $admin;
+            } else {
+                return $admin;
+            }
         }
     }
 
@@ -94,35 +105,42 @@ class UserService extends Service
     {
         try {
             $mappingProfile = [
-                'phone' => 'phone',
+                'phone'    => 'phone',
                 'lastName' => 'last_name',
-                'city' => 'city',
+                'city'     => 'city',
             ];
 
             $mappingUser = [
-                'email' => 'email',
-                'avatar' => 'avatar'
+                'email'  => 'email',
+                'avatar' => 'avatar',
             ];
 
-            $this->repository->updateUser($this->parseExistingData($data, $mappingUser), $this->userId());
-            $this->repository->updateUserProfile($this->parseExistingData($data, $mappingProfile), $this->userId());
+            $this->repository->updateUser($this->parseExistingData($data,
+                $mappingUser), $this->userId());
+            $this->repository->updateUserProfile($this->parseExistingData($data,
+                $mappingProfile), $this->userId());
+
             return true;
         } catch (\Exception $e) {
-            $this->logWarning('Problem pri updatovani použivateľovho hesla s errorom' . $e);
+            $this->logWarning('Problem pri updatovani použivateľovho hesla s errorom'
+                .$e);
         }
 
         return false;
     }
 
-    function updateUserPassword($password)
+    function updateUserPassword($password, $userId)
     {
+        $userId = $userId ?: $this->userId();
         try {
             $this->repository->updateUser([
-                'password' => Hash::make($password)
-            ], $this->userId());
+                'password' => Hash::make($password),
+            ], $userId);
+
             return true;
         } catch (\Exception $e) {
-            $this->logWarning('Problem pri updatovani použivateľovho hesla s errorom' . $e);
+            $this->logWarning('Problem pri updatovani použivateľovho hesla s errorom'
+                .$e);
         }
 
         return false;
@@ -132,25 +150,27 @@ class UserService extends Service
     {
         try {
             $userData = [
-                'email' => $data['email'],
-                'avatar' => array_get($data, 'avatar', null),
+                'email'    => $data['email'],
+                'avatar'   => array_get($data, 'avatar', null),
                 'password' => Hash::make($data['password']),
             ];
-            Log::info(implode($userData, ','));
+
             $user = $this->repository->createUser($userData);
 
             $profileData = [
                 'first_name' => ucfirst($data['firstName']),
-                'last_name' => ucfirst($data['lastName']),
-                'city' => ucfirst($data['city']),
-                'phone' => $data['phone'],
-                'user_id' => $user->id,
+                'last_name'  => ucfirst($data['lastName']),
+                'city'       => ucfirst($data['city']),
+                'phone'      => $data['phone'],
+                'user_id'    => $user->id,
                 'birth_date' => $data['birthDate'],
             ];
             $this->repository->createUserProfile($profileData);
+
             return true;
         } catch (\Exception $e) {
-            $this->logWarning('Problem pri vytvarani použivateľa s errorom ' . $e);
+            $this->logWarning('Problem pri vytvarani použivateľa s errorom '
+                .$e);
         }
 
         return false;
@@ -161,4 +181,48 @@ class UserService extends Service
         return $this->participantRepository->userActiveEvents($this->userId());
     }
 
+    public function list($size, $filter)
+    {
+        return $this->repository->list($size, $filter);
+    }
+
+    public function editUser(array $data, $userId)
+    {
+        try {
+            $mappingProfile = [
+                'phone'    => 'phone',
+                'lastName' => 'last_name',
+                'firstName' => 'first_name',
+                'city'     => 'city',
+            ];
+
+            $mappingUser = [
+                'email'  => 'email',
+                'avatar' => 'avatar',
+                'isEditor' => 'is_editor',
+                'isAdmin' => 'is_admin',
+            ];
+
+            $this->repository->updateUser($this->parseExistingData($data,
+                $mappingUser), $userId);
+            $this->repository->updateUserProfile($this->parseExistingData($data,
+                $mappingProfile), $userId);
+
+            return true;
+        } catch (\Exception $e) {
+            $this->logWarning('Problem pri updatovani použivateľovho hesla s errorom'
+                .$e);
+        }
+
+        return false;
+    }
+
+    public function generateNewPassword($userId)
+    {
+        $user = $this->repository->findUser($userId);
+        $password = Str::random(12);
+
+        Mail::to($user->email)->send(new ResetPasswordMail($password));
+        return $this->updateUserPassword($password, $userId);
+    }
 }
