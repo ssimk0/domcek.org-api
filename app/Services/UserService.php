@@ -80,10 +80,14 @@ class UserService extends Service
             'email'        => $user->email,
             'admin'        => $user->is_admin,
             'editor'       => $user->is_writer,
-            'registration' => $user->is_registration,
             'avatar'       => $user->avatar,
             'profile'      => $this->repository->getUserProfile($user->id),
         ];
+    }
+
+    function findUser($userId)
+    {
+        return $this->repository->findUser($userId);
     }
 
     function checkPermission($perm, $user)
@@ -106,7 +110,7 @@ class UserService extends Service
         try {
             $mappingProfile = [
                 'phone'    => 'phone',
-                'lastName' => 'last_name',
+                'last_name' => 'lastName',
                 'city'     => 'city',
             ];
 
@@ -191,16 +195,15 @@ class UserService extends Service
         try {
             $mappingProfile = [
                 'phone'    => 'phone',
-                'lastName' => 'last_name',
-                'firstName' => 'first_name',
+                'last_name' => 'lastName',
+                'first_name' => 'firstName',
                 'city'     => 'city',
             ];
 
             $mappingUser = [
                 'email'  => 'email',
-                'avatar' => 'avatar',
-                'isEditor' => 'is_editor',
-                'isAdmin' => 'is_admin',
+                'is_writer' => 'isEditor',
+                'is_admin' => 'isAdmin',
             ];
 
             $this->repository->updateUser($this->parseExistingData($data,

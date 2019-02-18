@@ -79,8 +79,8 @@ class UserController extends Controller
             'firstName' => 'string',
             'lastName' => 'string',
             'city' => 'string',
-            'isAdmin' => 'string',
-            'isEditor' => 'string',
+            'isAdmin' => 'boolean',
+            'isEditor' => 'boolean',
             'phone' => 'string',
             'email' => 'string',
         ]);
@@ -92,6 +92,14 @@ class UserController extends Controller
         }
 
         return ErrorMessagesConstant::badAttempt();
+    }
+
+    function adminUserDetail($userId)
+    {
+        $user = $this->service->findUser($userId);
+        $detail = $this->service->userDetail($user);
+
+        return $this->jsonResponse($detail);
     }
 
     function resetPassword($userId) {

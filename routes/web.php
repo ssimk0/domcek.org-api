@@ -90,6 +90,7 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
 
             $router->get('users', 'Secure\UserController@list');
             $router->put('users/{userId}', 'Secure\UserController@editUserAdmin');
+            $router->get('users/{userId}', 'Secure\UserController@adminUserDetail');
             $router->put('users/{userId}/reset-password', 'Secure\UserController@resetPassword');
         });
 
