@@ -113,6 +113,7 @@ class ParticipantService extends Service
             Mail::to($user->email)->send(new RegistrationMail(
                 $event->deposit,
                 "$profile->first_name $profile->last_name",
+                $profile->birth_date,
                 $paymentNumber,
                 $event->name,
                 "https://domcek.org/login?next=/user/registrations"

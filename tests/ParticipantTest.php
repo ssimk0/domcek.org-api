@@ -2,6 +2,8 @@
 
 
 use App\Models\Event;
+use App\User;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 
 class ParticipantTest extends TestCase
@@ -53,12 +55,16 @@ class ParticipantTest extends TestCase
     {
 
         $event = factory(App\Models\Event::class, 1)->create()[0];
+        $profile = factory(App\Models\Profile::class)->create();
+        $user = User::find($profile->user_id);
+        $token = Auth::login($user);
+
         $this->post('/api/secure/user/events/1/register', [
             'note' => 'test',
             'transportIn' => 'test',
             'transportOut' => 'test',
         ], [
-            'Authorization' => 'Bearer ' . $this->login()
+            'Authorization' => 'Bearer ' . $token
         ]);
 
         $this->assertResponseStatus(201);
