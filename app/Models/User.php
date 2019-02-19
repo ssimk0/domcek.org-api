@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Profile;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Auth\Authenticatable;
@@ -40,7 +41,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function profile()
     {
-        return $this->hasOne('App\Profile');
+        return $this->hasOne(Profile::class);
     }
 
     public function getAvatar()

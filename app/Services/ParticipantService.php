@@ -3,10 +3,13 @@
 
 namespace App\Services;
 
+use App\Mails\RegistrationMail;
 use App\Repositories\EventRepository;
 use App\Repositories\ParticipantRepository;
 use App\Repositories\PaymentRepository;
 use App\Repositories\VolunteersRepository;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class ParticipantService extends Service
 {
@@ -96,16 +99,24 @@ class ParticipantService extends Service
                     'user_id' => $this->userId()
                 ]);
             }
-
+            $paymentNumber = $this->paymentRepository->generatePaymentNumber();
             $this->paymentRepository->create([
                 'user_id' => $this->userId(),
-                'payment_number' => $this->paymentRepository->generatePaymentNumber(),
+                'payment_number' => $paymentNumber,
                 'paid' => 0,
                 'need_pay' => $event->need_pay,
                 'event_id' => $eventId,
             ]);
-
+            $user = Auth::user();
+            $profile = $user->profile()->first();
             // TODO: check if we need send a email about payment
+            Mail::to($user->email)->send(new RegistrationMail(
+                $event->deposit,
+                "$profile->first_name $profile->last_name",
+                $paymentNumber,
+                $event->name,
+                "https://domcek.org/login?next=/user/registrations"
+                ));
 
             return true;
         } catch (\Exception $e) {

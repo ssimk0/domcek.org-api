@@ -20,6 +20,7 @@ class ParticipantController extends Controller
         $this->service = $service;
     }
 
+    // Register user to event
     function create(Request $request, $eventId)
     {
         $data = $this->validate($request, [
