@@ -4,9 +4,13 @@
 namespace App\Services;
 
 
+use App\Exceptions\MultipleOldAccounts;
+use App\Mails\ExceptionMail;
 use App\Mails\ForgotPasswordMail;
 use App\Mails\ResetPasswordMail;
+use App\Repositories\OldWebIntegrationRepository;
 use App\Repositories\ParticipantRepository;
+use App\Repositories\PaymentRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\VolunteersRepository;
 use Carbon\Carbon;
@@ -16,18 +20,24 @@ use Illuminate\Support\Str;
 
 class UserService extends Service
 {
-    private $repository;
-    private $participantRepository;
-    private $volunteersRepository;
+    protected $repository;
+    protected $participantRepository;
+    protected $volunteersRepository;
+    protected $oldWebIntegrationRepository;
+    protected $paymentRepository;
 
     public function __construct(
         UserRepository $repository,
         ParticipantRepository $participantRepository,
-        VolunteersRepository $volunteersRepository
+        PaymentRepository $paymentRepository,
+        VolunteersRepository $volunteersRepository,
+        OldWebIntegrationRepository $oldWebIntegrationRepository
     ) {
         $this->repository = $repository;
         $this->participantRepository = $participantRepository;
         $this->volunteersRepository = $volunteersRepository;
+        $this->paymentRepository = $paymentRepository;
+        $this->oldWebIntegrationRepository = $oldWebIntegrationRepository;
     }
 
     function forgotPassword($email)
@@ -170,6 +180,7 @@ class UserService extends Service
                 'birth_date' => $data['birthDate'],
             ];
             $this->repository->createUserProfile($profileData);
+            $this->migrateDataFromOldDatabase($user->email, $user->id);
 
             return true;
         } catch (\Exception $e) {
@@ -180,9 +191,58 @@ class UserService extends Service
         return false;
     }
 
+    private function migrateDataFromOldDatabase($email, $userId) {
+        try {
+            $oldUsers = $this->oldWebIntegrationRepository->findOldUser($email);
+            if (count($oldUsers) > 1) {
+                throw new MultipleOldAccounts("User s emailom: $email ma viac uctou");
+            }
+            $oldUserId = $oldUsers[0]->user_id;
+
+            $oldEvents = $this->oldWebIntegrationRepository->findOldEventRegistration($oldUserId);
+            if (!empty($oldEvents) && count($oldEvents) > 1) {
+                foreach ($oldEvents as $event) {
+                    if ($event->was_on_act) {
+                        // create record about event registration
+                        $this->participantRepository->create([
+                            'note'          => $event->note,
+                            'transport_in'  => '',
+                            'transport_out' => '',
+                            'user_id'       => $userId,
+                            'event_id'      => $event->action_id
+                        ]);
+                        // create record about event volunteer registration
+                        if (!empty($event->role) || !empty($event->real_role)) {
+                            $role = !empty($event->real_role) ? $event->real_role : $event->role;
+
+                            $typeId = $this->volunteersRepository->typeByName($role)->id;
+                            $this->registerVolunteer($typeId, $userId, $event->action_id);
+                        }
+                        // create record about event payment registration
+                        $paymentNumber = $this->paymentRepository->generatePaymentNumber();
+
+                        $this->paymentRepository->create([
+                            'user_id' => $userId,
+                            'payment_number' => $paymentNumber,
+                            'paid' => $event->payedDeposit + $event->payedReg,
+                            'need_pay' => $event->payedDeposit + $event->payedReg,
+                            'event_id' => $event->action_id,
+                        ]);
+                    }
+                }
+            }
+        } catch(MultipleOldAccounts $e) {
+            // TODO: send email to me with ids and email of user
+            Mail::to('simko22@gmail.com')->send(new ExceptionMail($e));
+        } catch (\Exception $e) {
+            // TODO: send email to me with ids and email of user and contrete error
+            Mail::to('simko22@gmail.com')->send(new ExceptionMail($e));
+        }
+    }
+
     public function userEvents()
     {
-        return $this->participantRepository->userActiveEvents($this->userId());
+        return $this->participantRepository->userEvents($this->userId());
     }
 
     public function list($size, $filter)
@@ -227,5 +287,17 @@ class UserService extends Service
 
         Mail::to($user->email)->send(new ResetPasswordMail($password));
         return $this->updateUserPassword($password, $userId);
+    }
+
+    private function registerVolunteer(
+        $typeId,
+        $userId,
+        $eventId
+    ) {
+        $this->volunteersRepository->create([
+            'volunteer_type_id' => $typeId,
+            'event_id' => $eventId,
+            'user_id' => $userId
+        ]);
     }
 }

@@ -66,6 +66,11 @@ class VolunteersRepository extends Repository
         return DB::table('volunteer_types')->where('active', true)->get();
     }
 
+    public function typeByName($name)
+    {
+        return DB::table('volunteer_types')->where('name', $name)->first();
+    }
+
     public function create(array $data)
     {
         $volunteer = new Volunteer($data);
