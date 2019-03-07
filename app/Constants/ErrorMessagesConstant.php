@@ -19,6 +19,7 @@ class ErrorMessagesConstant
     const SERVER_ERROR = 'SERVER_ERROR';
     const CONFLICT = 'CONFLICT';
     const MULTI_SERVER_USER = 'MULTI_SERVER_USER';
+    const USER_ALREADY_EXIST = 'USER_ALREADY_EXIST';
 
 
     static public function badRequest() {
@@ -37,7 +38,7 @@ class ErrorMessagesConstant
         return static::error(404, self::HTTP_NOT_FOUND);
     }
 
-    static private function error($status, $errorMessage) {
+    static function error($status, $errorMessage) {
         return response()->json([
             'message' => $errorMessage,
             'success' => false

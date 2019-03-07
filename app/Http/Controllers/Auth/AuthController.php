@@ -104,6 +104,9 @@ class AuthController extends Controller
         ]);
 
         $result = $this->service->createUser($data);
+        if ($result === ErrorMessagesConstant::USER_ALREADY_EXIST) {
+            return ErrorMessagesConstant::error(400, ErrorMessagesConstant::USER_ALREADY_EXIST);
+        }
 
         if ($result) {
             return $this->successResponse();

@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Constants\ErrorMessagesConstant;
 use App\Exceptions\MultipleOldAccounts;
 use App\Mails\ExceptionMail;
 use App\Mails\ForgotPasswordMail;
@@ -168,6 +169,12 @@ class UserService extends Service
                 'avatar'   => array_get($data, 'avatar', null),
                 'password' => Hash::make($data['password']),
             ];
+
+            $user = $this->repository->findUserByEmail($data['email']);
+
+            if (isset($user)) {
+                return ErrorMessagesConstant::USER_ALREADY_EXIST;
+            }
 
             $user = $this->repository->createUser($userData);
 
