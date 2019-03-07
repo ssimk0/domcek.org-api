@@ -91,8 +91,8 @@ class UserRepository extends Repository
                 'users.email',
                 'users.is_admin',
                 'users.is_writer',
-                DB::raw('(select count(*) from volunteers where users.id = volunteers.user_id ) as volunteer_count'),
-                DB::raw('(select count(*) from participants where users.id = participants.user_id ) as participant_count'),
+                DB::raw('(select count(*) from volunteers where users.id = volunteers.user_id and volunteers.was_on_event = 1 ) as volunteer_count'),
+                DB::raw('(select count(*) from participants where users.id = participants.user_id and participants.was_on_event = 1 ) as participant_count'),
             ])
             ->paginate($size);
     }

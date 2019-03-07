@@ -136,7 +136,6 @@ class ParticipantRepository extends Repository
 
         if (!empty($registrationUserId)) {
             $data['register_by_user_id'] = $registrationUserId;
-            $data['registration_date'] = Carbon::now()->format('Y-m-d');
         }
 
         DB::table(TableConstants::PARTICIPANTS)
