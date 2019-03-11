@@ -87,6 +87,8 @@ class ParticipantRepository extends Repository
             ->leftJoin(TableConstants::PAYMENTS, TableConstants::PAYMENTS . '.user_id', TableConstants::PARTICIPANTS . '.user_id')
             ->leftJoin(TableConstants::GROUPS, TableConstants::GROUPS . '.participant_id', TableConstants::PARTICIPANTS . '.id')
             ->where(TableConstants::PARTICIPANTS . '.event_id', $eventId)
+            ->where(TableConstants::PAYMENTS . '.event_id', $eventId)
+            ->where(TableConstants::VOLUNTEERS . '.event_id', $eventId)
             ->select(
                 TableConstants::PROFILES . '.first_name',
                 TableConstants::PROFILES . '.last_name',
@@ -115,6 +117,8 @@ class ParticipantRepository extends Repository
             ->leftJoin(TableConstants::PAYMENTS, TableConstants::PAYMENTS . '.user_id', TableConstants::PARTICIPANTS . '.user_id')
             ->leftJoin(TableConstants::GROUPS, TableConstants::GROUPS . '.participant_id', TableConstants::PARTICIPANTS . '.id')
             ->where(TableConstants::PARTICIPANTS . '.event_id', $eventId)
+            ->where(TableConstants::PAYMENTS . '.event_id', $eventId)
+            ->where(TableConstants::VOLUNTEERS . '.event_id', $eventId)
             ->select(
                 TableConstants::PROFILES . '.first_name',
                 TableConstants::PARTICIPANTS . '.*',
