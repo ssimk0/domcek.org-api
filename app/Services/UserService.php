@@ -144,7 +144,7 @@ class UserService extends Service
         return false;
     }
 
-    function updateUserPassword($password, $userId)
+    function updateUserPassword($password, $userId = null)
     {
         $userId = $userId ?: $this->userId();
         try {

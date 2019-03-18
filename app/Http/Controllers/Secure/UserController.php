@@ -8,6 +8,7 @@ use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
 use App\Services\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -29,8 +30,13 @@ class UserController extends Controller
     function changePassword(Request $request)
     {
         $data = $this->validate($request, [
+            'oldPassword' => 'required',
             'password' => 'required|string|confirmed|min:6'
         ]);
+
+        if (Hash::check($data['oldPassword'], $request->user()->password ))  {
+            return ErrorMessagesConstant::error(400, ErrorMessagesConstant::WRONG_CREDENTIALS);
+        }
 
         $result = $this->service->updateUserPassword($data['password']);
 
