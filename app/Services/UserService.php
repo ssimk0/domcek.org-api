@@ -201,6 +201,11 @@ class UserService extends Service
     private function migrateDataFromOldDatabase($email, $userId) {
         try {
             $oldUsers = $this->oldWebIntegrationRepository->findOldUser($email);
+
+            if (empty($oldUsers)) {
+                return;
+            }
+
             if (count($oldUsers) > 1) {
                 throw new MultipleOldAccounts("User s emailom: $email ma viac uctou");
             }
