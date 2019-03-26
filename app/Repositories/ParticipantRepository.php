@@ -83,17 +83,17 @@ class ParticipantRepository extends Repository
         return DB::table(TableConstants::PARTICIPANTS)
             ->join(TableConstants::PROFILES, TableConstants::PROFILES . '.user_id', TableConstants::PARTICIPANTS . '.user_id')
             ->join(TableConstants::USERS, TableConstants::USERS . '.id', TableConstants::PARTICIPANTS . '.user_id')
-            ->leftJoin(TableConstants::VOLUNTEERS, function($join) use ($eventId) {
-                $join->on(TableConstants::VOLUNTEERS . '.user_id', '=', TableConstants::PARTICIPANTS . '.user_id');
-                $join->on(TableConstants::VOLUNTEERS . '.event_id', '=', $eventId);
+            ->leftJoin(TableConstants::VOLUNTEERS, function($join) {
+                $join->on(TableConstants::VOLUNTEERS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
+                $join->on(TableConstants::VOLUNTEERS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
-            ->leftJoin(TableConstants::PAYMENTS, function($join) use ($eventId) {
-                $join->on(TableConstants::PAYMENTS . '.user_id', '=', TableConstants::PARTICIPANTS . '.user_id');
-                $join->on(TableConstants::PAYMENTS . '.event_id', '=', $eventId);
+            ->leftJoin(TableConstants::PAYMENTS, function($join) {
+                $join->on(TableConstants::PAYMENTS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
+                $join->on(TableConstants::PAYMENTS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
-            ->leftJoin(TableConstants::GROUPS, function($join) use ($eventId) {
-                $join->on(TableConstants::GROUPS . '.participant_id', '=', TableConstants::PARTICIPANTS . '.id');
-                $join->on(TableConstants::GROUPS . '.event_id', '=', $eventId);
+            ->leftJoin(TableConstants::GROUPS, function($join) {
+                $join->on(TableConstants::GROUPS . '.participant_id', TableConstants::PARTICIPANTS . '.id');
+                $join->on(TableConstants::GROUPS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
             ->where(TableConstants::PARTICIPANTS . '.event_id', $eventId)
             ->select(
