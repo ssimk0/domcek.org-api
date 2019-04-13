@@ -20,6 +20,12 @@ class ParticipantRepository extends Repository
         return $participant;
     }
 
+    public function userEdit($data, $userId, $eventId) {
+        Participant::where('user_id', $userId)
+            ->where('event_id', $eventId)
+            ->update($data);
+    }
+
     public function userEvents($userId)
     {
         $today = Carbon::now()->format('Y-m-d');
@@ -183,6 +189,27 @@ class ParticipantRepository extends Repository
     {
         return DB::table(TableConstants::PARTICIPANTS)
             ->where('event_id', $event_id)
+            ->where('subscribed', true)
             ->count();
+    }
+
+    public function unsubscribeToEvent($eventId, $userId)
+    {
+        DB::table(TableConstants::PARTICIPANTS)
+            ->where('event_id', $eventId)
+            ->where('user_id', $userId)
+            ->update([
+                'subscribed' => false
+            ]);
+    }
+
+    public function resubscribeToEvent($eventId, $userId)
+    {
+        DB::table(TableConstants::PARTICIPANTS)
+            ->where('event_id', $eventId)
+            ->where('user_id', $userId)
+            ->update([
+                'subscribed' => true
+            ]);
     }
 }

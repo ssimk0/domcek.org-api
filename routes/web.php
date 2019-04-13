@@ -101,7 +101,10 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
 
         $router->put('user/change-password', 'Secure\UserController@changePassword');
         $router->get('user/events', 'Secure\ParticipantController@userEvents');
-        $router->post('user/events/{id}/register', 'Secure\ParticipantController@create');
+        $router->post('user/events/{id}', 'Secure\ParticipantController@register');
+        $router->put('user/events/{id}', 'Secure\ParticipantController@userEdit');
+        $router->put('user/events/{id}/unsubscribe', 'Secure\ParticipantController@unsubscribe');
+        $router->put('user/events/{id}/subscribe', 'Secure\ParticipantController@subscribe');
         $router->get('user/events/{id}/qr', 'Secure\ParticipantController@eventQRCode');
     });
 });

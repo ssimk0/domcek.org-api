@@ -1,10 +1,11 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddTransportTypeToParticipant extends Migration
+class AddParticipantSubscribedColumn extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +15,11 @@ class AddTransportTypeToParticipant extends Migration
     public function up()
     {
         Schema::table('participants', function (Blueprint $table) {
-            $table->string('transport_in')->nullable();
-            $table->string('transport_out')->nullable();
+            $table->boolean('subscribed')->default(true);
+        });
+
+        Schema::table('profiles', function (Blueprint $table) {
+            $table->timestamp('date_approved_term_and_condition')->useCurrent();
         });
     }
 
@@ -27,8 +31,10 @@ class AddTransportTypeToParticipant extends Migration
     public function down()
     {
         Schema::table('participants', function (Blueprint $table) {
-            $table->dropColumn('transport_in');
-            $table->dropColumn('transport_out');
+            $table->dropColumn('subscribed');
+        });
+        Schema::table('profiles', function (Blueprint $table) {
+            $table->dropColumn('date_approved_term_and_condition');
         });
     }
 }

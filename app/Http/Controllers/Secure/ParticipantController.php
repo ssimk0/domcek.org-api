@@ -21,7 +21,7 @@ class ParticipantController extends Controller
     }
 
     // Register user to event
-    function create(Request $request, $eventId)
+    function register(Request $request, $eventId)
     {
         $data = $this->validate($request, [
             'volunteerTypeId' => 'integer',
@@ -34,6 +34,47 @@ class ParticipantController extends Controller
 
         if ($result) {
             return $this->successResponse(201);
+        }
+
+        return ErrorMessagesConstant::badAttempt();
+    }
+
+    function userEdit(Request $request, $eventId)
+    {
+        $data = $this->validate($request, [
+            'note' => 'string',
+            'transportIn' => 'required|string',
+            'transportOut' => 'required|string'
+        ]);
+
+        $result = $this->service->userEdit($data, $eventId);
+
+        if ($result) {
+            return $this->successResponse();
+        }
+
+        return ErrorMessagesConstant::badAttempt();
+    }
+
+     // Subscribe user to event after unsubscribe
+     function subscribe(Request $request, $eventId)
+     {
+         $result = $this->service->subscribe($eventId);
+ 
+         if ($result) {
+             return $this->successResponse();
+         }
+ 
+         return ErrorMessagesConstant::badAttempt();
+     }
+
+    // Unsubscribe user from event after registration
+    function unsubscribe(Request $request, $eventId)
+    {
+        $result = $this->service->unsubscribe($eventId);
+
+        if ($result) {
+            return $this->successResponse();
         }
 
         return ErrorMessagesConstant::badAttempt();

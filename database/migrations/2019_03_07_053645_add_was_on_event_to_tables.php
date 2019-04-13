@@ -30,8 +30,13 @@ class AddWasOnEventToTables extends Migration
      */
     public function down()
     {
-        Schema::table('tables', function (Blueprint $table) {
-            //
+        Schema::table('volunteers', function (Blueprint $table) {
+            $table->dropColumn('was_on_event');
+        });
+
+        Schema::table('participants', function (Blueprint $table) {
+            $table->dropColumn('was_on_event');
+            $table->date('registration_date')->nullable();
         });
     }
 }

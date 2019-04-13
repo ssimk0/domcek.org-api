@@ -8,6 +8,7 @@ use App\Repositories\EventRepository;
 use App\Repositories\ParticipantRepository;
 use App\Repositories\PaymentRepository;
 use App\Repositories\VolunteersRepository;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
@@ -127,11 +128,48 @@ class ParticipantService extends Service
         return false;
     }
 
+    public function unsubscribe($eventId) {
+        try {
+            $this->repository->unsubscribeToEvent($eventId, $this->userId());
+        } catch (\Exception $e) {
+            $this->logError("Problem with unsubscribe to event with error: " . $e);
+            return false;
+        }
+
+        return true;
+    }
+
+    public function subscribe($eventId) {
+        try {
+            $this->repository->resubscribeToEvent($eventId, $this->userId());
+        } catch (Exception $e) {
+            $this->logError("Problem with subscribe to event with error: " . $e);
+            return false;
+        }
+
+        return true;
+    }
+
+    public function userEdit($data, $eventId) {
+        try {
+            $this->repository->userEdit([
+                'note' => array_get($data, 'note'),
+                'transport_in' => array_get($data, 'transportIn'),
+                'transport_out' => array_get($data, 'transportOut')
+            ], $this->userId(), $eventId);
+        } catch (Exception $e) {
+            $this->logError("Problem with user edit participant detail with error: " . $e);
+            return false;
+        }
+
+        return true;
+    }
+
     public function adminDetail($eventId, $userId)
     {
         try {
             return $this->repository->detail($eventId, $userId);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->logError("Problem with getting participant detail with error: " . $e);
         }
 

@@ -29,6 +29,12 @@ class AddMissingFields extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('volunteer_types', function (Blueprint $table) {
+            $table->dropColumn('active');
+        });
+
+        Schema::table('event_transport_times', function (Blueprint $table) {
+            $table->dropColumn('type');
+        });
     }
 }

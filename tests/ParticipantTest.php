@@ -2,13 +2,16 @@
 
 
 use App\Models\Event;
+use App\Models\Participant;
+use App\Models\Profile;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Lumen\Testing\DatabaseMigrations;
+use Laravel\Lumen\Testing\DatabaseTransactions;
 
 class ParticipantTest extends TestCase
 {
-    use DatabaseMigrations;
+    use DatabaseTransactions;
 
     function testAuthEvent()
     {
@@ -59,7 +62,7 @@ class ParticipantTest extends TestCase
         $user = User::find($profile->user_id);
         $token = Auth::login($user);
 
-        $this->post('/api/secure/user/events/1/register', [
+        $this->post('/api/secure/user/events/1', [
             'note' => 'test',
             'transportIn' => 'test',
             'transportOut' => 'test',
@@ -69,27 +72,95 @@ class ParticipantTest extends TestCase
 
         $this->assertResponseStatus(201);
 
-        $payment = \App\Models\Payment::where('user_id', 1)->first();
+        $payment = \App\Models\Payment::where('user_id', $profile->user_id)->first();
 
         $this->assertEquals($event->need_pay, $payment->need_pay);
         $this->assertEquals('0', $payment->paid);
         $this->assertEquals('1', $payment->event_id);
     }
 
+    function testUserEditParticipant()
+    {
+        $participant = factory(App\Models\Participant::class)->create();
+        $user = User::find($participant->user_id);
+        $token = Auth::login($user);
+
+        $this->put('/api/secure/user/events/' . $participant->event_id, [
+            'note' => 'test',
+            'transportIn' => 'CAR',
+            'transportOut' => 'CAR',
+        ], [
+            'Authorization' => 'Bearer ' . $token
+        ]);
+
+        $this->assertResponseOk();
+
+        $participant = \App\Models\Participant::where('user_id', $participant->user_id)->first();
+
+        $this->assertEquals('CAR', $participant->transport_in);
+        $this->assertEquals('CAR', $participant->transport_out);
+        $this->assertEquals('test', $participant->note);
+    }
+
+    function testUserUnsubscribe()
+    {
+        $participant = factory(App\Models\Participant::class)->create();
+        $user = User::find($participant->user_id);
+        $token = Auth::login($user);
+
+        $this->put('/api/secure/user/events/' . $participant->event_id . '/unsubscribe', [
+        ], [
+            'Authorization' => 'Bearer ' . $token
+        ]);
+
+        $this->assertResponseOk();
+
+        $participant = Participant::where('user_id', $participant->user_id)->first();
+
+        $this->assertEquals(false, $participant->subscribed);
+    }
+
+    function testUserSubscribe()
+    {
+        $participant = factory(Participant::class)->create();
+        $participant->update(['subscribed' => false]);
+        $user = User::find($participant->user_id);
+        $token = Auth::login($user);
+
+        $this->assertEquals(false, $participant->subscribed);
+
+        $this->put('/api/secure/user/events/' . $participant->event_id . '/subscribe', [
+        ], [
+            'Authorization' => 'Bearer ' . $token
+        ]);
+
+        $this->assertResponseOk();
+
+        $participant = \App\Models\Participant::where('user_id', $participant->user_id)->first();
+
+        $this->assertEquals(true, $participant->subscribed);
+    }
+
     function testEditParticipant()
     {
 
-        factory(App\Models\Event::class, 1)->create();
-        factory(App\Models\Participant::class, 1)->create();
-        factory(App\Models\VolunteerType::class, 1)->create();
+        $event = factory(App\Models\Event::class)->create();
+        $token = $this->login(true);
+        $participant = factory(App\Models\Participant::class)->create([
+            'user_id' => $this->user->id,
+            'event_id' => $event->id,
+        ]);
+        $volunteerType = factory(App\Models\VolunteerType::class)->create();
+        $regUser = factory(User::class)->create();
 
-        $this->put('/api/secure/admin/events/1/participants/1', [
-            'registrationUserId' => 2,
-            'userId' => 1,
-            'volunteerTypeId' => 1,
+
+        $this->put('/api/secure/admin/events/' . $event->id . '/participants/' . $participant->id, [
+            'registrationUserId' => $regUser->id,
+            'userId' => $this->user->id,
+            'volunteerTypeId' => $volunteerType->id,
             'isLeader' => true
         ], [
-            'Authorization' => 'Bearer ' . $this->login(true)
+            'Authorization' => 'Bearer ' . $token
         ]);
 
         $this->assertResponseOk();
