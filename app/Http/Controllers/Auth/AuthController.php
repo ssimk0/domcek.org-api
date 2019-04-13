@@ -100,8 +100,13 @@ class AuthController extends Controller
             'birthDate' => 'required|date_format:Y-m-d',
             'city' => 'required|string',
             'phone' => 'required|string',
-            'email' => 'required|email'
+            'email' => 'required|email',
+            'terms_and_condition' => 'required|boolean'
         ]);
+
+        if ($data['terms_and_condition']) {
+            return ErrorMessagesConstant::badRequest();
+        }
 
         $result = $this->service->createUser($data);
         if ($result === ErrorMessagesConstant::USER_ALREADY_EXIST) {
