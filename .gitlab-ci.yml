@@ -1,5 +1,10 @@
 image: edbizarro/gitlab-ci-pipeline-php:7.2-alpine
 
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - vendor/
+
 stages:
   - test
 
