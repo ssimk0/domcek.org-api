@@ -26,9 +26,5 @@ class AddTransportTypeToParticipant extends Migration
      */
     public function down()
     {
-        Schema::table('participants', function (Blueprint $table) {
-            $table->dropColumn('transport_in');
-            $table->dropColumn('transport_out');
-        });
     }
 }

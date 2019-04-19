@@ -121,12 +121,5 @@ class CreateEventTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('event_volunteer_types');
-        Schema::dropIfExists('volunteers');
-        Schema::dropIfExists('volunteer_types');
-        Schema::dropIfExists('payments');
-        Schema::dropIfExists('events');
-        Schema::dropIfExists('participants');
-
     }
 }

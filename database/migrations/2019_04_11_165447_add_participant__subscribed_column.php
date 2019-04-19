@@ -19,7 +19,7 @@ class AddParticipantSubscribedColumn extends Migration
         });
 
         Schema::table('profiles', function (Blueprint $table) {
-            $table->timestamp('date_approved_term_and_condition')->useCurrent();
+            $table->timestamp('date_approved_term_and_condition')->nullable()->default(null);
         });
     }
 

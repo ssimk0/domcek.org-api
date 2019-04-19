@@ -3,11 +3,10 @@
 
 use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Testing\DatabaseMigrations;
-use Laravel\Lumen\Testing\DatabaseTransactions;
 
 class VolunteerTest extends TestCase
 {
-    use DatabaseTransactions;
+    use DatabaseMigrations;
 
     function testTypes()
     {

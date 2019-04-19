@@ -38,6 +38,6 @@ class CreateArchiveItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('archive_items');
+//        Schema::dropIfExists('archive_items');
     }
 }

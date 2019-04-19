@@ -31,6 +31,6 @@ class CreateEventTransportTypes extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('event_transport_times');
+//        Schema::dropIfExists('event_transport_times');
     }
 }

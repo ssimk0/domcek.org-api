@@ -185,6 +185,7 @@ class UserService extends Service
                 'phone'      => $data['phone'],
                 'user_id'    => $user->id,
                 'birth_date' => $data['birthDate'],
+                'date_approved_term_and_condition' => Carbon::now()
             ];
             $this->repository->createUserProfile($profileData);
             $this->migrateDataFromOldDatabase($user->email, $user->id);

@@ -1,17 +1,13 @@
 <?php
 
-
-use App\Models\Event;
 use App\Models\Participant;
-use App\Models\Profile;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Lumen\Testing\DatabaseMigrations;
-use Laravel\Lumen\Testing\DatabaseTransactions;
 
 class ParticipantTest extends TestCase
 {
-    use DatabaseTransactions;
+    use DatabaseMigrations;
 
     function testAuthEvent()
     {
@@ -59,8 +55,7 @@ class ParticipantTest extends TestCase
 
         $event = factory(App\Models\Event::class, 1)->create()[0];
         $profile = factory(App\Models\Profile::class)->create();
-        $user = User::find($profile->user_id);
-        $token = Auth::login($user);
+        $token = $this->login();
 
         $this->post('/api/secure/user/events/1', [
             'note' => 'test',
@@ -117,7 +112,7 @@ class ParticipantTest extends TestCase
 
         $participant = Participant::where('user_id', $participant->user_id)->first();
 
-        $this->assertEquals(false, $participant->subscribed);
+        $this->assertEquals('0', $participant->subscribed);
     }
 
     function testUserSubscribe()
@@ -147,7 +142,7 @@ class ParticipantTest extends TestCase
         $event = factory(App\Models\Event::class)->create();
         $token = $this->login(true);
         $participant = factory(App\Models\Participant::class)->create([
-            'user_id' => $this->user->id,
+            'user_id' => 1,
             'event_id' => $event->id,
         ]);
         $volunteerType = factory(App\Models\VolunteerType::class)->create();
@@ -156,7 +151,7 @@ class ParticipantTest extends TestCase
 
         $this->put('/api/secure/admin/events/' . $event->id . '/participants/' . $participant->id, [
             'registrationUserId' => $regUser->id,
-            'userId' => $this->user->id,
+            'userId' => 1,
             'volunteerTypeId' => $volunteerType->id,
             'isLeader' => true
         ], [

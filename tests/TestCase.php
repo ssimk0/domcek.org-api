@@ -18,12 +18,12 @@ abstract class TestCase extends Laravel\Lumen\Testing\TestCase
 
     function login($admin = false, $editor = false, $reg = false)
     {
-        $this->user = factory(User::class)->create();
-        $this->user->update([
-            'is_admin' => $admin,
-            'is_writer' => $editor,
-            'is_registration' => $reg,
-        ]);
-        return Auth::login($this->user);
+        $user = new User();
+        $user->id = 1;
+        $user->is_admin = $admin;
+        $user->is_writer = $editor;
+        $user->is_registration = $reg;
+        $user->email = 'test@test.com';
+        return Auth::login($user);
     }
 }

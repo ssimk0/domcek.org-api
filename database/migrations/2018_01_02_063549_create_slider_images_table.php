@@ -34,6 +34,6 @@ class CreateSliderImagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('slider_images');
+//        Schema::dropIfExists('slider_images');
     }
 }
