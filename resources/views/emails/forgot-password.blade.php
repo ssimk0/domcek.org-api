@@ -13,6 +13,6 @@ Reset Hesla
     {{ config('app.name') }}
 
 ------
-######V prípade ak si nežiadal o resetovanie hesla môžeš tento email ignorovať
-######V prípade akychkoľvek problémov nás kontakuj na podpora@domcek.org
+###### V prípade ak si nežiadal o resetovanie hesla môžeš tento email ignorovať
+###### V prípade akychkoľvek problémov nás kontakuj na podpora@domcek.org
 @endcomponent

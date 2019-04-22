@@ -22,5 +22,5 @@
     Registračný tím Domčeka
 
     ------
-    ######V prípade akychkoľvek problémov nás kontakuj na podpora@domcek.org
+    ###### V prípade akychkoľvek problémov nás kontakuj na podpora@domcek.org
 @endcomponent
