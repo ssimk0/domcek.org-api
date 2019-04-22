@@ -17,7 +17,7 @@ class OldWebIntegrationRepository extends Repository
     {
         return DB::table('users_old')
             ->where('email', $email)
-            ->get(['user_id']);
+            ->pluck('user_id');
     }
 
     function findOldEventRegistration($userId)
