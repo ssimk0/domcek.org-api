@@ -102,4 +102,24 @@ class UserRepository extends Repository
         return DB::table(TableConstants::USERS)
             ->find($userId);
     }
+
+    public function registerToNewsLetter($email)
+    {
+        $foundedEmail = DB::table(TableConstants::NEWSLETTER_SUBS)
+            ->where('email', $email)
+            ->first();
+
+        if (empty($foundedEmail)) {
+            DB::table(TableConstants::NEWSLETTER_SUBS)->insert([
+                'email' => $email,
+                'active' => true
+            ]);
+        } else {
+            DB::table(TableConstants::NEWSLETTER_SUBS)
+                ->where('id', $foundedEmail->id)
+                ->update([
+                    'active' => true
+                ]);
+        }
+    }
 }

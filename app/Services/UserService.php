@@ -188,6 +188,9 @@ class UserService extends Service
                 'date_approved_term_and_condition' => Carbon::now()
             ];
             $this->repository->createUserProfile($profileData);
+            if (array_get($data, 'newsletter', false)) {
+                $this->repository->registerToNewsLetter($data['email']);
+            }
             $this->migrateDataFromOldDatabase($user->email, $user->id);
 
             return true;

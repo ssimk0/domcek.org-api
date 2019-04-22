@@ -101,7 +101,8 @@ class AuthController extends Controller
             'city' => 'required|string',
             'phone' => 'required|string',
             'email' => 'required|email',
-            'terms_and_condition' => 'required|boolean'
+            'terms_and_condition' => 'required|boolean',
+            'newsletter' => 'boolean'
         ]);
 
         if ($data['terms_and_condition']) {
