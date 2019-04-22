@@ -85,7 +85,7 @@ class EventRepository extends Repository
 
         return DB::table(TableConstants::EVENTS)
             ->whereDate('start_registration', '<=', $today)
-            ->whereDate('end_registration', '>=', $today)
+            ->whereDate('start_date', '>', $today)
             ->orderBy('start_date', 'desc')
             ->get();
     }

@@ -8,6 +8,7 @@ use App\Repositories\EventRepository;
 use App\Repositories\ParticipantRepository;
 use App\Repositories\PaymentRepository;
 use App\Repositories\VolunteersRepository;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -84,6 +85,9 @@ class ParticipantService extends Service
 
         try {
             $event = $this->eventRepository->detail($eventId);
+            if (Carbon::now() <= Carbon::parse($event->start_date)) {
+                return false;
+            }
 
             $this->repository->create([
                 'note' => array_get($data, 'note'),
@@ -101,11 +105,17 @@ class ParticipantService extends Service
                 ]);
             }
             $paymentNumber = $this->paymentRepository->generatePaymentNumber();
+            $needPay = $event->need_pay;
+
+            if (Carbon::now() > Carbon::parse($event->end_registration)) {
+                // if you register after end of registration you need pay 5 euro fee
+                $needPay += 5;
+            }
             $this->paymentRepository->create([
                 'user_id' => $this->userId(),
                 'payment_number' => $paymentNumber,
                 'paid' => 0,
-                'need_pay' => $event->need_pay,
+                'need_pay' => $needPay,
                 'event_id' => $eventId,
             ]);
             $user = Auth::user();

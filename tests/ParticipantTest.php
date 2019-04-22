@@ -1,7 +1,11 @@
 <?php
 
+use App\Models\Event;
 use App\Models\Participant;
+use App\Models\Payment;
+use App\Models\Profile;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 
@@ -67,9 +71,47 @@ class ParticipantTest extends TestCase
 
         $this->assertResponseStatus(201);
 
-        $payment = \App\Models\Payment::where('user_id', $profile->user_id)->first();
+        $payment = \App\Models\Payment::where('user_id', $profile->user_id)
+            ->where('event_id', $event->id)
+            ->first();
 
         $this->assertEquals($event->need_pay, $payment->need_pay);
+        $this->assertEquals('0', $payment->paid);
+        $this->assertEquals('1', $payment->event_id);
+    }
+
+    function testLateRegisterParticipant()
+    {
+
+        $event = new Event([
+            'name' => 'test',
+            'start_date' => Carbon::now()->format('Y-m-d'),
+            'end_date' => Carbon::now()->addDays(3)->format('Y-m-d'),
+            'end_registration' => Carbon::now()->subDays(3)->format('Y-m-d'),
+            'end_volunteer_registration' => Carbon::now()->subDays(14)->format('Y-m-d'),
+            'start_registration' => Carbon::now()->subDays(30)->format('Y-m-d'),
+            'need_pay' => 5,
+            'deposit' => 0
+        ]);
+        $event->save();
+        $profile = factory(App\Models\Profile::class)->create();
+        $token = $this->login();
+
+        $this->post('/api/secure/user/events/' . $event->id, [
+            'note' => 'test',
+            'transportIn' => 'test',
+            'transportOut' => 'test',
+        ], [
+            'Authorization' => 'Bearer ' . $token
+        ]);
+
+        $this->assertResponseStatus(201);
+
+        $payment = Payment::where('user_id', $profile->user_id)
+            ->where('event_id', $event->id)
+            ->first();
+        // test fee
+        $this->assertEquals($event->need_pay + 5, $payment->need_pay);
         $this->assertEquals('0', $payment->paid);
         $this->assertEquals('1', $payment->event_id);
     }
