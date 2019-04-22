@@ -57,7 +57,7 @@ class ParticipantTest extends TestCase
     function testRegisterParticipant()
     {
 
-        $event = factory(App\Models\Event::class, 1)->create()[0];
+        $event = factory(App\Models\Event::class)->create();
         $profile = factory(App\Models\Profile::class)->create();
         $token = $this->login();
 
@@ -71,7 +71,7 @@ class ParticipantTest extends TestCase
 
         $this->assertResponseStatus(201);
 
-        $payment = \App\Models\Payment::where('user_id', $profile->user_id)
+        $payment = Payment::where('user_id', $profile->user_id)
             ->where('event_id', $event->id)
             ->first();
 
@@ -85,8 +85,8 @@ class ParticipantTest extends TestCase
 
         $event = new Event([
             'name' => 'test',
-            'start_date' => Carbon::now()->format('Y-m-d'),
-            'end_date' => Carbon::now()->addDays(3)->format('Y-m-d'),
+            'start_date' => Carbon::now()->addDays(1)->format('Y-m-d'),
+            'end_date' => Carbon::now()->addDays(4)->format('Y-m-d'),
             'end_registration' => Carbon::now()->subDays(3)->format('Y-m-d'),
             'end_volunteer_registration' => Carbon::now()->subDays(14)->format('Y-m-d'),
             'start_registration' => Carbon::now()->subDays(30)->format('Y-m-d'),
@@ -114,6 +114,34 @@ class ParticipantTest extends TestCase
         $this->assertEquals($event->need_pay + 5, $payment->need_pay);
         $this->assertEquals('0', $payment->paid);
         $this->assertEquals('1', $payment->event_id);
+    }
+
+    function testInStartDateRegisterParticipant()
+    {
+
+        $event = new Event([
+            'name' => 'test',
+            'start_date' => Carbon::now()->format('Y-m-d'),
+            'end_date' => Carbon::now()->addDays(4)->format('Y-m-d'),
+            'end_registration' => Carbon::now()->subDays(3)->format('Y-m-d'),
+            'end_volunteer_registration' => Carbon::now()->subDays(14)->format('Y-m-d'),
+            'start_registration' => Carbon::now()->subDays(30)->format('Y-m-d'),
+            'need_pay' => 5,
+            'deposit' => 0
+        ]);
+        $event->save();
+        $profile = factory(App\Models\Profile::class)->create();
+        $token = $this->login();
+
+        $this->post('/api/secure/user/events/' . $event->id, [
+            'note' => 'test',
+            'transportIn' => 'test',
+            'transportOut' => 'test',
+        ], [
+            'Authorization' => 'Bearer ' . $token
+        ]);
+
+        $this->assertResponseStatus(400);
     }
 
     function testUserEditParticipant()

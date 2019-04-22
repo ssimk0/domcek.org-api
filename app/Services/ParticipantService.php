@@ -85,7 +85,9 @@ class ParticipantService extends Service
 
         try {
             $event = $this->eventRepository->detail($eventId);
-            if (Carbon::now() <= Carbon::parse($event->start_date)) {
+            $now = Carbon::now();
+
+            if ($now >= Carbon::parse($event->start_date)) {
                 return false;
             }
 
@@ -97,7 +99,7 @@ class ParticipantService extends Service
                 'event_id' => $eventId
             ]);
 
-            if ($volunteerTypeId) {
+            if ($volunteerTypeId && $now <= Carbon::parse($event->end_volunteer_registration)) {
                 $this->volunteersRepository->create([
                     'volunteer_type_id' => $volunteerTypeId,
                     'event_id' => $eventId,
@@ -107,7 +109,7 @@ class ParticipantService extends Service
             $paymentNumber = $this->paymentRepository->generatePaymentNumber();
             $needPay = $event->need_pay;
 
-            if (Carbon::now() > Carbon::parse($event->end_registration)) {
+            if ($now > Carbon::parse($event->end_registration)) {
                 // if you register after end of registration you need pay 5 euro fee
                 $needPay += 5;
             }
@@ -120,7 +122,7 @@ class ParticipantService extends Service
             ]);
             $user = Auth::user();
             $profile = $user->profile()->first();
-            // TODO: check if we need send a email about payment
+
             Mail::to($user->email)->send(new RegistrationMail(
                 $event->deposit,
                 "$profile->first_name $profile->last_name",
