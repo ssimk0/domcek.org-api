@@ -105,7 +105,7 @@ class AuthController extends Controller
             'newsletter' => 'boolean'
         ]);
 
-        if ($data['terms_and_condition']) {
+        if (!$data['terms_and_condition']) {
             return ErrorMessagesConstant::badRequest();
         }
 
