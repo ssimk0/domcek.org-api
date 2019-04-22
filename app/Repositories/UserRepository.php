@@ -5,6 +5,7 @@ namespace App\Repositories;
 
 
 use App\Constants\TableConstants;
+use App\Models\NewsletterSubs;
 use App\Models\Profile;
 use App\User;
 use Illuminate\Support\Facades\DB;
@@ -105,18 +106,17 @@ class UserRepository extends Repository
 
     public function registerToNewsLetter($email)
     {
-        $foundedEmail = DB::table(TableConstants::NEWSLETTER_SUBS)
-            ->where('email', $email)
-            ->first();
+        $foundedEmail = NewsletterSubs::where('email', $email);
 
         if (empty($foundedEmail)) {
-            DB::table(TableConstants::NEWSLETTER_SUBS)->insert([
+            $newSub = new NewsletterSubs([
                 'email' => $email,
                 'active' => true
             ]);
+
+            $newSub->save();
         } else {
-            DB::table(TableConstants::NEWSLETTER_SUBS)
-                ->where('id', $foundedEmail->id)
+            $foundedEmail
                 ->update([
                     'active' => true
                 ]);

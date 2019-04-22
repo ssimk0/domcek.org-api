@@ -213,6 +213,7 @@ class UserService extends Service
             if (count($oldUsers) > 1) {
                 throw new MultipleOldAccounts("User s emailom: $email ma viac uctou");
             }
+            $this->logWarning(print_r($oldUsers));
             $oldUserId = $oldUsers[0]->user_id;
 
             $oldEvents = $this->oldWebIntegrationRepository->findOldEventRegistration($oldUserId);
