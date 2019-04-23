@@ -44,7 +44,7 @@ class NewsController extends Controller
         $data = $this->validate($request, [
             'title' => 'required|string',
             'body' => 'required|string',
-            'short' => 'required|string|max:200',
+            'short' => 'required|string',
             'image' => 'required|url',
             'status' => 'required|in:draft,archived,published',
             'is_featured' => 'required|boolean'
