@@ -17,7 +17,9 @@ class AddNewslettterTable extends Migration
             $table->string('email')->unique();
             $table->boolean('active')->default(true);
             $table->timestamps();
+            $table->primary('email');
         });
+
     }
 
     /**
