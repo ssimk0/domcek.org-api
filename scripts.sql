@@ -64,3 +64,10 @@ CALL ACTION_VOLUNTEER_TYPE_BY_INDEX(17);
 
 DELETE t1 FROM volunteer_types t1 INNER JOIN volunteer_types t2
 WHERE t1.id < t2.id AND t1.name = t2.name;
+
+INSERT INTO events (events.id, events.name, events.theme, events.type, events.start_date,
+                    events.start_registration, events.end_volunteer_registration,
+                    events.end_registration, events.end_date, events.deposit, events.need_pay)
+SELECT actions.action_id, actions.action_name, actions.action_theme, actions.action_type, actions.action_start,
+       DATE_SUB(actions.action_reg_end, INTERVAL 14 DAY), actions.action_volunt_reg_end,
+       actions.action_reg_end, actions.action_end, 0, 0 FROM  actions;
