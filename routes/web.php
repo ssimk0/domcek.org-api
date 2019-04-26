@@ -71,6 +71,8 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
 
         // ADMIN
         $router->group(['prefix' => '/admin', 'middleware' => 'perm:admin'], function () use ($router) {
+            $router->post('payments/log', 'Secure\PaymentController@uploadTransferLog');
+
             $router->post('events', 'Secure\EventController@create');
             $router->get('events', 'Secure\EventController@list');
             $router->put('events/{id}', 'Secure\EventController@edit');
