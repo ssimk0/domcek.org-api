@@ -29,7 +29,8 @@ class PaymentService extends Service
 
             if ($payment['paymentNumber']) {
                 $dbPayment = $this->repository->findByPaymentNumber($payment['paymentNumber'], $eventId);
-                if ($dbPayment && $dbPayment->paid < $payment['amount']) {
+
+                if ($dbPayment && intval($dbPayment->paid) < intval($payment['amount'])) {
                     try {
                         $user = $this->userRepository->findUserWithProfile($dbPayment->user_id);
                         $mail = new ConfirmPaymentMail($payment, $user);
