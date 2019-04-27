@@ -36,7 +36,7 @@ class PaymentService extends Service
                         Mail::to($user)
                             ->send($mail);
 
-                        //$this->repository->edit($dbPayment->user_id, $dbPayment->event_id, intval($payment['amount']));
+                        $this->repository->edit($dbPayment->user_id, $dbPayment->event_id, intval($payment['amount']));
                     } catch (\Exception $e) {
                         $this->logError('Problem pri updatovani platby: ' . json_encode($payment) . ' error: ' . $e->getMessage() . 'trace: ' . $e->getTraceAsString());
                     }
