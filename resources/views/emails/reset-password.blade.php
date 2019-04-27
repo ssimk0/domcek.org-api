@@ -1,13 +1,13 @@
 @component('mail::message')
-    # Reset Hesla
+# Reset Hesla
 
-    Ahoj,
-    zmenili sme tvoje heslo k učtu na domčeku tvoje nove heslo je : {{$password}}
+Ahoj,
+zmenili sme tvoje heslo k učtu na domčeku tvoje nove heslo je : {{$password}}
 
-    Pekný deň praje team,
+Pekný deň praje team,
 
-    {{ config('app.name') }}
+{{ config('app.name') }}
 
-    ------
-    ###### V prípade akychkoľvek problémov nás kontakuj na podpora@domcek.org
+------
+###### V prípade akychkoľvek problémov nás kontakuj na podpora@domcek.org
 @endcomponent

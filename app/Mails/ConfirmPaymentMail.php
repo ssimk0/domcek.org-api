@@ -8,8 +8,9 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
-class ConfirmPaymentMail extends Mailable implements ShouldQueue
+class ConfirmPaymentMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -32,8 +33,8 @@ class ConfirmPaymentMail extends Mailable implements ShouldQueue
         return $this->markdown('emails.confirmPayment')
             ->subject('Potvrdenie Platby')
             ->with([
-            'details' =>  $this->paymentsDetails,
-            'user' => $this->user
-        ]);
+                'details' => $this->paymentsDetails,
+                'user' => $this->user
+            ]);
     }
 }

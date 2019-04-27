@@ -24,7 +24,7 @@ class PaymentService extends Service
     public function processPayments($payments, $eventId)
     {
 
-        foreach ($payments as $i => $payment) {
+        foreach ($payments as $payment) {
             $matched = false;
 
             if ($payment['paymentNumber']) {
@@ -32,13 +32,11 @@ class PaymentService extends Service
                 if ($dbPayment && $dbPayment->paid < $payment['amount']) {
                     try {
                         $user = $this->userRepository->findUserWithProfile($dbPayment->user_id);
-                        // Don't send too much emails same time
-                        $when = now()->addMinutes($i + 1);
+                        $mail = new ConfirmPaymentMail($payment, $user);
+                        Mail::to($user)
+                            ->send($mail);
 
-                        Mail::to($user->email)
-                            ->send($when, new ConfirmPaymentMail($payment, $user));
-
-                        $this->repository->edit($dbPayment->user_id, $dbPayment->event_id, intval($payment['amount']));
+                        //$this->repository->edit($dbPayment->user_id, $dbPayment->event_id, intval($payment['amount']));
                     } catch (\Exception $e) {
                         $this->logError('Problem pri updatovani platby: ' . json_encode($payment) . ' error: ' . $e->getMessage() . 'trace: ' . $e->getTraceAsString());
                     }
