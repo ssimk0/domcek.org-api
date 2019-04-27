@@ -71,12 +71,14 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
 
         // ADMIN
         $router->group(['prefix' => '/admin', 'middleware' => 'perm:admin'], function () use ($router) {
+
             $router->post('events', 'Secure\EventController@create');
             $router->get('events', 'Secure\EventController@list');
             $router->put('events/{id}', 'Secure\EventController@edit');
             $router->delete('events/{id}', 'Secure\EventController@delete');
             $router->get('events/{id}', 'Secure\EventController@detail');
             $router->get('events/{eventId}/volunteers', 'Secure\VolunteerController@list');
+            $router->post('events/{id}/payments', 'Secure\PaymentController@uploadTransferLog');
 
             $router->put('volunteers/{id}', 'Secure\VolunteerController@edit');
             $router->get('volunteers/{id}', 'Secure\VolunteerController@detail');

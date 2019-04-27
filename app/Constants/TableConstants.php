@@ -20,4 +20,5 @@ class TableConstants
     const PAYMENTS = 'payments';
     const EVENT_TRANSPORT_TIMES = 'event_transport_times';
     const NEWSLETTER_SUBS = 'newsletter_subs';
+    const WRONG_PAYMENTS = 'wrong_payments';
 }

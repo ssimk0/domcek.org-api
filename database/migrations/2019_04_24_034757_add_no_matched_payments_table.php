@@ -27,7 +27,7 @@ class AddNoMatchedPaymentsTable extends Migration
         });
 
         Schema::table('events', function (Blueprint $table) {
-            $table->text('type');
+            $table->text('type')->nullable();
         });
     }
 
