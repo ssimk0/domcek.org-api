@@ -18,9 +18,9 @@ class PaymentController extends Controller
         $this->service = $service;
     }
 
-    public function uploadTransferLog(Request $request)
+    public function uploadTransferLog(Request $request, $eventId)
     {
-        $log = request()->file('file')->openFile('r');
+        $log = $request->file('file')->openFile('r');
         $parsedPayments = [];
         $error = false;
 
@@ -33,13 +33,14 @@ class PaymentController extends Controller
                 $line = $log->fgets();
                 # do same stuff with the $line
                 $parsed = explode('|', $line);
-                if ($parsed[4] === 'Kredit') {
+
+                if (count($parsed) > 1 && trim($parsed[4]) === 'Kredit') {
                     $parsedPayments [] = [
-                        'paymentNumber' => $parsed[9],
-                        'iban' => $parsed[8],
-                        'amount' => $parsed[2],
-                        'note' => $parsed[13],
-                        'date' => $parsed[1],
+                        'paymentNumber' => trim($parsed[9]),
+                        'iban' => trim($parsed[8]),
+                        'amount' => trim($parsed[2]),
+                        'note' => trim($parsed[13]),
+                        'date' => trim($parsed[1]),
                     ];
                 }
             }
@@ -48,7 +49,7 @@ class PaymentController extends Controller
             $error = true;
         }
 
-        $this->service->processPayments($parsedPayments);
+        $this->service->processPayments($parsedPayments, $eventId);
         return response()->json([
             'processed'=> count($parsedPayments),
             'error' => $error

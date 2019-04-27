@@ -43,6 +43,13 @@ class PaymentRepository extends Payment
         return $number;
     }
 
+    public function findByPaymentNumber($paymentNumber, $eventId) {
+        return DB::table(TableConstants::PAYMENTS)
+            ->where('payment_number', $paymentNumber)
+            ->where('event_id', $eventId)
+            ->first();
+    }
+
     public function edit($userId, $eventId, $paid)
     {
         return DB::table(TableConstants::PAYMENTS)
@@ -51,5 +58,25 @@ class PaymentRepository extends Payment
             ->update([
                 'paid' => $paid
             ]);
+    }
+
+    public function addNotMatchedPayment($payment, $eventId)
+    {
+        $exist = DB::table(TableConstants::WRONG_PAYMENTS)
+            ->where('event_id', $eventId)
+            ->where('iban',  $payment['iban'])
+            ->where('payment_number', $payment['paymentNumber'])
+            ->exists();
+        if (!$exist) {
+            DB::table(TableConstants::WRONG_PAYMENTS)
+                ->insert([
+                    'event_id' => $eventId,
+                    'payment_number' => $payment['paymentNumber'],
+                    'payment_note' => $payment['note'],
+                    'amount' => $payment['amount'],
+                    'iban' => $payment['iban'],
+                    'transaction_date' => $payment['date'],
+                ]);
+        }
     }
 }

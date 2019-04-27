@@ -104,6 +104,14 @@ class UserRepository extends Repository
             ->find($userId);
     }
 
+    public function findUserWithProfile($userId)
+    {
+        return DB::table(TableConstants::USERS)
+            ->join(TableConstants::PROFILES, TableConstants::PROFILES.'.user_id', TableConstants::USERS.'.id')
+            ->find($userId);
+    }
+
+
     public function registerToNewsLetter($email)
     {
         $foundedEmail = NewsletterSubs::where('email', $email);
