@@ -25,6 +25,7 @@ class EventService extends Service
         $createData = [
             'name' => $data['name'],
             'theme' => array_get($data, 'theme', null),
+            'type' => array_get($data, 'type', null),
             'start_date' => array_get($data, 'startDate', false),
             'end_date' => array_get($data, 'endDate', false),
             'start_registration' => array_get($data, 'startRegistration', false),

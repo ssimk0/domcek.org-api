@@ -26,6 +26,7 @@ class EventTest extends TestCase
             "name" => "81. Púť radosti",
             "needPay" => 10,
             "deposit" => 5,
+            "type" => 'pz',
             "startDate" => "2019-02-03",
             "endDate" => "2019-02-04",
             "startRegistration" => "2019-01-15",
@@ -48,6 +49,7 @@ class EventTest extends TestCase
         $this->assertCount(2, $times);
 
         $this->assertEquals('10:00', $times[0]->time);
+        $this->assertEquals('pz', $event->type);
     }
 
     function testEventList()

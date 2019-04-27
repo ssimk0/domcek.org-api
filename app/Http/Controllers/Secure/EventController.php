@@ -23,6 +23,7 @@ class EventController extends Controller
         $data = $this->validate($request, [
             'name' => 'required|string',
             'theme' => 'string',
+            'type' => 'required|string',
             'needPay' => 'required|integer',
             'deposit' => 'required|integer',
             'startDate' => 'required|date_format:Y-m-d',
