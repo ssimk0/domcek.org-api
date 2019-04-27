@@ -26,16 +26,18 @@ class PaymentService extends Service
 
         foreach ($payments as $payment) {
             $matched = false;
-
+            $when = now();
             if ($payment['paymentNumber']) {
                 $dbPayment = $this->repository->findByPaymentNumber($payment['paymentNumber'], $eventId);
 
                 if ($dbPayment && intval($dbPayment->paid) < intval($payment['amount'])) {
                     try {
+                        $when = $when->addMinutes(1);
                         $user = $this->userRepository->findUserWithProfile($dbPayment->user_id);
                         $mail = new ConfirmPaymentMail($payment, $user);
-                        Mail::to($user)
-                            ->send($mail);
+                        $userEmail = $user->email;
+                        Mail::to($userEmail)
+                            ->later($when, $mail);
 
                         $this->repository->edit($dbPayment->user_id, $dbPayment->event_id, intval($payment['amount']));
                     } catch (\Exception $e) {

@@ -13,7 +13,7 @@ return [
     |            "sparkpost", "log", "array"
     |
     */
-    'driver'     => env('MAIL_DRIVER', 'ses'),
+    'driver'     => env('MAIL_DRIVER', 'sendmail'),
     /*
     |--------------------------------------------------------------------------
     | Global "From" Address
@@ -28,6 +28,10 @@ return [
         'address' => env('MAIL_FROM_ADDRESS', 'noreply@domcek.org'),
         'name'    => env('MAIL_FROM_NAME', 'Domcek admin'),
     ],
+    'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+    'port' => env('MAIL_PORT', 587),
+    'log_channel' => env('MAIL_LOG_CHANNEL'),
+
     /*
     |--------------------------------------------------------------------------
     | E-Mail Encryption Protocol
