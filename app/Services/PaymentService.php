@@ -33,9 +33,10 @@ class PaymentService extends Service
                     try {
                         $user = $this->userRepository->findUserWithProfile($dbPayment->user_id);
                         // Don't send too much emails same time
-                        $when = now()->addMinutes($i);
+                        $when = now()->addMinutes($i + 1);
+
                         Mail::to($user->email)
-                            ->later($when, new ConfirmPaymentMail($payment, $user));
+                            ->send($when, new ConfirmPaymentMail($payment, $user));
 
                         $this->repository->edit($dbPayment->user_id, $dbPayment->event_id, intval($payment['amount']));
                     } catch (\Exception $e) {

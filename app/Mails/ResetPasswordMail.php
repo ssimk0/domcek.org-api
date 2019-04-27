@@ -31,8 +31,10 @@ class ResetPasswordMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.reset-password')->with([
-            'password' =>  $this->password
-        ]);
+        return $this->markdown('emails.reset-password')
+            ->subject('Tvoje heslo bolo restovane')
+            ->with([
+                'password' =>  $this->password
+            ]);
     }
 }

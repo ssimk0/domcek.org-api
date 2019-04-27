@@ -5,10 +5,11 @@ namespace App\Mails;
 
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class ConfirmPaymentMail extends Mailable
+class ConfirmPaymentMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -28,7 +29,9 @@ class ConfirmPaymentMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.confirmPayment')->with([
+        return $this->markdown('emails.confirmPayment')
+            ->subject('Potvrdenie Platby')
+            ->with([
             'details' =>  $this->paymentsDetails,
             'user' => $this->user
         ]);

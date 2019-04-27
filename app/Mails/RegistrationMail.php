@@ -44,7 +44,9 @@ class RegistrationMail extends Mailable
     {
         $min = Carbon::now()->subYear(18);
         if ($min->lt(Carbon::parse($this->birthDate))) {
-            return $this->markdown('emails.registration')->with([
+            return $this->markdown('emails.registration')
+                ->subject('Potvrdenie Prihlasenia')
+                ->with([
                 'url' =>  $this->url,
                 'deposit' =>  $this->deposit,
                 'paymentNumber' =>  $this->paymentNumber,
@@ -53,7 +55,9 @@ class RegistrationMail extends Mailable
             ])->attach('https://s3.eu-central-1.amazonaws.com/org.domcek.public/docs/Pre+%C3%BA%C4%8Dastn%C3%ADkov+mlad%C5%A1%C3%ADch+ako+18+rokov.docx');
         } else {
 
-            return $this->markdown('emails.registration')->with([
+            return $this->markdown('emails.registration')
+                ->subject('Potvrdenie Prihlasenia')
+                ->with([
                 'url'           => $this->url,
                 'deposit'       => $this->deposit,
                 'paymentNumber' => $this->paymentNumber,
