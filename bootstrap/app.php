@@ -114,6 +114,10 @@ $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 $app->register(App\Providers\CatchAllOptionsRequestsProvider::class);
 $app->register(AlbertCht\InvisibleReCaptcha\InvisibleReCaptchaServiceProvider::class);
 $app->register(\Illuminate\Queue\QueueServiceProvider::class);
+$app->register(Illuminate\Mail\MailServiceProvider::class);
+$app->alias('mailer', Illuminate\Mail\Mailer::class);
+$app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
+$app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
 
 /*
 |--------------------------------------------------------------------------
