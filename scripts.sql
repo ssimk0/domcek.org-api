@@ -29,19 +29,19 @@ END$$
 DELIMITER ;
 
 UPDATE pages
-SET pages.body = REPLACE(pages.body, '/uploads/', 'https://s3.eu-central-1.wasabisys.com/org.domcek.public/media/')
+SET pages.body = REPLACE(pages.body, '/uploads/', 'https://s3.eu-central-1.amazonaws.com/org.domcek.public/media')
 WHERE pages.body LIKE '%/uploads/%';
 
 UPDATE news_items
-SET news_items.body = REPLACE(news_items.body, '/uploads/', 'https://s3.eu-central-1.wasabisys.com/org.domcek.public/media/')
+SET news_items.body = REPLACE(news_items.body, '/uploads/', 'https://s3.eu-central-1.amazonaws.com/org.domcek.public/media')
 WHERE news_items.body LIKE '%/uploads/%';
 
 UPDATE news_items
-SET news_items.image = CONCAT('https://s3.eu-central-1.wasabisys.com/org.domcek.public/media/', news_items.image_file_name)
+SET news_items.image = CONCAT('https://s3.eu-central-1.amazonaws.com/org.domcek.public/media', news_items.image_file_name)
 where news_items.image_file_name IS NOT NULL;
 
 UPDATE slider_images
-SET slider_images.image = CONCAT('https://s3.eu-central-1.wasabisys.com/org.domcek.public/media/', slider_images.image_file_name)
+SET slider_images.image = CONCAT('https://s3.eu-central-1.amazonaws.com/org.domcek.public/media', slider_images.image_file_name)
 where slider_images.image_file_name IS NOT NULL;
 
 CALL ACTION_VOLUNTEER_TYPE_BY_INDEX(1);
