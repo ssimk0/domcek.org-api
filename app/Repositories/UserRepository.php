@@ -108,7 +108,8 @@ class UserRepository extends Repository
     {
         return DB::table(TableConstants::USERS)
             ->join(TableConstants::PROFILES, TableConstants::PROFILES.'.user_id', TableConstants::USERS.'.id')
-            ->find($userId);
+            ->where(TableConstants::USERS.'.id',$userId)
+            ->first();
     }
 
 

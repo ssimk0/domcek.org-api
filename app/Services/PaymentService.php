@@ -21,23 +21,25 @@ class PaymentService extends Service
     }
 
 
-    public function processPayments($payments, $eventId) {
+    public function processPayments($payments, $eventId)
+    {
 
-        foreach($payments as $i=>$payment) {
+        foreach ($payments as $i => $payment) {
             $matched = false;
 
             if ($payment['paymentNumber']) {
                 $dbPayment = $this->repository->findByPaymentNumber($payment['paymentNumber'], $eventId);
                 if ($dbPayment && $dbPayment->paid < $payment['amount']) {
                     try {
-                        $this->repository->edit($dbPayment->user_id, $dbPayment->event_id, intval($payment['amount']));
                         $user = $this->userRepository->findUserWithProfile($dbPayment->user_id);
                         // Don't send too much emails same time
                         $when = now()->addMinutes($i);
                         Mail::to($user->email)
                             ->later($when, new ConfirmPaymentMail($payment, $user));
+
+                        $this->repository->edit($dbPayment->user_id, $dbPayment->event_id, intval($payment['amount']));
                     } catch (\Exception $e) {
-                        $this->logError('Problem pri updatovani platby: ' . json_encode($payment) . ' error: '.$e);
+                        $this->logError('Problem pri updatovani platby: ' . json_encode($payment) . ' error: ' . $e->getMessage() . 'trace: ' . $e->getTraceAsString());
                     }
                     $matched = true;
                 }

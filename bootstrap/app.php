@@ -34,6 +34,7 @@ $app->configure('services');
 $app->configure('mail');
 $app->configure('app');
 $app->configure('filesystems');
+$app->configure('queue');
 
 
 $app->withFacades();
@@ -112,7 +113,7 @@ $app->register(\Illuminate\Mail\MailServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 $app->register(App\Providers\CatchAllOptionsRequestsProvider::class);
 $app->register(AlbertCht\InvisibleReCaptcha\InvisibleReCaptchaServiceProvider::class);
-
+$app->register(\Illuminate\Queue\QueueServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
