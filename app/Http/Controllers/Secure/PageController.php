@@ -24,7 +24,7 @@ class PageController extends Controller
             'title' => 'required|string',
             'body' => 'required|string',
             'order' => 'required|integer',
-            'parent_id' => 'required|integer',
+            'parent_slug' => 'required|string',
             'active' => 'required|boolean'
         ]);
 

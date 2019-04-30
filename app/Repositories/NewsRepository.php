@@ -41,7 +41,7 @@ class NewsRepository extends Repository
     function findNewsDetail($slug)
     {
         return DB::table('news_items')
-            ->where('status', NewsConstant::PUBLISHED)
+            ->whereIn('status', [NewsConstant::PUBLISHED, NewsConstant::DRAFT])
             ->where('slug', $slug)
             ->first();
     }

@@ -53,7 +53,14 @@ class PageService extends Service
 
     function create(array $data) {
         try {
-            $page = $this->repository->create($data);
+            $parent = $this->repository->findPageBySlug($data['parent_slug']);
+            $page = $this->repository->create([
+                'parent_id' => $parent->id,
+                'title' => $data['title'],
+                'body' => $data['body'],
+                'order' => $data['order'],
+                'active' => $data['active']
+            ]);
             return $page;
         } catch (\Exception $e) {
             // this error can be ignored
