@@ -85,12 +85,13 @@ class ParticipantController extends Controller
         $userId = $request->user()->id;
         $path = "/tmp/qr-$userId.png";
         $qrCode = new QrCode("secure/registration/events/$eventId/participants/$userId");
+        $qrCode->setEncoding('UTF-8');
+        $qrCode->setWriterByName('png');
         $qrCode->setSize(300);
 
         $qrCode->writeFile($path);
 
-        $type = 'image/png';
-        $headers = ['Content-Type' => $type];
+        $headers = ['Content-Type' => $qrCode->getContentType()];
         $response = new BinaryFileResponse($path, 200 , $headers);
         return $response;
     }

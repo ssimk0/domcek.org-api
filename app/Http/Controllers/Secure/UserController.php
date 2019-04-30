@@ -34,7 +34,7 @@ class UserController extends Controller
             'password' => 'required|string|confirmed|min:6'
         ]);
 
-        if (Hash::check($data['oldPassword'], $request->user()->password ))  {
+        if (!Hash::check($data['oldPassword'], $request->user()->password ))  {
             return ErrorMessagesConstant::error(400, ErrorMessagesConstant::WRONG_CREDENTIALS);
         }
 

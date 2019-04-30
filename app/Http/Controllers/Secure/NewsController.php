@@ -23,7 +23,7 @@ class NewsController extends Controller
             'title' => 'required|string',
             'body' => 'required|string',
             'short' => 'required|string|max:200',
-            'image' => 'required|url',
+            'image' => ['required', 'regex:(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'],
             'status' => 'required|in:draft,archived,published',
             'is_featured' => 'required|boolean'
         ]);
@@ -45,7 +45,7 @@ class NewsController extends Controller
             'title' => 'required|string',
             'body' => 'required|string',
             'short' => 'required|string',
-            'image' => 'required|url',
+            'image' => ['required', 'regex:(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'],
             'status' => 'required|in:draft,archived,published',
             'is_featured' => 'required|boolean'
         ]);
