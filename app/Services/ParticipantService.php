@@ -212,4 +212,15 @@ class ParticipantService extends Service
         $qrCode->writeFile($path);
     }
 
+    public function detailedRegistrationList($eventId)
+    {
+        $participants = $this->repository->detailedRegistrationList($eventId);
+        $notMatchedPayments = $this->paymentRepository->getNotMatchedPaymentForEvent($eventId);
+
+        return [
+            "participants" => $participants,
+            "wrong-payments" => $notMatchedPayments
+        ];
+    }
+
 }

@@ -146,4 +146,10 @@ class ParticipantController extends Controller
 
         return $this->jsonResponse($list);
     }
+
+    function detailedRegistrationList($eventId) {
+        $list = $this->service->detailedRegistrationList($eventId);
+
+        return $this->jsonResponse($list);
+    }
 }

@@ -87,4 +87,11 @@ class PaymentRepository extends Payment
             ->where('event_id', $eventId)
             ->first();
     }
+
+    public function getNotMatchedPaymentForEvent($eventId)
+    {
+        return DB::table(TableConstants::WRONG_PAYMENTS)
+            ->where('event_id', $eventId)
+            ->get();
+    }
 }

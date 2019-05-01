@@ -218,4 +218,35 @@ class ParticipantRepository extends Repository
                 'subscribed' => true
             ]);
     }
+
+    public function detailedRegistrationList($eventId)
+    {
+        return DB::table(TableConstants::PARTICIPANTS)
+            ->join(TableConstants::PROFILES, TableConstants::PROFILES . '.user_id', TableConstants::PARTICIPANTS . '.user_id')
+            ->join(TableConstants::USERS, TableConstants::USERS . '.id', TableConstants::PARTICIPANTS . '.user_id')
+            ->leftJoin(TableConstants::VOLUNTEERS, function($join) {
+                $join->on(TableConstants::VOLUNTEERS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
+                $join->on(TableConstants::VOLUNTEERS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
+            })
+            ->leftJoin(TableConstants::PAYMENTS, function($join) {
+                $join->on(TableConstants::PAYMENTS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
+                $join->on(TableConstants::PAYMENTS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
+            })
+            ->leftJoin(TableConstants::GROUPS, function($join) {
+                $join->on(TableConstants::GROUPS . '.participant_id', TableConstants::PARTICIPANTS . '.id');
+                $join->on(TableConstants::GROUPS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
+            })
+            ->where(TableConstants::PARTICIPANTS . '.event_id', $eventId)
+            ->select(
+                TableConstants::PROFILES . '.*',
+                TableConstants::PARTICIPANTS . '.*',
+                TableConstants::VOLUNTEERS . '.is_leader',
+                TableConstants::VOLUNTEERS . '.volunteer_type_id',
+                TableConstants::PAYMENTS . '.payment_number',
+                TableConstants::PAYMENTS . '.need_pay',
+                TableConstants::PAYMENTS . '.paid',
+                TableConstants::PAYMENTS . '.on_registration',
+                TableConstants::GROUPS . '.group_name'
+            )->get();
+    }
 }

@@ -64,7 +64,7 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
         // TODO: create new perm for registration valid while event duration only
         // REGISTRATION
         $router->group(['prefix' => '/registration', 'middleware' => 'perm:admin'], function () use ($router) {
-            $router->get('events/{id}/participants', 'Secure\ParticipantController@list');
+            $router->get('events/{id}/participants/all-details/sync', 'Secure\ParticipantController@detailedRegistrationList');
             $router->get('events/{id}/participants/sync', 'Secure\ParticipantController@registrationList');
             $router->put('events/{id}/participants/sync', 'Secure\ParticipantController@sync');
         });
