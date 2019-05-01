@@ -85,8 +85,9 @@ class ParticipantController extends Controller
     function eventQRCode(Request $request, $eventId)
     {
         $userId = $request->user()->id;
-        $path = "/tmp/qr-$userId.png";
-        $qrCode = new QrCode("secure/registration/events/$eventId/participants/$userId");
+        $path = storage_path()."/app/qrcodes/qr-$userId.png";
+        $paymentNumber = $this->service->getUserPaymentNumber($eventId, $userId);
+        $qrCode = new QrCode(base64_encode($paymentNumber));
         $qrCode->setEncoding('UTF-8');
         $qrCode->setWriterByName('png');
         $qrCode->setSize(300);
@@ -95,6 +96,7 @@ class ParticipantController extends Controller
 
         $headers = ['Content-Type' => $qrCode->getContentType()];
         $response = new BinaryFileResponse($path, 200 , $headers);
+        ob_end_clean();
         return $response;
     }
 

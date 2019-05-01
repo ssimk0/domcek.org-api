@@ -188,4 +188,10 @@ class ParticipantService extends Service
         return false;
     }
 
+    public function getUserPaymentNumber($eventId, $userId)
+    {
+        return $this->paymentRepository->findByUserIdAndEventId($eventId, $userId)->payment_number;
+    }
+
+
 }

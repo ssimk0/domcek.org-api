@@ -79,4 +79,12 @@ class PaymentRepository extends Payment
                 ]);
         }
     }
+
+    public function findByUserIdAndEventId($eventId, $userId)
+    {
+        return DB::table(TableConstants::PAYMENTS)
+            ->where('user_id', $userId)
+            ->where('event_id', $eventId)
+            ->first();
+    }
 }
