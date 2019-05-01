@@ -40,6 +40,13 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
         $router->get('events', 'Secure\EventController@availableEvents');
     });
 
+    // REGISTRATION
+    $router->group(['prefix' => '/registration', 'middleware' => ['cors', 'token_auth:registration']], function () use ($router) {
+        $router->get('events/{id}/participants/all-details/sync', 'Secure\ParticipantController@detailedRegistrationList');
+        $router->get('events/{id}/participants/sync', 'Secure\ParticipantController@registrationList');
+        $router->put('events/{id}/participants/sync', 'Secure\ParticipantController@sync');
+    });
+
     // PAGE SECURE
     $router->group(
         ['prefix' => 'secure', 'middleware' => ['cors', 'auth:api']], function () use ($router) {
@@ -59,14 +66,6 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
             $router->get('slider-images', 'Secure\SliderImagesController@list');
             $router->put('slider-images/{id}', 'Secure\SliderImagesController@edit');
             $router->delete('slider-images/{id}', 'Secure\SliderImagesController@delete');
-        });
-
-        // TODO: create new perm for registration valid while event duration only
-        // REGISTRATION
-        $router->group(['prefix' => '/registration', 'middleware' => 'perm:admin'], function () use ($router) {
-            $router->get('events/{id}/participants/all-details/sync', 'Secure\ParticipantController@detailedRegistrationList');
-            $router->get('events/{id}/participants/sync', 'Secure\ParticipantController@registrationList');
-            $router->put('events/{id}/participants/sync', 'Secure\ParticipantController@sync');
         });
 
         // ADMIN

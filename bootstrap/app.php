@@ -29,6 +29,7 @@ $app->instance('path.config', app()->basePath() . DIRECTORY_SEPARATOR . 'config'
 $app->instance('path.storage', app()->basePath() . DIRECTORY_SEPARATOR . 'storage');
 $app->configure('auth');
 $app->configure('logging');
+$app->configure('database');
 $app->configure('sluggable');
 $app->configure('services');
 $app->configure('mail');
@@ -89,6 +90,7 @@ $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
     'cors' => App\Http\Middleware\Cors::class,
     'perm' => App\Http\Middleware\Permission::class,
+    'token_auth' => App\Http\Middleware\TokenAuth::class,
     'optimizeImages' => \Spatie\LaravelImageOptimizer\Middlewares\OptimizeImages::class
 ]);
 

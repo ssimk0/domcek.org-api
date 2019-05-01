@@ -1,24 +1,26 @@
 <?php
 
+
 namespace App\Http\Middleware;
 
-use App\Services\UserService;
+
+use App\Services\TokenService;
 use Closure;
 
-class Permission
+class TokenAuth
 {
     private $service;
 
-    public function __construct(UserService $service)
+    public function __construct(TokenService $service)
     {
         $this->service = $service;
     }
 
-    public function handle($request, Closure $next, $perm)
+    public function handle($request, Closure $next, $type)
     {
-
-        if ($request->user()) {
-            if ($this->service->checkPermission($perm, $request->user())) {
+        $token = $request->token;
+        if ($token) {
+            if ($this->service->checkToken($type, $token)) {
                 return $next($request);
             } else {
                 return response('', 403);

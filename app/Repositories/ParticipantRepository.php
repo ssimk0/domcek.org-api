@@ -20,7 +20,8 @@ class ParticipantRepository extends Repository
         return $participant;
     }
 
-    public function userEdit($data, $userId, $eventId) {
+    public function userEdit($data, $userId, $eventId)
+    {
         Participant::where('user_id', $userId)
             ->where('event_id', $eventId)
             ->update($data);
@@ -34,15 +35,15 @@ class ParticipantRepository extends Repository
             ->join(TableConstants::PROFILES, TableConstants::PROFILES . '.user_id', TableConstants::PARTICIPANTS . '.user_id')
             ->join(TableConstants::USERS, TableConstants::USERS . '.id', TableConstants::PARTICIPANTS . '.user_id')
             ->join(TableConstants::EVENTS, TableConstants::EVENTS . '.id', TableConstants::PARTICIPANTS . '.event_id')
-            ->leftJoin(TableConstants::VOLUNTEERS, function($join) {
+            ->leftJoin(TableConstants::VOLUNTEERS, function ($join) {
                 $join->on(TableConstants::VOLUNTEERS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
                 $join->on(TableConstants::VOLUNTEERS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
-            ->leftJoin(TableConstants::PAYMENTS, function($join) {
+            ->leftJoin(TableConstants::PAYMENTS, function ($join) {
                 $join->on(TableConstants::PAYMENTS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
                 $join->on(TableConstants::PAYMENTS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
-            ->leftJoin(TableConstants::GROUPS, function($join) {
+            ->leftJoin(TableConstants::GROUPS, function ($join) {
                 $join->on(TableConstants::GROUPS . '.participant_id', TableConstants::PARTICIPANTS . '.id');
                 $join->on(TableConstants::GROUPS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
@@ -75,15 +76,15 @@ class ParticipantRepository extends Repository
         return DB::table(TableConstants::PARTICIPANTS)
             ->join(TableConstants::PROFILES, TableConstants::PROFILES . '.user_id', TableConstants::PARTICIPANTS . '.user_id')
             ->join(TableConstants::USERS, TableConstants::USERS . '.id', TableConstants::PARTICIPANTS . '.user_id')
-            ->leftJoin(TableConstants::VOLUNTEERS, function($join) {
+            ->leftJoin(TableConstants::VOLUNTEERS, function ($join) {
                 $join->on(TableConstants::VOLUNTEERS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
                 $join->on(TableConstants::VOLUNTEERS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
-            ->leftJoin(TableConstants::PAYMENTS, function($join) {
+            ->leftJoin(TableConstants::PAYMENTS, function ($join) {
                 $join->on(TableConstants::PAYMENTS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
                 $join->on(TableConstants::PAYMENTS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
-            ->leftJoin(TableConstants::GROUPS, function($join) {
+            ->leftJoin(TableConstants::GROUPS, function ($join) {
                 $join->on(TableConstants::GROUPS . '.participant_id', TableConstants::PARTICIPANTS . '.id');
                 $join->on(TableConstants::GROUPS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
@@ -113,15 +114,15 @@ class ParticipantRepository extends Repository
         return DB::table(TableConstants::PARTICIPANTS)
             ->join(TableConstants::PROFILES, TableConstants::PROFILES . '.user_id', TableConstants::PARTICIPANTS . '.user_id')
             ->join(TableConstants::USERS, TableConstants::USERS . '.id', TableConstants::PARTICIPANTS . '.user_id')
-            ->leftJoin(TableConstants::VOLUNTEERS, function($join) {
+            ->leftJoin(TableConstants::VOLUNTEERS, function ($join) {
                 $join->on(TableConstants::VOLUNTEERS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
                 $join->on(TableConstants::VOLUNTEERS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
-            ->leftJoin(TableConstants::PAYMENTS, function($join) {
+            ->leftJoin(TableConstants::PAYMENTS, function ($join) {
                 $join->on(TableConstants::PAYMENTS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
                 $join->on(TableConstants::PAYMENTS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
-            ->leftJoin(TableConstants::GROUPS, function($join) {
+            ->leftJoin(TableConstants::GROUPS, function ($join) {
                 $join->on(TableConstants::GROUPS . '.participant_id', TableConstants::PARTICIPANTS . '.id');
                 $join->on(TableConstants::GROUPS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
@@ -150,15 +151,15 @@ class ParticipantRepository extends Repository
         return DB::table(TableConstants::PARTICIPANTS)
             ->join(TableConstants::PROFILES, TableConstants::PROFILES . '.user_id', TableConstants::PARTICIPANTS . '.user_id')
             ->join(TableConstants::USERS, TableConstants::USERS . '.id', TableConstants::PARTICIPANTS . '.user_id')
-            ->leftJoin(TableConstants::VOLUNTEERS, function($join) {
+            ->leftJoin(TableConstants::VOLUNTEERS, function ($join) {
                 $join->on(TableConstants::VOLUNTEERS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
                 $join->on(TableConstants::VOLUNTEERS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
-            ->leftJoin(TableConstants::PAYMENTS, function($join) {
+            ->leftJoin(TableConstants::PAYMENTS, function ($join) {
                 $join->on(TableConstants::PAYMENTS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
                 $join->on(TableConstants::PAYMENTS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
-            ->leftJoin(TableConstants::GROUPS, function($join) {
+            ->leftJoin(TableConstants::GROUPS, function ($join) {
                 $join->on(TableConstants::GROUPS . '.participant_id', TableConstants::PARTICIPANTS . '.id');
                 $join->on(TableConstants::GROUPS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
@@ -221,18 +222,18 @@ class ParticipantRepository extends Repository
 
     public function detailedRegistrationList($eventId)
     {
-        return DB::table(TableConstants::PARTICIPANTS)
+        $registered = DB::table(TableConstants::PARTICIPANTS)
             ->join(TableConstants::PROFILES, TableConstants::PROFILES . '.user_id', TableConstants::PARTICIPANTS . '.user_id')
             ->join(TableConstants::USERS, TableConstants::USERS . '.id', TableConstants::PARTICIPANTS . '.user_id')
-            ->leftJoin(TableConstants::VOLUNTEERS, function($join) {
+            ->leftJoin(TableConstants::VOLUNTEERS, function ($join) {
                 $join->on(TableConstants::VOLUNTEERS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
                 $join->on(TableConstants::VOLUNTEERS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
-            ->leftJoin(TableConstants::PAYMENTS, function($join) {
+            ->leftJoin(TableConstants::PAYMENTS, function ($join) {
                 $join->on(TableConstants::PAYMENTS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
                 $join->on(TableConstants::PAYMENTS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
-            ->leftJoin(TableConstants::GROUPS, function($join) {
+            ->leftJoin(TableConstants::GROUPS, function ($join) {
                 $join->on(TableConstants::GROUPS . '.participant_id', TableConstants::PARTICIPANTS . '.id');
                 $join->on(TableConstants::GROUPS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
@@ -247,6 +248,23 @@ class ParticipantRepository extends Repository
                 TableConstants::PAYMENTS . '.paid',
                 TableConstants::PAYMENTS . '.on_registration',
                 TableConstants::GROUPS . '.group_name'
-            )->get();
+            )->get()
+            ->all();
+
+        $profiles = DB::table(TableConstants::PROFILES)
+            ->get()
+            ->all();
+        $notRegistered = array_filter($profiles, function ($profile) use ($registered) {
+            $notMatched = true;
+            foreach ($registered as $user) {
+                if ($user->user_id == $profile->user_id) {
+                    $notMatched = false;
+                }
+            }
+
+            return $notMatched;
+        });
+
+        return array_merge($registered, $notRegistered);
     }
 }

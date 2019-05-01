@@ -21,4 +21,5 @@ class TableConstants
     const EVENT_TRANSPORT_TIMES = 'event_transport_times';
     const NEWSLETTER_SUBS = 'newsletter_subs';
     const WRONG_PAYMENTS = 'wrong_payments';
+    const AUTH_TOKEN = 'auth_tokens';
 }
