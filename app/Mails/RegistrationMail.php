@@ -24,8 +24,9 @@ class RegistrationMail extends Mailable
     public $url;
     private $eventName;
     private $birthDate;
+    private $qrCodePath;
 
-    public function __construct($deposit, $userName, $birthDate, $paymentNumber, $eventName, $url)
+    public function __construct($deposit, $userName, $birthDate, $paymentNumber, $eventName, $url, $qrCodePath)
     {
         $this->deposit = $deposit;
         $this->userName = $userName;
@@ -33,6 +34,7 @@ class RegistrationMail extends Mailable
         $this->paymentNumber = $paymentNumber;
         $this->url = $url;
         $this->eventName = $eventName;
+        $this->qrCodePath = $qrCodePath;
     }
 
     /**
@@ -47,23 +49,26 @@ class RegistrationMail extends Mailable
             return $this->markdown('emails.registration')
                 ->subject('Potvrdenie Prihlasenia')
                 ->with([
-                'url' =>  $this->url,
-                'deposit' =>  $this->deposit,
-                'paymentNumber' =>  $this->paymentNumber,
-                'userName' =>  $this->userName,
-                'eventName' => $this->eventName
-            ])->attach('https://s3.eu-central-1.amazonaws.com/org.domcek.public/docs/Pre+%C3%BA%C4%8Dastn%C3%ADkov+mlad%C5%A1%C3%ADch+ako+18+rokov.docx');
+                    'url' => $this->url,
+                    'deposit' => $this->deposit,
+                    'paymentNumber' => $this->paymentNumber,
+                    'userName' => $this->userName,
+                    'eventName' => $this->eventName
+                ])
+                ->attach($this->qrCodePath)
+                ->attach('https://s3.eu-central-1.amazonaws.com/org.domcek.public/docs/Pre+%C3%BA%C4%8Dastn%C3%ADkov+mlad%C5%A1%C3%ADch+ako+18+rokov.docx');
         } else {
 
             return $this->markdown('emails.registration')
                 ->subject('Potvrdenie Prihlasenia')
                 ->with([
-                'url'           => $this->url,
-                'deposit'       => $this->deposit,
-                'paymentNumber' => $this->paymentNumber,
-                'userName'      => $this->userName,
-                'eventName'     => $this->eventName
-            ]);
+                    'url' => $this->url,
+                    'deposit' => $this->deposit,
+                    'paymentNumber' => $this->paymentNumber,
+                    'userName' => $this->userName,
+                    'eventName' => $this->eventName
+                ])
+                ->attach($this->qrCodePath);
         }
     }
 }

@@ -9,9 +9,11 @@ use App\Repositories\ParticipantRepository;
 use App\Repositories\PaymentRepository;
 use App\Repositories\VolunteersRepository;
 use Carbon\Carbon;
+use Endroid\QrCode\QrCode;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class ParticipantService extends Service
 {
@@ -122,6 +124,8 @@ class ParticipantService extends Service
             ]);
             $user = Auth::user();
             $profile = $user->profile()->first();
+            $qrCodePath = "/tmp/".Str::random().".png";
+            $this->generateQrCode($eventId, $user->id, $qrCodePath);
 
             Mail::to($user->email)->send(new RegistrationMail(
                 $event->deposit,
@@ -129,8 +133,9 @@ class ParticipantService extends Service
                 $profile->birth_date,
                 $paymentNumber,
                 $event->name,
-                "https://domcek.org/login?next=/user/registrations"
-                ));
+                "https://domcek.org/login?next=/user/registrations",
+                $qrCodePath
+            ));
 
             return true;
         } catch (\Exception $e) {
@@ -140,7 +145,8 @@ class ParticipantService extends Service
         return false;
     }
 
-    public function unsubscribe($eventId) {
+    public function unsubscribe($eventId)
+    {
         try {
             $this->repository->unsubscribeToEvent($eventId, $this->userId());
         } catch (\Exception $e) {
@@ -151,7 +157,8 @@ class ParticipantService extends Service
         return true;
     }
 
-    public function subscribe($eventId) {
+    public function subscribe($eventId)
+    {
         try {
             $this->repository->resubscribeToEvent($eventId, $this->userId());
         } catch (Exception $e) {
@@ -162,7 +169,8 @@ class ParticipantService extends Service
         return true;
     }
 
-    public function userEdit($data, $eventId) {
+    public function userEdit($data, $eventId)
+    {
         try {
             $this->repository->userEdit([
                 'note' => array_get($data, 'note'),
@@ -193,5 +201,15 @@ class ParticipantService extends Service
         return $this->paymentRepository->findByUserIdAndEventId($eventId, $userId)->payment_number;
     }
 
+    public function generateQrCode($eventId, $userId, $path)
+    {
+        $paymentNumber = $this->getUserPaymentNumber($eventId, $userId);
+        $qrCode = new QrCode(base64_encode($paymentNumber));
+        $qrCode->setEncoding('UTF-8');
+        $qrCode->setWriterByName('png');
+        $qrCode->setSize(300);
+
+        $qrCode->writeFile($path);
+    }
 
 }

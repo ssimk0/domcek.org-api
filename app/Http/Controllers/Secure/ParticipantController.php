@@ -7,8 +7,8 @@ namespace App\Http\Controllers\Secure;
 use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
 use App\Services\ParticipantService;
-use Endroid\QrCode\QrCode;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ParticipantController extends Controller
@@ -85,16 +85,9 @@ class ParticipantController extends Controller
     function eventQRCode(Request $request, $eventId)
     {
         $userId = $request->user()->id;
-        $path = storage_path()."/app/qrcodes/qr-$userId.png";
-        $paymentNumber = $this->service->getUserPaymentNumber($eventId, $userId);
-        $qrCode = new QrCode(base64_encode($paymentNumber));
-        $qrCode->setEncoding('UTF-8');
-        $qrCode->setWriterByName('png');
-        $qrCode->setSize(300);
-
-        $qrCode->writeFile($path);
-
-        $headers = ['Content-Type' => $qrCode->getContentType()];
+        $path = storage_path()."/app/qrcodes/".Str::random(40).".png";
+        $this->service->generateQrCode($eventId, $userId, $path);
+        $headers = ['Content-Type' => "image/png"];
         $response = new BinaryFileResponse($path, 200 , $headers);
         ob_end_clean();
         return $response;
