@@ -65,6 +65,8 @@ class ParticipantTest extends TestCase
             'note' => 'test',
             'transportIn' => 'test',
             'transportOut' => 'test',
+            'GDPRRegistration' => true,
+            'audioVisualKnowledgeAgreement' => true,
         ], [
             'Authorization' => 'Bearer ' . $token
         ]);
@@ -101,6 +103,8 @@ class ParticipantTest extends TestCase
             'note' => 'test',
             'transportIn' => 'test',
             'transportOut' => 'test',
+            'GDPRRegistration' => true,
+            'audioVisualKnowledgeAgreement' => true,
         ], [
             'Authorization' => 'Bearer ' . $token
         ]);
@@ -137,6 +141,8 @@ class ParticipantTest extends TestCase
             'note' => 'test',
             'transportIn' => 'test',
             'transportOut' => 'test',
+            'GDPRRegistration' => true,
+            'audioVisualKnowledgeAgreement' => true,
         ], [
             'Authorization' => 'Bearer ' . $token
         ]);
