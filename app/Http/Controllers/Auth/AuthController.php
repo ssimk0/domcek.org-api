@@ -101,13 +101,9 @@ class AuthController extends Controller
             'city' => 'required|string',
             'phone' => 'required|string',
             'email' => 'required|email',
-            'terms_and_condition' => 'required|boolean',
+            'terms_and_condition' => 'required|accepted',
             'newsletter' => 'boolean'
         ]);
-
-        if (!$data['terms_and_condition']) {
-            return ErrorMessagesConstant::badRequest();
-        }
 
         $result = $this->service->createUser($data);
         if ($result === ErrorMessagesConstant::USER_ALREADY_EXIST) {

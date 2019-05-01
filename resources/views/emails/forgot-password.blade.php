@@ -1,5 +1,5 @@
 @component('mail::message')
-    # Reset Hesla
+# Reset Hesla
 
 Ahoj,
 

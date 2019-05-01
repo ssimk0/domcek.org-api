@@ -27,7 +27,9 @@ class ParticipantController extends Controller
             'volunteerTypeId' => 'integer',
             'note' => 'string',
             'transportIn' => 'required|string',
-            'transportOut' => 'required|string'
+            'transportOut' => 'required|string',
+            'audioVisualKnowledgeAgreement' => 'required|accepted',
+            'GDPRRegistration' => 'required|accepted',
         ]);
 
         $result = $this->service->create($data, $eventId);

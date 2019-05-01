@@ -23,6 +23,7 @@ Sprava pre prijimatela: Prispevok na cinnost
 <pre style="color:black">
 Viac info najdeš vo svojom profile
 
+Vezmi si so sebou aj QR kod ktory najdes v prilohe emailu, alebo na stranke po prihlásení v sekcii "Moje prihlásenia"
 Vezmi si so sebou aj potvrdenie o platbe pre pripad, ze system nedokaze sparovat tvoju platbu.
 Ak zaplatis postovou poukazkou tesne pred uvedenym terminom, urcite si vezmi ustrizok (stava sa, ze platby cez postu neprejdu ani za tyzden). Ak mas moznost poslat peniaze cez ucet, vyuzi tuto formu. Platby postovou poukazkou musime parovat rucne.
 
