@@ -21,8 +21,10 @@ jobs:
     steps:
       - checkout
 
-      - run: sudo apt update && sudo apt install zlib1g-dev libsqlite3-dev
+      - run: sudo apt update && sudo apt install zlib1g-dev libsqlite3-dev libpng-dev
       - run: sudo docker-php-ext-install zip
+      - run: sudo docker-php-ext-install mbstring
+      - run: sudo docker-php-ext-install mysql mysqli
       - run: sudo docker-php-ext-install gd
 
       # Download and cache dependencies
