@@ -2,6 +2,7 @@
 
 
 use App\Models\Event;
+use App\Models\VolunteerType;
 use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -22,6 +23,8 @@ class EventTest extends TestCase
 
     function testCreateEvent()
     {
+        $types = factory(App\Models\VolunteerType::class, 5)->create();
+
         $this->post('/api/secure/admin/events', [
             "name" => "81. Púť radosti",
             "needPay" => 10,
@@ -32,7 +35,7 @@ class EventTest extends TestCase
             "startRegistration" => "2019-01-15",
             "endRegistration" => "2019-01-25",
             "endVolunteerRegistration" => "2019-01-20",
-            "volunteerTypes" => [1],
+            "volunteerTypes" => [$types[0]->id],
             "transportTimesIn" => ['10:00', '11:00'],
             "transportTimesOut" => ['10:01', '11:01']
         ], [
