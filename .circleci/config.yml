@@ -23,6 +23,7 @@ jobs:
 
       - run: sudo apt update && sudo apt install zlib1g-dev libsqlite3-dev
       - run: sudo docker-php-ext-install zip
+      - run: sudo docker-php-ext-install gd
 
       # Download and cache dependencies
 
@@ -34,7 +35,7 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run: composer install -n --prefer-dist
+      - run: composer install
 
       - save_cache:
           key: composer-v1-{{ checksum "composer.lock" }}
