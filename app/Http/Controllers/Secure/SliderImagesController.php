@@ -45,7 +45,8 @@ class SliderImagesController extends Controller
             'image' => ['required', 'regex:(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'],
             'title' => 'required|string',
             'text' => 'required|string',
-            'order' => 'required|integer'
+            'order' => 'required|integer',
+            'active' => 'required|boolean'
         ]);
 
         $result = $this->service->edit($id, $data);
