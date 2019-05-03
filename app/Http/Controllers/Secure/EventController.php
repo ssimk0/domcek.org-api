@@ -59,7 +59,8 @@ class EventController extends Controller
             'endVolunteerRegistration' => 'required|date_format:Y-m-d',
             'volunteerTypes' => 'array',
             'volunteerTypes.*' => 'integer',
-            'transportTimes' => 'array',
+            'transportTimesIn' => 'array',
+            'transportTimesOut' => 'array',
         ]);
 
         $result = $this->service->editEvent($data, $eventId);
