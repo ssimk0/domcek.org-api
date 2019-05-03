@@ -1,42 +1,44 @@
 @component('mail::message')
 
-Mily/a {{ $userName }},
+Milý/á {{ $userName }},
 
-prihlasenie na {{ $eventName }} prebehlo uspesne. <br/>
+prihlásenie na {{ $eventName }} prebehlo úspešne. <br/>
 
 @component('mail::panel')
-Stav prihlasenia je:
+Stav prihlásenia je:
 
-Udaje pre platbu zalohy (POZOR! Zmena c. uctu!):
+Údaje pre platbu zálohy:
 
 Banka: Tatrabanka
 
-IBAN uctu: SK52 1100 0000 0029 4304 5043
+IBAN účtu: SK52 1100 0000 0029 4304 5043
 
-Variabilny symbol: {{ $paymentNumber }} (tento VS je platny len a len pre teba a len na tuto put)
+Variabilný symbol: {{ $paymentNumber }} (tento VS je platný len a len pre teba a len na túto púť)
 
-Suma: {{ $deposit }} EUR (viac info o prispevkoch tu: https://domcek.org/pages/prispevky)
+Suma: {{ $deposit }} EUR (viac info o príspevkoch nájdeš tu: https://domcek.org/pages/prispevky)
 
-Sprava pre prijimatela: Prispevok na cinnost
+Správa pre prijímateľa: Príspevok na činnosť
 @endcomponent
 
 <pre style="color:black">
-Viac info najdeš vo svojom profile
+Viac info nájdeš vo svojom profile.
 
-Vezmi si so sebou aj QR kod ktory najdes v prilohe emailu, alebo na stranke po prihlásení v sekcii "Moje prihlásenia"
-Vezmi si so sebou aj potvrdenie o platbe pre pripad, ze system nedokaze sparovat tvoju platbu.
-Ak zaplatis postovou poukazkou tesne pred uvedenym terminom, urcite si vezmi ustrizok (stava sa, ze platby cez postu neprejdu ani za tyzden). Ak mas moznost poslat peniaze cez ucet, vyuzi tuto formu. Platby postovou poukazkou musime parovat rucne.
+Vezmi si so sebou aj potvrdenie o platbe pre prípad, že systém nedokáže spárovať tvoju platbu.
+Ak zaplatíš poštovou poukážkou, určite so sebou prines aj ústrižok (stáva sa, že platby cez poštu neprejdú ani za týždeň). Ak máš možnosť uhradiť účastnícky poplatok cez internet banking, využi prosím túto možnosť.
 
-Dakujeme za tvoje prihlasenie na akciu a tesime sa na teba.
-V pripade, ze chces zmenit svoje prilasenie alebo sa odhlásiť, odpis na tento e-mail.
+Ďakujeme za tvoje prihlásenie na púť a tešíme sa na teba.
+
+V prípade, že sa z púte odhlásiš v termíne otvoreného prihlasovania, odpísaním na tento e-mail môžeš požiadať o vrátenie vyplatenej zálohy.
+V prípade, že chceš zmeniť svoje prihlásenie alebo sa chceš odhlásiť, odpíš na tento e-mail.
 </pre>
 
 <div style="margin-top: 40px;color:black" >
-    Pekný deň praje team,
+Pekný deň praje team,
 </div>
 {{ config('app.name') }}
 
 
 ------
-###### V prípade akychkoľvek problémov nás kontakuj na podpora@domcek.org
+###### V prípade akýchkoľvek problémov s používateľským kontom nás kontaktuj na podpora@domcek.org.
+###### V prípade akýchkoľvek otázok súvisiacich s tvojou účasťou na podujatí nás kontaktuj na registracia@domček.org.
 @endcomponent

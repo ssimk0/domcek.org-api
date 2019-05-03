@@ -1,8 +1,8 @@
 @component('mail::message')
 
-Mily/a {{ $user->first_name }},
+Milý/á {{ $user->first_name }},
 
-Potvrdzujeme že sme obdržali tvoju platbu vo výške: {{ $details['amount'] }} EUR
+potvrdzujeme, že sme obdržali tvoju platbu vo výške: {{ $details['amount'] }} EUR.
 
 
 
@@ -12,5 +12,6 @@ Pekný deň praje team,
 {{ config('app.name') }}
 
 ------
-###### V prípade akychkoľvek problémov nás kontakuj na podpora@domcek.org
+###### V prípade akýchkoľvek problémov s používateľským kontom nás kontaktuj na podpora@domcek.org.
+###### V prípade akýchkoľvek otázok súvisiacich s tvojou účasťou na podujatí nás kontaktuj na registracia@domček.org.
 @endcomponent
