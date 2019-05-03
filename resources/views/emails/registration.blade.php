@@ -28,8 +28,8 @@ Ak zaplatíš poštovou poukážkou, určite so sebou prines aj ústrižok (stá
 
 Ďakujeme za tvoje prihlásenie na púť a tešíme sa na teba.
 
-V prípade, že sa z púte odhlásiš v termíne otvoreného prihlasovania, odpísaním na tento e-mail môžeš požiadať o vrátenie vyplatenej zálohy.
-V prípade, že chceš zmeniť svoje prihlásenie alebo sa chceš odhlásiť, odpíš na tento e-mail.
+V prípade, že sa z púte odhlásiš v termíne otvoreného prihlasovania, odoslaním mailu na registrácia@domcek.org môžeš požiadať o vrátenie vyplatenej zálohy.
+V prípade, že chceš zmeniť svoje prihlásenie alebo sa chceš odhlásiť, môžeš tak urobiť na stráke v sekcii "Moje prihlásenia".
 </pre>
 
 <div style="margin-top: 40px;color:black" >
