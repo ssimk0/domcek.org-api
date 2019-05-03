@@ -44,7 +44,7 @@ class CreateEventTable extends Migration
             $table->unsignedInteger('user_id')->index();
 
 
-            $table->unique(['event_id', 'volunteer_type_id']);
+            $table->unique(['event_id', 'user_id']);
             $table->foreign('volunteer_type_id')->references('id')->on('volunteer_types')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
