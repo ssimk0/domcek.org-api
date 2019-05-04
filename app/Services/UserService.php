@@ -233,7 +233,8 @@ class UserService extends Service
                     if (!empty($event->role) || !empty($event->real_role)) {
                         $role = !empty($event->real_role) ? $event->real_role : $event->role;
 
-                        $typeId = $this->volunteersRepository->typeByName($role)->id;
+                        $role = $this->volunteersRepository->typeByName($role);
+                        $typeId = empty($role) ? 41 : $role->id;
                         $this->registerVolunteer($typeId, $userId, $event->action_id, $event->was_on_act === 'true');
                     }
                     // create record about event payment registration
