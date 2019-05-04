@@ -5,8 +5,6 @@ Milý/á {{ $userName }},
 prihlásenie na {{ $eventName }} prebehlo úspešne. <br/>
 
 @component('mail::panel')
-Stav prihlásenia je:
-
 Údaje pre platbu zálohy:
 
 Banka: Tatrabanka
@@ -23,8 +21,8 @@ Správa pre prijímateľa: Príspevok na činnosť
 <pre style="color:black">
 Viac info nájdeš vo svojom profile.
 
-Vezmi si so sebou aj QR kod ktory najdes v prilohe emailu, alebo na stranke po prihlásení v sekcii "Moje prihlásenia"
-a potvrdenie o platbe pre prípad, že systém nedokáže spárovať tvoju platbu.
+Vezmi si so sebou aj **QR kod** ktory najdes v prilohe emailu, alebo na stranke po prihlásení v sekcii "Moje prihlásenia"
+a **potvrdenie o platbe** pre prípad, že systém nedokáže spárovať tvoju platbu.
 Ak zaplatíš poštovou poukážkou, určite so sebou prines aj ústrižok (stáva sa, že platby cez poštu neprejdú ani za týždeň). Ak máš možnosť uhradiť účastnícky poplatok cez internet banking, využi prosím túto možnosť.
 
 Ďakujeme za tvoje prihlásenie na púť a tešíme sa na teba.
