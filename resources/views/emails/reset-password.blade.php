@@ -7,7 +7,7 @@ zmenili sme tvoje heslo k používateľskému kontu na stránke www.domcek.org. 
 
 Pekný deň praje team,
 
-{{ config('app.name') }}
+Domček
 
 ------
 ###### V prípade akýchkoľvek problémov s používateľským kontom nás kontaktuj na podpora@domcek.org.

@@ -9,7 +9,7 @@ potvrdzujeme, že sme obdržali tvoju platbu vo výške: {{ $details['amount'] }
 <div style="margin-top: 40px">
 Pekný deň praje team,
 </div>
-{{ config('app.name') }}
+Domček
 
 ------
 ###### V prípade akýchkoľvek problémov s používateľským kontom nás kontaktuj na podpora@domcek.org.

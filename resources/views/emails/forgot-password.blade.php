@@ -12,7 +12,7 @@ dostali sme požiadavku na resetovanie tvojho hesla. Ak si želáš pokračovať
 <div style="margin-top: 40px">
 Pekný deň praje team,
 </div>
-{{ config('app.name') }}
+Domček
 
 ------
 ###### V prípade, ak si nežiadal o resetovanie hesla, môžeš tento e-mail ignorovať.

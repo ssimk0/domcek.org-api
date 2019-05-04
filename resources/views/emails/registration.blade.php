@@ -34,7 +34,7 @@ V prípade, že chceš zmeniť svoje prihlásenie alebo sa chceš odhlásiť, m�
 <div style="margin-top: 40px;color:black" >
 Pekný deň praje team,
 </div>
-{{ config('app.name') }}
+Domček
 
 
 ------
