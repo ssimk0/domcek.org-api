@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 
 
 use App\Services\TokenService;
+use Carbon\Carbon;
 use Closure;
 
 class TokenAuth
@@ -20,7 +21,9 @@ class TokenAuth
     {
         $token = $request->token;
         if ($token) {
-            if ($this->service->checkToken($type, $token)) {
+            $tokenData = $this->service->checkToken($type, $token);
+            if ($tokenData && Carbon::now()->greaterThanOrEqualTo($tokenData->valid_until)) {
+                $request->event_id = $tokenData->event_id;
                 return $next($request);
             } else {
                 return response('', 403);

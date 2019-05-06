@@ -42,9 +42,9 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
 
     // REGISTRATION
     $router->group(['prefix' => '/registration', 'middleware' => ['cors', 'token_auth:registration']], function () use ($router) {
-        $router->get('events/{id}/participants/all-details/sync', 'Secure\ParticipantController@detailedRegistrationList');
-        $router->get('events/{id}/participants/sync', 'Secure\ParticipantController@registrationList');
-        $router->put('events/{id}/participants/sync', 'Secure\ParticipantController@sync');
+        $router->get('events/participants/all-details/sync', 'Secure\ParticipantController@detailedRegistrationList');
+        $router->get('events/participants/sync', 'Secure\ParticipantController@registrationList');
+        $router->put('events/participants/sync', 'Secure\ParticipantController@sync');
     });
 
     // PAGE SECURE

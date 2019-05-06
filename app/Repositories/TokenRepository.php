@@ -15,6 +15,6 @@ class TokenRepository extends Repository
         return DB::table(TableConstants::AUTH_TOKEN)
             ->where('type', $type)
             ->where('token', $token)
-            ->exists();
+            ->first();
     }
 }
