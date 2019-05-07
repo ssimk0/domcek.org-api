@@ -155,6 +155,7 @@ class ParticipantRepository extends Repository
                 $join->on(TableConstants::VOLUNTEERS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
                 $join->on(TableConstants::VOLUNTEERS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
+            ->leftJoin(TableConstants::VOLUNTEERS_TYPES, TableConstants::VOLUNTEERS_TYPES.'.id', TableConstants::VOLUNTEERS.'.volunteer_type_id')
             ->leftJoin(TableConstants::PAYMENTS, function ($join) {
                 $join->on(TableConstants::PAYMENTS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
                 $join->on(TableConstants::PAYMENTS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
@@ -168,7 +169,7 @@ class ParticipantRepository extends Repository
                 TableConstants::PROFILES . '.first_name',
                 TableConstants::PARTICIPANTS . '.*',
                 TableConstants::VOLUNTEERS . '.is_leader',
-                TableConstants::VOLUNTEERS . '.volunteer_type_id',
+                TableConstants::VOLUNTEERS_TYPES . '.name',
                 TableConstants::PAYMENTS . '.payment_number',
                 TableConstants::PAYMENTS . '.need_pay',
                 TableConstants::PAYMENTS . '.paid',
@@ -229,6 +230,7 @@ class ParticipantRepository extends Repository
                 $join->on(TableConstants::VOLUNTEERS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
                 $join->on(TableConstants::VOLUNTEERS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
+            ->leftJoin(TableConstants::VOLUNTEERS_TYPES, TableConstants::VOLUNTEERS_TYPES.'.id', TableConstants::VOLUNTEERS.'.volunteer_type_id')
             ->leftJoin(TableConstants::PAYMENTS, function ($join) {
                 $join->on(TableConstants::PAYMENTS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
                 $join->on(TableConstants::PAYMENTS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
@@ -242,8 +244,8 @@ class ParticipantRepository extends Repository
                 TableConstants::PROFILES . '.*',
                 TableConstants::PARTICIPANTS . '.*',
                 TableConstants::VOLUNTEERS . '.is_leader',
-                TableConstants::VOLUNTEERS . '.volunteer_type_id',
                 TableConstants::PAYMENTS . '.payment_number',
+                TableConstants::VOLUNTEERS_TYPES . '.name',
                 TableConstants::PAYMENTS . '.need_pay',
                 TableConstants::PAYMENTS . '.paid',
                 TableConstants::PAYMENTS . '.on_registration',
