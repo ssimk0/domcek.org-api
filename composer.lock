@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c3ce61f562cfc7ab0fa8918d74c85a65",
+    "content-hash": "0f75e0d988615a69260ba89789280cb2",
     "packages": [
         {
             "name": "albertcht/invisible-recaptcha",
@@ -1660,6 +1660,53 @@
                 "slack"
             ],
             "time": "2018-12-12T13:12:06+00:00"
+        },
+        {
+            "name": "laravelista/lumen-vendor-publish",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravelista/lumen-vendor-publish.git",
+                "reference": "7684f731187277ac2ca7747558ec2ce3835bfc91"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravelista/lumen-vendor-publish/zipball/7684f731187277ac2ca7747558ec2ce3835bfc91",
+                "reference": "7684f731187277ac2ca7747558ec2ce3835bfc91",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/console": "^5.0",
+                "illuminate/filesystem": "^5.0",
+                "illuminate/support": "^5.0",
+                "league/flysystem": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Laravelista\\LumenVendorPublish\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mario Bašić",
+                    "email": "mario.basic@outlook.com"
+                }
+            ],
+            "description": "vendor:publish for Lumen framework.",
+            "keywords": [
+                "command",
+                "console",
+                "lumen",
+                "publish",
+                "vendor"
+            ],
+            "abandoned": true,
+            "time": "2017-09-26T12:43:31+00:00"
         },
         {
             "name": "lcobucci/jwt",
