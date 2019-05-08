@@ -109,15 +109,16 @@ class ParticipantRepository extends Repository
             ->first();
     }
 
-    public function list($eventId)
+    public function list($eventId, $filters)
     {
-        return DB::table(TableConstants::PARTICIPANTS)
+        $query = DB::table(TableConstants::PARTICIPANTS)
             ->join(TableConstants::PROFILES, TableConstants::PROFILES . '.user_id', TableConstants::PARTICIPANTS . '.user_id')
             ->join(TableConstants::USERS, TableConstants::USERS . '.id', TableConstants::PARTICIPANTS . '.user_id')
             ->leftJoin(TableConstants::VOLUNTEERS, function ($join) {
                 $join->on(TableConstants::VOLUNTEERS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
                 $join->on(TableConstants::VOLUNTEERS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
+            ->leftJoin(TableConstants::VOLUNTEERS_TYPES, TableConstants::VOLUNTEERS_TYPES.'.id', TableConstants::VOLUNTEERS.'.volunteer_type_id')
             ->leftJoin(TableConstants::PAYMENTS, function ($join) {
                 $join->on(TableConstants::PAYMENTS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
                 $join->on(TableConstants::PAYMENTS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
@@ -126,7 +127,23 @@ class ParticipantRepository extends Repository
                 $join->on(TableConstants::GROUPS . '.participant_id', TableConstants::PARTICIPANTS . '.id');
                 $join->on(TableConstants::GROUPS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
-            ->where(TableConstants::PARTICIPANTS . '.event_id', $eventId)
+            ->where(TableConstants::PARTICIPANTS . '.event_id', $eventId);
+
+            if ($filters['volunteer'] == '1' || $filters['volunteer'] == 1) {
+                $query->where(TableConstants::VOLUNTEERS.'.volunteer_type_id', '!=', null);
+            }
+
+            return $this->addWhereForFilter($query, $filters['filter'], [
+                'profiles.last_name',
+                'profiles.first_name',
+                'profiles.birth_date',
+                'profiles.phone',
+                'profiles.city',
+                'users.email',
+                'volunteer_types.name',
+                'payments.payment_number',
+                'groups.group_name'
+            ])
             ->select(
                 TableConstants::PROFILES . '.first_name',
                 TableConstants::PROFILES . '.last_name',
@@ -137,12 +154,16 @@ class ParticipantRepository extends Repository
                 TableConstants::USERS . '.email',
                 TableConstants::VOLUNTEERS . '.is_leader',
                 TableConstants::VOLUNTEERS . '.volunteer_type_id',
+                TableConstants::VOLUNTEERS_TYPES . '.name',
                 TableConstants::PAYMENTS . '.need_pay',
                 TableConstants::PAYMENTS . '.payment_number',
                 TableConstants::PAYMENTS . '.paid',
                 TableConstants::PAYMENTS . '.on_registration',
-                TableConstants::GROUPS . '.group_name'
+                TableConstants::GROUPS . '.group_name',
+                DB::raw('(select count(*) from volunteers where users.id = volunteers.user_id and volunteers.was_on_event = 1 ) as volunteer_count'),
+                DB::raw('(select count(*) from participants where users.id = participants.user_id and participants.was_on_event = 1 ) as participant_count'),
             )
+            ->groupBy('users.id')
             ->paginate(10);
     }
 

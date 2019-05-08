@@ -8,15 +8,15 @@ abstract class Repository {
     }
 
     public function addWhereForFilter($query, $filterString, $columns) {
-        $filters = explode(' ', $filterString);
-
+        $query->where(function($q) use ($filterString, $columns) {
+            $filters = explode(' ', $filterString);
 
             foreach ($columns as $column) {
                 foreach ($filters as $filter) {
-                    $query->orWhere($column, 'like', $this->prepareStringForLikeFilter($filter));
+                    $q->orWhere($column, 'like', $this->prepareStringForLikeFilter($filter));
                 }
             }
-
+        });
 
         return $query;
     }

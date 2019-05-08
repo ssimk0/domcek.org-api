@@ -134,9 +134,14 @@ class ParticipantController extends Controller
         return ErrorMessagesConstant::badAttempt();
     }
 
-    function list($eventId)
+    function list(Request $request, $eventId)
     {
-        $list = $this->service->list($eventId);
+        $filters = $this->validate($request, [
+            'filter' => 'string',
+            'volunteer' => 'integer'
+        ]);
+
+        $list = $this->service->list($eventId, $filters);
 
         return $this->jsonResponse($list);
     }

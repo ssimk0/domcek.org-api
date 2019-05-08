@@ -75,6 +75,7 @@ class UserRepository extends Repository
                 $this->prepareStringForLikeFilter($filter));
 
         return $this->addWhereForFilter($query, $filter, [
+            'profiles.first_name',
             'profiles.last_name',
             'profiles.birth_date',
             'profiles.phone',

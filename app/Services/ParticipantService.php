@@ -30,9 +30,9 @@ class ParticipantService extends Service
         $this->volunteersRepository = $volunteersRepository;
     }
 
-    public function list($eventId)
+    public function list($eventId, $filters)
     {
-        return $this->repository->list($eventId);
+        return $this->repository->list($eventId, $filters);
     }
 
     public function registrationList($eventId)
