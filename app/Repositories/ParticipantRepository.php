@@ -129,11 +129,11 @@ class ParticipantRepository extends Repository
             })
             ->where(TableConstants::PARTICIPANTS . '.event_id', $eventId);
 
-            if ($filters['volunteer'] == '1' || $filters['volunteer'] == 1) {
+            if (array_get($filters, 'volunteer') != null && ($filters['volunteer'] == '1' || $filters['volunteer'] == 1)) {
                 $query->where(TableConstants::VOLUNTEERS.'.volunteer_type_id', '!=', null);
             }
 
-            return $this->addWhereForFilter($query, $filters['filter'], [
+            return $this->addWhereForFilter($query, array_get($filters, 'filter', ''), [
                 'profiles.last_name',
                 'profiles.first_name',
                 'profiles.birth_date',

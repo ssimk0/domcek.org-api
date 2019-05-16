@@ -137,7 +137,7 @@ class EventTest extends TestCase
         $events = factory(App\Models\Event::class, 1)->create();
 
         foreach ($events as $event) {
-            $event->volunteerTypes()->attach([$types[1]]);
+            $event->volunteerTypes()->attach($types);
         }
 
         $this->put('/api/secure/admin/events/' . $events[0]->id, [
@@ -205,7 +205,7 @@ class EventTest extends TestCase
         $participant->save();
 
         foreach ([$eventAvailable, $eventNotAvailable] as $event) {
-            $event->volunteerTypes()->attach([$types[1]]);
+            $event->volunteerTypes()->attach($types);
         }
 
         $this->get('/api/events', [

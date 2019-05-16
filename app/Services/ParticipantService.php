@@ -107,13 +107,13 @@ class ParticipantService extends Service
                 // if you register after end of registration you need pay 5 euro fee
                 $needPay += $this->REGISTRATION_FEE;
             }
-            $this->createPayment($needPay, $eventId);
+            $paymentNumber = $this->createPayment($needPay, $eventId);
 
             $user = Auth::user();
             $profile = $user->profile()->first();
             $qrCodePath = "/tmp/".Str::random().".png";
             $this->generateQrCode($eventId, $user->id, $qrCodePath);
-
+    
             Mail::to($user->email)->send(new RegistrationMail(
                 $event->deposit,
                 $profile->first_name,
@@ -257,6 +257,8 @@ class ParticipantService extends Service
             'need_pay' => $needPay,
             'event_id' => $eventId,
         ]);
+
+        return $paymentNumber;
     }
 
 }
