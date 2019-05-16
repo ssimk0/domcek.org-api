@@ -17,6 +17,8 @@ use Illuminate\Support\Str;
 
 class ParticipantService extends Service
 {
+    private $REGISTRATION_FEE = 5;
+
     private $repository;
     private $volunteersRepository;
     private $paymentRepository;
@@ -93,35 +95,20 @@ class ParticipantService extends Service
                 return false;
             }
 
-            $this->repository->create([
-                'note' => array_get($data, 'note'),
-                'transport_in' => array_get($data, 'transportIn'),
-                'transport_out' => array_get($data, 'transportOut'),
-                'user_id' => $this->userId(),
-                'event_id' => $eventId
-            ]);
+            $this->createParticipant($data, $eventId);
 
             if ($volunteerTypeId && $now <= Carbon::parse($event->end_volunteer_registration)) {
-                $this->volunteersRepository->create([
-                    'volunteer_type_id' => $volunteerTypeId,
-                    'event_id' => $eventId,
-                    'user_id' => $this->userId()
-                ]);
+                $this->createVolunteer($volunteerTypeId, $eventId);
             }
-            $paymentNumber = $this->paymentRepository->generatePaymentNumber();
+
             $needPay = $event->need_pay;
 
             if ($now > Carbon::parse($event->end_registration)) {
                 // if you register after end of registration you need pay 5 euro fee
-                $needPay += 5;
+                $needPay += $this->REGISTRATION_FEE;
             }
-            $this->paymentRepository->create([
-                'user_id' => $this->userId(),
-                'payment_number' => $paymentNumber,
-                'paid' => 0,
-                'need_pay' => $needPay,
-                'event_id' => $eventId,
-            ]);
+            $this->createPayment($needPay, $eventId);
+
             $user = Auth::user();
             $profile = $user->profile()->first();
             $qrCodePath = "/tmp/".Str::random().".png";
@@ -221,6 +208,55 @@ class ParticipantService extends Service
             "participants" => $participants,
             "wrong-payments" => $notMatchedPayments
         ];
+    }
+
+    function sync($data, $eventId) {
+        $event = $this->eventRepository->detail($eventId);
+        foreach($data as $user) {
+            if ($user['was_on_event']) {
+                // registered before event
+                if ($user['payment_number']) {
+                   $this->repository->registerUser($user['user_id'], $eventId, $user['on_registration']);
+                } else {
+                    // register on event
+                    $this->createParticipant([], $eventId, true);
+                    $this->createPayment($event->need_pay + $this->REGISTRATION_FEE, $eventId, $user['on_registration']);
+                }
+            }
+        }
+    }
+
+    private function createParticipant($data, $eventId, $wasOnEvent=false) {
+        $this->repository->create([
+            'note' => array_get($data, 'note'),
+            'transport_in' => array_get($data, 'transportIn'),
+            'transport_out' => array_get($data, 'transportOut'),
+            'user_id' => $this->userId(),
+            'event_id' => $eventId,
+            'was_on_event' => $wasOnEvent
+        ]);
+    }
+
+    private function createVolunteer($volunteerTypeId, $eventId, $wasOnEvent=false) {
+        $this->volunteersRepository->create([
+            'volunteer_type_id' => $volunteerTypeId,
+            'event_id' => $eventId,
+            'user_id' => $this->userId(),
+            'was_on_event' => $wasOnEvent
+        ]);
+    }
+
+    private function createPayment($needPay, $eventId, $onReg = 0) {
+        $paymentNumber = $this->paymentRepository->generatePaymentNumber();
+     
+        $this->paymentRepository->create([
+            'user_id' => $this->userId(),
+            'payment_number' => $paymentNumber,
+            'paid' => 0,
+            'on_registration' => $onReg,
+            'need_pay' => $needPay,
+            'event_id' => $eventId,
+        ]);
     }
 
 }

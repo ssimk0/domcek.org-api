@@ -242,6 +242,33 @@ class ParticipantRepository extends Repository
             ]);
     }
 
+    public function registerUser($userId, $eventId, $payedOnRegistration) {
+        DB::table(TableConstants::PARTICIPANTS)
+        ->where('event_id', $eventId)
+        ->where('user_id', $userId)
+        ->update([
+            'was_on_event' => true
+        ]);
+
+        DB::table(TableConstants::PAYMENTS)
+        ->where('event_id', $eventId)
+        ->where('user_id', $userId)
+        ->update([
+            'on_registration' => $payedOnRegistration
+        ]);
+
+        $vol = DB::table(TableConstants::VOLUNTEERS)
+        ->where('event_id', $eventId)
+        ->where('user_id', $userId)
+        ->first();
+
+        if (!empty($vol)) { 
+            $vol->update([
+                'was_on_event'
+            ]);
+        }
+    }
+
     public function detailedRegistrationList($eventId)
     {
         $registered = DB::table(TableConstants::PARTICIPANTS)
