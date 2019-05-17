@@ -136,7 +136,7 @@ class ParticipantRepository extends Repository
             if (array_get($filters, 'sortBy') != null) {
                 $sortBy = $filters['sortBy'];
                 $sort = array_get($filters, 'sortDesc', 'false') == 'false' ? 'asc' : 'desc';
-                $profileFields = ['birt_date'];
+                $profileFields = ['birth_date'];
                 $groupFields = ['group_name'];
 
                 if ( in_array($sortBy, $profileFields) ) { 
