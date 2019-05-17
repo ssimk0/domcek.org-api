@@ -72,3 +72,40 @@ INSERT INTO events (events.id, events.name, events.theme, events.type, events.st
 SELECT actions.action_id, actions.action_name, actions.action_theme, actions.action_type, actions.action_start,
        DATE_SUB(actions.action_reg_end, INTERVAL 14 DAY), actions.action_volunt_reg_end,
        actions.action_reg_end, actions.action_end, 0, 0 FROM  actions;
+
+### MIGRATE USER MANUALY
+
+INSERT INTO volunteers (
+    event_id,
+    user_id,
+    volunteer_type_id,
+    was_on_event)
+SELECT action_id,
+       75,
+       (SELECT id FROM volunteer_types
+        WHERE
+                pilgrims.role = volunteer_types.name ) as vol_id,
+       2
+FROM pilgrims WHERE user_id = 9658 AND pilgrims.role != '';
+
+
+INSERT INTO participants (
+      participants.user_id,
+      participants.event_id,
+      participants.note,
+      participants.transport_in,
+      participants.transport_out,
+      participants.was_on_event,
+      participants.subscribed
+      )
+SELECT 75,
+       pilgrims.action_id,
+       note,
+       bus_in,
+       bus_out,
+       1,
+       1
+FROM pilgrims WHERE user_id = 9658;
+
+INSERT INTO payments (user_id, payment_number, paid, on_registration, need_pay, event_id)
+SELECT 76, FLOOR(RAND()*100000000), pilgrims.payedDeposit, pilgrims.payedReg, (pilgrims.payedDeposit + pilgrims.payedReg), action_id FROM pilgrims WHERE pilgrims.user_id = 9658;

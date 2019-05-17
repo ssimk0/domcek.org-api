@@ -19,6 +19,9 @@ class AddWasOnEventToTables extends Migration
 
         Schema::table('participants', function (Blueprint $table) {
             $table->boolean('was_on_event')->default(false);
+        });
+
+        Schema::table('participants', function (Blueprint $table) {
             $table->dropColumn('registration_date');
         });
     }

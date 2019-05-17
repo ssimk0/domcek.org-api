@@ -129,11 +129,24 @@ class ParticipantRepository extends Repository
             })
             ->where(TableConstants::PARTICIPANTS . '.event_id', $eventId);
 
-            if ($filters['volunteer'] == '1' || $filters['volunteer'] == 1) {
-                $query->where(TableConstants::VOLUNTEERS.'.volunteer_type_id', '!=', null);
+            if (array_get($filters, 'volunteer') != null) {
+                $query->whereIn(TableConstants::VOLUNTEERS.'.volunteer_type_id', $filters['volunteer']);
             }
 
-            return $this->addWhereForFilter($query, $filters['filter'], [
+            if (array_get($filters, 'sortBy') != null) {
+                $sortBy = $filters['sortBy'];
+                $sort = array_get($filters, 'sortDesc', 'false') == 'false' ? 'asc' : 'desc';
+                $profileFields = ['birt_date'];
+                $groupFields = ['group_name'];
+
+                if ( in_array($sortBy, $profileFields) ) { 
+                    $query->orderBy(TableConstants::PROFILES.'.'.$sortBy, $sort);
+                } else if (in_array($sortBy, $groupFields)) {
+                    $query->orderBy(TableConstants::GROUPS.'.'.$sortBy, $sort);
+                }
+            }
+
+            return $this->addWhereForFilter($query, array_get($filters, 'filter', ''), [
                 'profiles.last_name',
                 'profiles.first_name',
                 'profiles.birth_date',
@@ -199,15 +212,11 @@ class ParticipantRepository extends Repository
             )->get();
     }
 
-    public function edit($participantId, $registrationUserId, $changedBy)
+    public function edit($participantId, $changedBy)
     {
         $data = [
             'changed_by_user_id' => $changedBy
         ];
-
-        if (!empty($registrationUserId)) {
-            $data['register_by_user_id'] = $registrationUserId;
-        }
 
         DB::table(TableConstants::PARTICIPANTS)
             ->where('id', $participantId)
@@ -240,6 +249,33 @@ class ParticipantRepository extends Repository
             ->update([
                 'subscribed' => true
             ]);
+    }
+
+    public function registerUser($userId, $eventId, $payedOnRegistration) {
+        DB::table(TableConstants::PARTICIPANTS)
+        ->where('event_id', $eventId)
+        ->where('user_id', $userId)
+        ->update([
+            'was_on_event' => true
+        ]);
+
+        DB::table(TableConstants::PAYMENTS)
+        ->where('event_id', $eventId)
+        ->where('user_id', $userId)
+        ->update([
+            'on_registration' => $payedOnRegistration
+        ]);
+
+        $vol = DB::table(TableConstants::VOLUNTEERS)
+        ->where('event_id', $eventId)
+        ->where('user_id', $userId)
+        ->first();
+
+        if (!empty($vol)) { 
+            $vol->update([
+                'was_on_event'
+            ]);
+        }
     }
 
     public function detailedRegistrationList($eventId)

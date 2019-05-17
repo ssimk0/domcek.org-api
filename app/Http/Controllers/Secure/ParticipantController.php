@@ -115,12 +115,26 @@ class ParticipantController extends Controller
         return ErrorMessagesConstant::notFound();
     }
 
+    function data(Request $request) {
+        $data = $this->validate($request, [
+            'data' => 'json'
+        ]);
+
+        $result = $this->service->sync($data['data'], $request->event_id);
+
+        if ($result) {
+            return $this->successResponse();
+        }
+
+        return ErrorMessagesConstant::badAttempt();
+    }
+
     function edit(Request $request, $participantId, $eventId)
     {
         $data = $this->validate($request, [
             'volunteerTypeId' => 'integer',
-            'registrationUserId' => 'integer',
             'paid' => 'integer',
+            'group_name' => 'string',
             'userId' => 'integer',
             'isLeader' => 'bool',
         ]);
@@ -138,7 +152,9 @@ class ParticipantController extends Controller
     {
         $filters = $this->validate($request, [
             'filter' => 'string',
-            'volunteer' => 'integer'
+            'volunteer' => 'array',
+            'sortBy' => 'string',
+            'sortDesc' => 'string'
         ]);
 
         $list = $this->service->list($eventId, $filters);

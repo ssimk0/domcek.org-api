@@ -14,7 +14,7 @@ class AddEventIdToAuthTokens extends Migration
     public function up()
     {
         Schema::table('auth_tokens', function (Blueprint $table) {
-            $table->unsignedInteger('event_id');
+            $table->unsignedInteger('event_id')->default(1);
 
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade')->onUpdate('cascade');
         });

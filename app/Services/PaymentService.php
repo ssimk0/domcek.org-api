@@ -47,7 +47,7 @@ class PaymentService extends Service
                 }
             }
 
-            if (!$matched) {
+            if (!$matched && ($payment['paymentNumber'] || $payment['note'])) {
                 $this->repository->addNotMatchedPayment($payment, $eventId);
             }
         }

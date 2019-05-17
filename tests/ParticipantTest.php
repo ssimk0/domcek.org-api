@@ -70,7 +70,6 @@ class ParticipantTest extends TestCase
         ], [
             'Authorization' => 'Bearer ' . $token
         ]);
-
         $this->assertResponseStatus(201);
 
         $payment = Payment::where('user_id', $profile->user_id)
