@@ -101,7 +101,7 @@ class CreateEventTable extends Migration
 
         Schema::create('groups', function (Blueprint $table) {
             $table->text('group_name');
-            $table->unsignedInteger('group_animator');
+            $table->unsignedInteger('group_animator')->nullable();
             $table->unsignedInteger('event_id')->index();
             $table->unsignedInteger('participant_id')->index();
 

@@ -133,8 +133,8 @@ class ParticipantController extends Controller
     {
         $data = $this->validate($request, [
             'volunteerTypeId' => 'integer',
-            'registrationUserId' => 'integer',
             'paid' => 'integer',
+            'group_name' => 'string',
             'userId' => 'integer',
             'isLeader' => 'bool',
         ]);
@@ -152,7 +152,9 @@ class ParticipantController extends Controller
     {
         $filters = $this->validate($request, [
             'filter' => 'string',
-            'volunteer' => 'integer'
+            'volunteer' => 'array',
+            'sortBy' => 'string',
+            'sortDesc' => 'string'
         ]);
 
         $list = $this->service->list($eventId, $filters);

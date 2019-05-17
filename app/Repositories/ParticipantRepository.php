@@ -129,8 +129,21 @@ class ParticipantRepository extends Repository
             })
             ->where(TableConstants::PARTICIPANTS . '.event_id', $eventId);
 
-            if (array_get($filters, 'volunteer') != null && ($filters['volunteer'] == '1' || $filters['volunteer'] == 1)) {
-                $query->where(TableConstants::VOLUNTEERS.'.volunteer_type_id', '!=', null);
+            if (array_get($filters, 'volunteer') != null) {
+                $query->whereIn(TableConstants::VOLUNTEERS.'.volunteer_type_id', $filters['volunteer']);
+            }
+
+            if (array_get($filters, 'sortBy') != null) {
+                $sortBy = $filters['sortBy'];
+                $sort = array_get($filters, 'sortDesc', 'false') == 'false' ? 'asc' : 'desc';
+                $profileFields = ['birt_date'];
+                $groupFields = ['group_name'];
+
+                if ( in_array($sortBy, $profileFields) ) { 
+                    $query->orderBy(TableConstants::PROFILES.'.'.$sortBy, $sort);
+                } else if (in_array($sortBy, $groupFields)) {
+                    $query->orderBy(TableConstants::GROUPS.'.'.$sortBy, $sort);
+                }
             }
 
             return $this->addWhereForFilter($query, array_get($filters, 'filter', ''), [
@@ -199,15 +212,11 @@ class ParticipantRepository extends Repository
             )->get();
     }
 
-    public function edit($participantId, $registrationUserId, $changedBy)
+    public function edit($participantId, $changedBy)
     {
         $data = [
             'changed_by_user_id' => $changedBy
         ];
-
-        if (!empty($registrationUserId)) {
-            $data['register_by_user_id'] = $registrationUserId;
-        }
 
         DB::table(TableConstants::PARTICIPANTS)
             ->where('id', $participantId)

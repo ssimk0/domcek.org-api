@@ -8,6 +8,7 @@ use App\Repositories\EventRepository;
 use App\Repositories\ParticipantRepository;
 use App\Repositories\PaymentRepository;
 use App\Repositories\VolunteersRepository;
+use App\Repositories\GroupRepository;
 use Carbon\Carbon;
 use Endroid\QrCode\QrCode;
 use Exception;
@@ -23,13 +24,20 @@ class ParticipantService extends Service
     private $volunteersRepository;
     private $paymentRepository;
     private $eventRepository;
+    private $groupRepository;
 
-    public function __construct(ParticipantRepository $repository, VolunteersRepository $volunteersRepository, PaymentRepository $paymentRepository, EventRepository $eventRepository)
+    public function __construct(ParticipantRepository $repository, 
+    VolunteersRepository $volunteersRepository, 
+    PaymentRepository $paymentRepository,
+    EventRepository $eventRepository,
+    GroupRepository $groupRepository
+    )
     {
         $this->repository = $repository;
         $this->eventRepository = $eventRepository;
         $this->paymentRepository = $paymentRepository;
         $this->volunteersRepository = $volunteersRepository;
+        $this->groupRepository = $groupRepository;
     }
 
     public function list($eventId, $filters)
@@ -48,7 +56,7 @@ class ParticipantService extends Service
         $paid = array_get($data, 'paid');
         $isLeader = array_get($data, 'isLeader', false);
         $volunteerTypeId = array_get($data, 'volunteerTypeId');
-        $registrationUserId = array_get($data, 'registrationUserId');
+        $group = array_get($data, 'group_name');
 
         try {
             if (!empty($paid)) {
@@ -63,7 +71,11 @@ class ParticipantService extends Service
                 $this->volunteersRepository->editByUserAndEventId($data, $userId, $eventId);
             }
 
-            $this->repository->edit($participantId, $registrationUserId, $this->userId());
+            if (!empty($group)) {
+                $this->groupRepository->editGroupByParticipantAndEventId($group, $participantId, $eventId);
+            }
+
+            $this->repository->edit($participantId, $this->userId());
 
             return true;
 
