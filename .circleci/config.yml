@@ -38,6 +38,7 @@ jobs:
             - v1-dependencies-
 
       - run: composer install
+      - run: cp -r .env.example .env
 
       - save_cache:
           key: composer-v1-{{ checksum "composer.lock" }}
