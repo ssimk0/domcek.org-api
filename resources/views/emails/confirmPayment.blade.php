@@ -1,8 +1,8 @@
 @component('mail::message')
 
-Milý/á {{ $user->first_name }},
+Milý/á {{ $user }},
 
-potvrdzujeme, že sme obdržali tvoju platbu vo výške: {{ $details['amount'] }} EUR.
+potvrdzujeme, že sme obdržali tvoju platbu vo výške: {{ $amount }} EUR.
 
 
 

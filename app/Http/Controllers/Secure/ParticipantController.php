@@ -115,12 +115,13 @@ class ParticipantController extends Controller
         return ErrorMessagesConstant::notFound();
     }
 
-    function data(Request $request) {
+    function sync(Request $request) {
         $data = $this->validate($request, [
-            'data' => 'json'
+            'participants' => 'array',
+            'wrong-payments' => 'array'
         ]);
 
-        $result = $this->service->sync($data['data'], $request->event_id);
+        $result = $this->service->sync($data, $request->event_id);
 
         if ($result) {
             return $this->successResponse();
@@ -154,7 +155,8 @@ class ParticipantController extends Controller
             'filter' => 'string',
             'volunteer' => 'array',
             'sortBy' => 'string',
-            'sortDesc' => 'string'
+            'sortDesc' => 'string',
+            'type' => 'string'
         ]);
 
         $list = $this->service->list($eventId, $filters);

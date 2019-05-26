@@ -34,12 +34,12 @@ class PaymentService extends Service
                     try {
                         $when = $when->addMinutes(1);
                         $user = $this->userRepository->findUserWithProfile($dbPayment->user_id);
-                        $mail = new ConfirmPaymentMail($payment, $user);
+                        $mail = new ConfirmPaymentMail($payment['amount'], $user->first_name);
                         $userEmail = $user->email;
                         Mail::to($userEmail)
                             ->later($when, $mail);
 
-                        $this->repository->edit($dbPayment->user_id, $dbPayment->event_id, intval($payment['amount']));
+                        $this->repository->edit($dbPayment->user_id, $eventId, intval($payment['amount']));
                     } catch (\Exception $e) {
                         $this->logError('Problem pri updatovani platby: ' . json_encode($payment) . ' error: ' . $e->getMessage() . 'trace: ' . $e->getTraceAsString());
                     }
