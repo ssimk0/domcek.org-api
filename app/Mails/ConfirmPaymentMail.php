@@ -5,22 +5,20 @@ namespace App\Mails;
 
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
 class ConfirmPaymentMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $paymentsDetails;
+    public $paymentAmount;
     public $user;
 
-    public function __construct($paymentsDetails, $user)
+    public function __construct($amount, $userFirstName)
     {
-        $this->paymentsDetails = $paymentsDetails;
-        $this->user = $user;
+        $this->paymentAmount = $amount;
+        $this->user = $userFirstName;
     }
 
     /**
@@ -33,7 +31,7 @@ class ConfirmPaymentMail extends Mailable
         return $this->markdown('emails.confirmPayment')
             ->subject('Potvrdenie Platby')
             ->with([
-                'details' => $this->paymentsDetails,
+                'amount' => $this->paymentAmount,
                 'user' => $this->user
             ]);
     }

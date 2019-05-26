@@ -224,26 +224,40 @@ class ParticipantService extends Service
 
     function sync($data, $eventId) {
         $event = $this->eventRepository->detail($eventId);
-        foreach($data as $user) {
-            if ($user['was_on_event']) {
+        foreach(array_get($data, 'participants', []) as $user) {
+            if (array_get($user, 'was_on_event', null)) {
                 // registered before event
-                if ($user['payment_number']) {
+                if (array_get($user, 'payment_number', false)) {
                    $this->repository->registerUser($user['user_id'], $eventId, $user['on_registration']);
                 } else {
-                    // register on event
-                    $this->createParticipant([], $eventId, true);
-                    $this->createPayment($event->need_pay + $this->REGISTRATION_FEE, $eventId, $user['on_registration']);
+                    $exist = $this->repository->participantExist($eventId, $user['user_id']);
+                    if (!$exist) {
+                        // register on event
+                        $this->createParticipant([
+                            'user_id' => $user['user_id'],
+                            'note' => 'Prihlasený na púti'
+                        ], $eventId, true);
+                        $this->createPayment($event->need_pay + $this->REGISTRATION_FEE, $eventId, $user['on_registration'], $user['user_id']);
+                    } else {
+                        $this->repository->registerUser($user['user_id'], $eventId, $user['on_registration']);
+                    }
                 }
             }
         }
+
+        foreach(array_get($data, 'wrong-payments', []) as $payment) {
+
+        }
+
+        return true;
     }
 
     private function createParticipant($data, $eventId, $wasOnEvent=false) {
         $this->repository->create([
-            'note' => array_get($data, 'note'),
+            'note' => array_get($data, 'note', ''),
             'transport_in' => array_get($data, 'transportIn'),
             'transport_out' => array_get($data, 'transportOut'),
-            'user_id' => $this->userId(),
+            'user_id' => array_get($data, 'user_id', false) ? $data['user_id'] : $this->userId(),
             'event_id' => $eventId,
             'was_on_event' => $wasOnEvent
         ]);
@@ -258,11 +272,11 @@ class ParticipantService extends Service
         ]);
     }
 
-    private function createPayment($needPay, $eventId, $onReg = 0) {
+    private function createPayment($needPay, $eventId, $onReg = 0, $userId=false) {
         $paymentNumber = $this->paymentRepository->generatePaymentNumber();
      
         $this->paymentRepository->create([
-            'user_id' => $this->userId(),
+            'user_id' => $userId ? $userId : $this->userId(),
             'payment_number' => $paymentNumber,
             'paid' => 0,
             'on_registration' => $onReg,

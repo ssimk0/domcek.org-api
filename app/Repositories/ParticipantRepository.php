@@ -146,6 +146,12 @@ class ParticipantRepository extends Repository
                 }
             }
 
+            if (array_get($filters, 'type') == 'volunteer') {
+                $query->where(TableConstants::VOLUNTEERS.'.volunteer_type_id', '!=', null);
+            } else if (array_get($filters, 'type') == 'participant') {
+                $query->where(TableConstants::VOLUNTEERS.'.volunteer_type_id', '=', null);
+            }
+
             return $this->addWhereForFilter($query, array_get($filters, 'filter', ''), [
                 'profiles.last_name',
                 'profiles.first_name',
@@ -276,6 +282,13 @@ class ParticipantRepository extends Repository
                 'was_on_event'
             ]);
         }
+    }
+
+    public function participantExist($eventId, $userId) {
+        return DB::table(TableConstants::PARTICIPANTS)
+        ->where('event_id', $eventId)
+        ->where('user_id', $userId)
+        ->exists();
     }
 
     public function detailedRegistrationList($eventId)
