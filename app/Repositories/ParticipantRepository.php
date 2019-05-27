@@ -312,6 +312,7 @@ class ParticipantRepository extends Repository
             ->where(TableConstants::PARTICIPANTS . '.event_id', $eventId)
             ->select(
                 TableConstants::PROFILES . '.*',
+                TableConstants::USERS.'.email',
                 TableConstants::PARTICIPANTS . '.*',
                 TableConstants::VOLUNTEERS . '.is_leader',
                 TableConstants::PAYMENTS . '.payment_number',
