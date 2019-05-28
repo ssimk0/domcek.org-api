@@ -218,11 +218,11 @@ class ParticipantRepository extends Repository
             )->get();
     }
 
-    public function edit($participantId, $changedBy)
+    public function edit($participantId, $changedBy, $data = [])
     {
-        $data = [
+        $data = array_merge($data, [
             'changed_by_user_id' => $changedBy
-        ];
+        ]);
 
         DB::table(TableConstants::PARTICIPANTS)
             ->where('id', $participantId)
@@ -312,6 +312,7 @@ class ParticipantRepository extends Repository
             ->where(TableConstants::PARTICIPANTS . '.event_id', $eventId)
             ->select(
                 TableConstants::PROFILES . '.*',
+                TableConstants::USERS.'.email',
                 TableConstants::PARTICIPANTS . '.*',
                 TableConstants::VOLUNTEERS . '.is_leader',
                 TableConstants::PAYMENTS . '.payment_number',
@@ -324,6 +325,11 @@ class ParticipantRepository extends Repository
             ->all();
 
         $profiles = DB::table(TableConstants::PROFILES)
+            ->join(TableConstants::USERS, TableConstants::USERS.'.id', TableConstants::PROFILES.'.user_id')
+            ->select(
+                TableConstants::PROFILES . '.*',
+                TableConstants::USERS.'.email'
+            )
             ->get()
             ->all();
         $notRegistered = array_filter($profiles, function ($profile) use ($registered) {

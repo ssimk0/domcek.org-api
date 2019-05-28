@@ -12,12 +12,12 @@ class ConfirmPaymentMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $paymentAmount;
+    public $amount;
     public $user;
 
     public function __construct($amount, $userFirstName)
     {
-        $this->paymentAmount = $amount;
+        $this->amount = $amount;
         $this->user = $userFirstName;
     }
 
@@ -31,7 +31,7 @@ class ConfirmPaymentMail extends Mailable
         return $this->markdown('emails.confirmPayment')
             ->subject('Potvrdenie Platby')
             ->with([
-                'amount' => $this->paymentAmount,
+                'amount' => $this->amount,
                 'user' => $this->user
             ]);
     }

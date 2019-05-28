@@ -135,6 +135,7 @@ class ParticipantController extends Controller
         $data = $this->validate($request, [
             'volunteerTypeId' => 'integer',
             'paid' => 'integer',
+            'adminNote' => 'string',
             'group_name' => 'string',
             'userId' => 'integer',
             'isLeader' => 'bool',
