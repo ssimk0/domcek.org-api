@@ -278,7 +278,7 @@ class ParticipantRepository extends Repository
 
         if ($vol->exists()) {
             $vol->update([
-                'was_on_event'
+                'was_on_event' => 1
             ]);
         }
     }
