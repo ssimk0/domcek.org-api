@@ -274,10 +274,9 @@ class ParticipantRepository extends Repository
 
         $vol = DB::table(TableConstants::VOLUNTEERS)
         ->where('event_id', $eventId)
-        ->where('user_id', $userId)
-        ->first();
+        ->where('user_id', $userId);
 
-        if (!empty($vol)) { 
+        if ($vol->exists()) {
             $vol->update([
                 'was_on_event'
             ]);
