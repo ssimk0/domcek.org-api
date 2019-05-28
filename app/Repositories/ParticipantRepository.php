@@ -207,6 +207,7 @@ class ParticipantRepository extends Repository
             ->where(TableConstants::PARTICIPANTS . '.event_id', $eventId)
             ->select(
                 TableConstants::PROFILES . '.first_name',
+                TableConstants::PROFILES . '.birth_date',
                 TableConstants::PARTICIPANTS . '.*',
                 TableConstants::VOLUNTEERS . '.is_leader',
                 TableConstants::VOLUNTEERS_TYPES . '.name',
