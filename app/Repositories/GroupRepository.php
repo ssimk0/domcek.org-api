@@ -7,13 +7,12 @@ use App\Models\Group;
 
 class GroupRepository extends Repository {
     function editGroupByParticipantAndEventId($group, $participantId, $eventId) {
-        $item = DB::table(TableConstants::GROUPS)
+        $query = DB::table(TableConstants::GROUPS)
         ->where('participant_id', $participantId)
-        ->where('event_id', $eventId)
-        ->first();
+        ->where('event_id', $eventId);
 
-        if ($item) { 
-            $item->update([
+        if ($query->exists()) { 
+            $query->update([
                 'group_name' => $group
             ]);
         } else {

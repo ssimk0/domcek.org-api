@@ -63,12 +63,12 @@ class VolunteersRepository extends Repository
 
     public function types()
     {
-        return DB::table('volunteer_types')->where('active', true)->get();
+        return DB::table(TableConstants::VOLUNTEERS_TYPES)->where('active', true)->get();
     }
 
     public function typeByName($name)
     {
-        return DB::table('volunteer_types')->where('name', $name)->first();
+        return DB::table(TableConstants::VOLUNTEERS_TYPES)->where('name', $name)->first();
     }
 
     public function create(array $data)
@@ -77,5 +77,15 @@ class VolunteersRepository extends Repository
         $volunteer->save();
 
         return $volunteer;
+    }
+
+
+    public function deleteIfExist($userId, $eventId) {
+        $query =  DB::table(TableConstants::VOLUNTEERS)
+        ->where('event_id', $eventId)
+        ->where('user_id', $userId);
+        if ($query->exists()) {
+            $query->delete();
+        }
     }
 }

@@ -15,6 +15,7 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use function GuzzleHttp\json_encode;
 
 class ParticipantService extends Service
 {
@@ -54,6 +55,7 @@ class ParticipantService extends Service
     {
         $userId = array_get($data, 'userId');
         $paid = array_get($data, 'paid');
+        $adminNote = array_get($data, 'adminNote', '');
         $isLeader = array_get($data, 'isLeader', false);
         $volunteerTypeId = array_get($data, 'volunteerTypeId');
         $group = array_get($data, 'group_name');
@@ -69,13 +71,17 @@ class ParticipantService extends Service
                     'is_leader' => $isLeader,
                 ];
                 $this->volunteersRepository->editByUserAndEventId($data, $userId, $eventId);
+            } else {
+                $this->volunteersRepository->deleteIfExist($userId, $eventId);
             }
 
             if (!empty($group)) {
                 $this->groupRepository->editGroupByParticipantAndEventId($group, $participantId, $eventId);
             }
 
-            $this->repository->edit($participantId, $this->userId());
+            $this->repository->edit($participantId, $this->userId(), [
+                'admin_note' => $adminNote
+            ]);
 
             return true;
 
@@ -226,27 +232,39 @@ class ParticipantService extends Service
         $event = $this->eventRepository->detail($eventId);
         foreach(array_get($data, 'participants', []) as $user) {
             if (array_get($user, 'was_on_event', null)) {
-                // registered before event
-                if (array_get($user, 'payment_number', false)) {
-                   $this->repository->registerUser($user['user_id'], $eventId, $user['on_registration']);
-                } else {
-                    $exist = $this->repository->participantExist($eventId, $user['user_id']);
-                    if (!$exist) {
-                        // register on event
-                        $this->createParticipant([
-                            'user_id' => $user['user_id'],
-                            'note' => 'Prihlasený na púti'
-                        ], $eventId, true);
-                        $this->createPayment($event->need_pay + $this->REGISTRATION_FEE, $eventId, $user['on_registration'], $user['user_id']);
+                try {
+                    // registered before event
+                    if (array_get($user, 'payment_number', false)) {
+                    $this->repository->registerUser($user['user_id'], $eventId, $user['on_registration']);
                     } else {
-                        $this->repository->registerUser($user['user_id'], $eventId, $user['on_registration']);
+                        $exist = $this->repository->participantExist($eventId, $user['user_id']);
+                        if (!$exist) {
+                            // register on event
+                            $this->createParticipant([
+                                'user_id' => $user['user_id'],
+                                'note' => 'Prihlasený na púti'
+                            ], $eventId, true);
+                            $this->createPayment($event->need_pay + $this->REGISTRATION_FEE, $eventId, $user['on_registration'], $user['user_id']);
+                        } else {
+                            $this->repository->registerUser($user['user_id'], $eventId, $user['on_registration']);
+                        }
                     }
+                } catch(\Exception $e) {
+                    $this->logError('Problem with register user ' + json_encode($user));
                 }
             }
         }
 
         foreach(array_get($data, 'wrong-payments', []) as $payment) {
-
+            $userId = array_get($payment, 'user_id', false);
+            if ($userId) { 
+                try {
+                    $this->paymentRepository->edit($userId, $eventId, $payment['amount']);
+                    $this->deleteWrongPaymentById($payment['id']);
+                } catch(\Exception $e) {
+                    $this->logError('Problem with edit payment ' + $payment['id'] + 'for user ' + $payment['user_id']);
+                }
+            }
         }
 
         return true;
