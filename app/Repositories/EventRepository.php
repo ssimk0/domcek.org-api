@@ -99,7 +99,10 @@ class EventRepository extends Repository
         $countParticipants = $this->getCountParticipant('participant', $eventId);
         $countVolunteer = $this->getCountParticipant('volunteer', $eventId);
         $countInBusPassengers = $this->getCountBusPassengers($eventId, 'transport_in');
-        $countOutBusPassengers = $this->getCountBusPassengers($eventId, 'transport_out');
+        $countOutBusPassengers = DB::table(TableConstants::PARTICIPANTS)
+            ->where('event_id', $eventId)
+            ->where('transport_out', 'like', '%:%')
+            ->count();
         $topNames = $this->getTop($eventId, TableConstants::PROFILES.'.first_name', 15);
         $topCities = $this->getTop($eventId, TableConstants::PROFILES.'.city');
         $topAges = $this->getTop($eventId, DB::raw('YEAR(profiles.birth_date) as year'), 5, DB::raw('YEAR(profiles.birth_date)'));
@@ -162,6 +165,10 @@ class EventRepository extends Repository
         return DB::table(TableConstants::PARTICIPANTS)
             ->where('event_id', $eventId)
             ->where($type, 'like', '%:%')
-            ->count();
+            ->groupBy($type)
+            ->select(
+                DB::raw('COUNT(*) as count'),
+                $type
+            )->get();
     }
 }
