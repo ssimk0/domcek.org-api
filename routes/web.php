@@ -45,6 +45,7 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
         $router->get('events/participants/all-details/sync', 'Secure\ParticipantController@detailedRegistrationList');
         $router->get('events/participants/sync', 'Secure\ParticipantController@registrationList');
         $router->put('events/participants/sync', 'Secure\ParticipantController@sync');
+        $router->post('backup', 'Secure\BackupController@upload');
     });
 
     // PAGE SECURE

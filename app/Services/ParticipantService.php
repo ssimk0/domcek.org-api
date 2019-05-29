@@ -272,7 +272,8 @@ class ParticipantService extends Service
 
     private function createParticipant($data, $eventId, $wasOnEvent=false) {
         $this->repository->create([
-            'note' => array_get($data, 'note', ''),
+            'admin_note' => array_get($data, 'note', ''),
+            'note' => '',
             'transport_in' => array_get($data, 'transportIn'),
             'transport_out' => array_get($data, 'transportOut'),
             'user_id' => array_get($data, 'user_id', false) ? $data['user_id'] : $this->userId(),

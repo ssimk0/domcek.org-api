@@ -207,6 +207,7 @@ class ParticipantRepository extends Repository
             ->where(TableConstants::PARTICIPANTS . '.event_id', $eventId)
             ->select(
                 TableConstants::PROFILES . '.first_name',
+                TableConstants::PROFILES . '.birth_date',
                 TableConstants::PARTICIPANTS . '.*',
                 TableConstants::VOLUNTEERS . '.is_leader',
                 TableConstants::VOLUNTEERS_TYPES . '.name',
@@ -274,12 +275,11 @@ class ParticipantRepository extends Repository
 
         $vol = DB::table(TableConstants::VOLUNTEERS)
         ->where('event_id', $eventId)
-        ->where('user_id', $userId)
-        ->first();
+        ->where('user_id', $userId);
 
-        if (!empty($vol)) { 
+        if ($vol->exists()) {
             $vol->update([
-                'was_on_event'
+                'was_on_event' => 1
             ]);
         }
     }
