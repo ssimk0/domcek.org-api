@@ -76,7 +76,11 @@ class EventRepository extends Repository
 
     public function deleteAllTransportTimesForEvent($eventId)
     {
-        DB::table('event_transport_times')->where('event_id', $eventId)->delete();
+        $query = DB::table('event_transport_times')->where('event_id', $eventId);
+
+        if ($query->exists()) {
+            $query->delete();
+        }
     }
 
     public function availableEvents()
@@ -88,5 +92,76 @@ class EventRepository extends Repository
             ->whereDate('start_date', '>', $today)
             ->orderBy('start_date', 'desc')
             ->get();
+    }
+
+    public function stats($eventId)
+    {
+        $countParticipants = $this->getCountParticipant('participant', $eventId);
+        $countVolunteer = $this->getCountParticipant('volunteer', $eventId);
+        $countInBusPassengers = $this->getCountBusPassengers($eventId, 'transport_in');
+        $countOutBusPassengers = $this->getCountBusPassengers($eventId, 'transport_out');
+        $topNames = $this->getTop($eventId, TableConstants::PROFILES.'.first_name', 15);
+        $topCities = $this->getTop($eventId, TableConstants::PROFILES.'.city');
+        $topAges = $this->getTop($eventId, DB::raw('YEAR(profiles.birth_date) as year'), 5, DB::raw('YEAR(profiles.birth_date)'));
+
+        return [
+            'ages' => $topAges,
+            'cities' => $topCities,
+            'names' => $topNames,
+            'bus-in' => $countInBusPassengers,
+            'bus-out' => $countOutBusPassengers,
+            'volunteers' => $countVolunteer,
+            'participants' => $countParticipants,
+            'count-all' => $countVolunteer + $countParticipants
+        ];
+    }
+
+
+    private function getCountParticipant($type, $eventId) {
+        $query = DB::table(TableConstants::PARTICIPANTS)
+            ->leftJoin(TableConstants::VOLUNTEERS, function ($join) {
+                $join->on(TableConstants::VOLUNTEERS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
+                $join->on(TableConstants::VOLUNTEERS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
+            })
+            ->where(TableConstants::PARTICIPANTS.'.event_id', $eventId)
+            ->where(TableConstants::PARTICIPANTS.'.was_on_event', true);
+
+        if ($type == 'volunteer') {
+            return $query
+                ->where(TableConstants::VOLUNTEERS . '.id', '!=', null)
+                ->count();
+        } else if ($type == 'participant') {
+            return $query
+                ->where(TableConstants::VOLUNTEERS . '.id', '=', null)
+                ->count();
+        } else {
+            return $query->count();
+        }
+    }
+
+    private function getTop($eventId, $column, $limit = 5, $groupBy = null) {
+        $groupBy = $groupBy ? $groupBy : $column;
+        return DB::table(TableConstants::PROFILES)
+            ->leftJoin(TableConstants::PARTICIPANTS, function ($join) {
+                $join->on(TableConstants::PARTICIPANTS . '.user_id', TableConstants::PROFILES . '.user_id');
+            })
+            ->where(TableConstants::PARTICIPANTS.'.event_id', $eventId)
+            ->where(TableConstants::PARTICIPANTS.'.was_on_event', true)
+            ->groupBy($groupBy)
+            ->orderByRaw('COUNT(*) desc')
+            ->select(
+                DB::raw('COUNT(*) as count'),
+                $column
+            )
+            ->limit($limit)
+            ->get();
+    }
+
+    private function getCountBusPassengers($eventId, $type)
+    {
+        return DB::table(TableConstants::PARTICIPANTS)
+            ->where('event_id', $eventId)
+            ->where($type, 'like', '%:%')
+            ->count();
     }
 }

@@ -118,9 +118,8 @@ class EventService extends Service
                 $event = $this->event->instance($eventId);
                 $event->volunteerTypes()->sync($volunteerTypes);
             }
-            if (!empty($timesIn) || !empty($timesOut)) {
-                $this->event->deleteAllTransportTimesForEvent($event->id);
-            }
+
+            $this->event->deleteAllTransportTimesForEvent($event->id);
 
             foreach ($timesIn as $time) {
                 $this->event->createEventTransportTime($event->id, $time, 'in');
@@ -141,13 +140,14 @@ class EventService extends Service
     public function eventDetail($eventId)
     {
         $event = $this->event->detail($eventId);
+        $stats = $this->event->stats($eventId);
         if (empty($event)) return $event;
 
         $event->busInTimes = $this->event->getEventTransportTimes($event->id, 'in');
         $event->busOutTimes = $this->event->getEventTransportTimes($event->id, 'out');
         $event->volunteerTypes = $this->eventVolunteer->eventVolunteerTypes($event->id);
         $event->participantCount = $this->participant->getCountForEvent($event->id);
-
+        $event->stats = $stats;
         return $event;
     }
 
