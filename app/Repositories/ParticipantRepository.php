@@ -258,12 +258,13 @@ class ParticipantRepository extends Repository
             ]);
     }
 
-    public function registerUser($userId, $eventId, $payedOnRegistration) {
+    public function registerUser($userId, $eventId, $transportOut, $payedOnRegistration) {
         DB::table(TableConstants::PARTICIPANTS)
         ->where('event_id', $eventId)
         ->where('user_id', $userId)
         ->update([
-            'was_on_event' => true
+            'was_on_event' => true,
+            'transport_out' => $transportOut
         ]);
 
         DB::table(TableConstants::PAYMENTS)

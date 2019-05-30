@@ -233,20 +233,24 @@ class ParticipantService extends Service
         foreach(array_get($data, 'participants', []) as $user) {
             if (array_get($user, 'was_on_event', null)) {
                 try {
+                    $transport = array_get($user, 'transport_out');
+                    $userId = $user['user_id'];
+                    $payedOnRegistration = $user['on_registration'];
                     // registered before event
                     if (array_get($user, 'payment_number', false)) {
-                    $this->repository->registerUser($user['user_id'], $eventId, $user['on_registration']);
+                    $this->repository->registerUser($userId, $eventId, $transport, $payedOnRegistration);
                     } else {
-                        $exist = $this->repository->participantExist($eventId, $user['user_id']);
+                        $exist = $this->repository->participantExist($eventId, $userId);
                         if (!$exist) {
                             // register on event
                             $this->createParticipant([
-                                'user_id' => $user['user_id'],
+                                'user_id' => $userId,
+                                'transportOut' => $transport,
                                 'note' => 'Prihlasený na púti'
                             ], $eventId, true);
-                            $this->createPayment($event->need_pay + $this->REGISTRATION_FEE, $eventId, $user['on_registration'], $user['user_id']);
+                            $this->createPayment($event->need_pay + $this->REGISTRATION_FEE, $eventId, $payedOnRegistration, $userId);
                         } else {
-                            $this->repository->registerUser($user['user_id'], $eventId, $user['on_registration']);
+                            $this->repository->registerUser($userId, $eventId, $transport, $payedOnRegistration);
                         }
                     }
                 } catch(\Exception $e) {
