@@ -146,6 +146,12 @@ class ParticipantRepository extends Repository
                 }
             }
 
+            if (array_get($filters, 'type') == 'volunteer') {
+                $query->where(TableConstants::VOLUNTEERS.'.volunteer_type_id', '!=', null);
+            } else if (array_get($filters, 'type') == 'participant') {
+                $query->where(TableConstants::VOLUNTEERS.'.volunteer_type_id', '=', null);
+            }
+
             return $this->addWhereForFilter($query, array_get($filters, 'filter', ''), [
                 'profiles.last_name',
                 'profiles.first_name',
@@ -201,6 +207,7 @@ class ParticipantRepository extends Repository
             ->where(TableConstants::PARTICIPANTS . '.event_id', $eventId)
             ->select(
                 TableConstants::PROFILES . '.first_name',
+                TableConstants::PROFILES . '.birth_date',
                 TableConstants::PARTICIPANTS . '.*',
                 TableConstants::VOLUNTEERS . '.is_leader',
                 TableConstants::VOLUNTEERS_TYPES . '.name',
@@ -212,11 +219,11 @@ class ParticipantRepository extends Repository
             )->get();
     }
 
-    public function edit($participantId, $changedBy)
+    public function edit($participantId, $changedBy, $data = [])
     {
-        $data = [
+        $data = array_merge($data, [
             'changed_by_user_id' => $changedBy
-        ];
+        ]);
 
         DB::table(TableConstants::PARTICIPANTS)
             ->where('id', $participantId)
@@ -268,14 +275,20 @@ class ParticipantRepository extends Repository
 
         $vol = DB::table(TableConstants::VOLUNTEERS)
         ->where('event_id', $eventId)
-        ->where('user_id', $userId)
-        ->first();
+        ->where('user_id', $userId);
 
-        if (!empty($vol)) { 
+        if ($vol->exists()) {
             $vol->update([
-                'was_on_event'
+                'was_on_event' => 1
             ]);
         }
+    }
+
+    public function participantExist($eventId, $userId) {
+        return DB::table(TableConstants::PARTICIPANTS)
+        ->where('event_id', $eventId)
+        ->where('user_id', $userId)
+        ->exists();
     }
 
     public function detailedRegistrationList($eventId)
@@ -299,6 +312,7 @@ class ParticipantRepository extends Repository
             ->where(TableConstants::PARTICIPANTS . '.event_id', $eventId)
             ->select(
                 TableConstants::PROFILES . '.*',
+                TableConstants::USERS.'.email',
                 TableConstants::PARTICIPANTS . '.*',
                 TableConstants::VOLUNTEERS . '.is_leader',
                 TableConstants::PAYMENTS . '.payment_number',
@@ -311,6 +325,11 @@ class ParticipantRepository extends Repository
             ->all();
 
         $profiles = DB::table(TableConstants::PROFILES)
+            ->join(TableConstants::USERS, TableConstants::USERS.'.id', TableConstants::PROFILES.'.user_id')
+            ->select(
+                TableConstants::PROFILES . '.*',
+                TableConstants::USERS.'.email'
+            )
             ->get()
             ->all();
         $notRegistered = array_filter($profiles, function ($profile) use ($registered) {

@@ -94,4 +94,10 @@ class PaymentRepository extends Payment
             ->where('event_id', $eventId)
             ->get();
     }
+
+    public function deleteWrongPaymentById($id) {
+        return DB::table(TableConstants::WRONG_PAYMENTS)
+        ->where('id', $id)
+        ->delete();
+    }
 }
