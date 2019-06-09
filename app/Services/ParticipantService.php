@@ -264,7 +264,7 @@ class ParticipantService extends Service
             if ($userId) { 
                 try {
                     $this->paymentRepository->edit($userId, $eventId, $payment['amount']);
-                    $this->deleteWrongPaymentById($payment['id']);
+                    $this->paymentRepository->deleteWrongPaymentById($payment['id']);
                 } catch(\Exception $e) {
                     $this->logError('Problem with edit payment ' + $payment['id'] + 'for user ' + $payment['user_id']);
                 }

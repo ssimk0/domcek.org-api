@@ -274,6 +274,7 @@ class UserService extends Service
                 'last_name' => 'lastName',
                 'first_name' => 'firstName',
                 'city'     => 'city',
+                'admin_note' => 'note'
             ];
 
             $mappingUser = [

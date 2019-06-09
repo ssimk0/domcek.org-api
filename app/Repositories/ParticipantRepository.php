@@ -169,6 +169,7 @@ class ParticipantRepository extends Repository
                 TableConstants::PROFILES . '.city',
                 TableConstants::PROFILES . '.birth_date',
                 TableConstants::PROFILES . '.phone',
+                DB::raw('profiles.admin_note as anote'),
                 TableConstants::PARTICIPANTS . '.*',
                 TableConstants::USERS . '.email',
                 TableConstants::VOLUNTEERS . '.is_leader',
