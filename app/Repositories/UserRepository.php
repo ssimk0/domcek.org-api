@@ -80,6 +80,7 @@ class UserRepository extends Repository
             'profiles.birth_date',
             'profiles.phone',
             'profiles.city',
+            'profiles.admin_note',
             'users.email',
         ])
             ->orderBy('email', 'desc')
