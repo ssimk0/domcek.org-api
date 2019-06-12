@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Mails\ConfirmPaymentMail;
 use App\Repositories\PaymentRepository;
 use App\Repositories\UserRepository;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 
 class PaymentService extends Service
@@ -48,6 +49,11 @@ class PaymentService extends Service
             }
 
             if (!$matched && ($payment['paymentNumber'] || $payment['note'])) {
+                try {
+                    $payment['date'] = Carbon::parse($payment['date']);
+                } catch (\Exception $e) {
+                    $this->logWarning('Error while parsing date from transaction');
+                }
                 $this->repository->addNotMatchedPayment($payment, $eventId);
             }
         }

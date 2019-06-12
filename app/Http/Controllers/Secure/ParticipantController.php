@@ -157,6 +157,7 @@ class ParticipantController extends Controller
             'volunteer' => 'array',
             'sortBy' => 'string',
             'sortDesc' => 'string',
+            'group' => 'string',
             'type' => 'string'
         ]);
 

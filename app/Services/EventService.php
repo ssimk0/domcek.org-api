@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\TransportType;
 use App\Repositories\EventRepository;
+use App\Repositories\GroupRepository;
 use App\Repositories\ParticipantRepository;
 use App\Repositories\VolunteersRepository;
 
@@ -12,12 +13,14 @@ class EventService extends Service
     private $participant;
     private $event;
     private $eventVolunteer;
+    private $group;
 
-    public function __construct(EventRepository $event, ParticipantRepository $participant, VolunteersRepository $eventVolunteer)
+    public function __construct(EventRepository $event, ParticipantRepository $participant, VolunteersRepository $eventVolunteer, GroupRepository $group)
     {
         $this->event = $event;
         $this->participant = $participant;
         $this->eventVolunteer = $eventVolunteer;
+        $this->group = $group;
     }
 
     public function createEvent(array $data)
@@ -160,6 +163,11 @@ class EventService extends Service
         }
 
         return false;
+    }
+
+    public function eventGroups($eventId)
+    {
+        return $this->group->getGroupsForEvent($eventId);
     }
 
 }

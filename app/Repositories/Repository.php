@@ -1,7 +1,14 @@
 <?php
 namespace App\Repositories;
 
+use App\Constants\TableConstants;
+
 abstract class Repository {
+
+    protected $globalFilters = [
+        "volunteer" => TableConstants::VOLUNTEERS.'.volunteer_type_id',
+        "group" => TableConstants::GROUPS.".group_name"
+    ];
 
     public function prepareStringForLikeFilter($string) {
         return '%'.$string.'%';
@@ -17,6 +24,20 @@ abstract class Repository {
                 }
             }
         });
+
+        return $query;
+    }
+
+    public function filterQuery($query, $filters) {
+        foreach ( $this->globalFilters as $filterName => $filterField) {
+            if (array_get($filters, $filterName) != null) {
+                if (is_array($filters[$filterName])) {
+                    $query->whereIn($filterField, $filters[$filterName]);
+                } else {
+                    $query->where($filterField, $filters[$filterName]);
+                }
+            }
+        }
 
         return $query;
     }

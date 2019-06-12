@@ -129,9 +129,7 @@ class ParticipantRepository extends Repository
             })
             ->where(TableConstants::PARTICIPANTS . '.event_id', $eventId);
 
-            if (array_get($filters, 'volunteer') != null) {
-                $query->whereIn(TableConstants::VOLUNTEERS.'.volunteer_type_id', $filters['volunteer']);
-            }
+            $query = $this->filterQuery($query, $filters);
 
             if (array_get($filters, 'sortBy') != null) {
                 $sortBy = $filters['sortBy'];
