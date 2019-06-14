@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
 {
@@ -102,7 +103,8 @@ class AuthController extends Controller
             'phone' => 'required|string',
             'email' => 'required|email',
             'terms_and_condition' => 'required|accepted',
-            'newsletter' => 'boolean'
+            'newsletter' => 'boolean',
+            'sex' => ['required', Rule::in(['f', 'm'])],
         ]);
 
         $result = $this->service->createUser($data);
