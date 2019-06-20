@@ -129,9 +129,7 @@ class ParticipantRepository extends Repository
             })
             ->where(TableConstants::PARTICIPANTS . '.event_id', $eventId);
 
-            if (array_get($filters, 'volunteer') != null) {
-                $query->whereIn(TableConstants::VOLUNTEERS.'.volunteer_type_id', $filters['volunteer']);
-            }
+            $query = $this->filterQuery($query, $filters);
 
             if (array_get($filters, 'sortBy') != null) {
                 $sortBy = $filters['sortBy'];
@@ -169,6 +167,7 @@ class ParticipantRepository extends Repository
                 TableConstants::PROFILES . '.city',
                 TableConstants::PROFILES . '.birth_date',
                 TableConstants::PROFILES . '.phone',
+                DB::raw('profiles.admin_note as anote'),
                 TableConstants::PARTICIPANTS . '.*',
                 TableConstants::USERS . '.email',
                 TableConstants::VOLUNTEERS . '.is_leader',
@@ -258,12 +257,13 @@ class ParticipantRepository extends Repository
             ]);
     }
 
-    public function registerUser($userId, $eventId, $payedOnRegistration) {
+    public function registerUser($userId, $eventId, $transportOut, $payedOnRegistration) {
         DB::table(TableConstants::PARTICIPANTS)
         ->where('event_id', $eventId)
         ->where('user_id', $userId)
         ->update([
-            'was_on_event' => true
+            'was_on_event' => true,
+            'transport_out' => $transportOut
         ]);
 
         DB::table(TableConstants::PAYMENTS)

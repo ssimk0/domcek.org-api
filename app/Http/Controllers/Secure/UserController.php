@@ -89,6 +89,7 @@ class UserController extends Controller
             'isEditor' => 'boolean',
             'phone' => 'string',
             'email' => 'string',
+            'note' => 'string'
         ]);
 
         $result = $this->service->editUser($data, $userId);

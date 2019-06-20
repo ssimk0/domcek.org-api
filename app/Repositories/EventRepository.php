@@ -25,8 +25,7 @@ class EventRepository extends Repository
 
     public function list($size, $filter)
     {
-        $query = DB::table(TableConstants::EVENTS)
-            ->where('name', 'like', $this->prepareStringForLikeFilter($filter));
+        $query = DB::table(TableConstants::EVENTS);
 
         return $this->addWhereForFilter($query, $filter, ['name', 'theme'])
             ->orderBy('start_date', 'desc')

@@ -114,4 +114,9 @@ class EventController extends Controller
 
         return ErrorMessagesConstant::notFound();
     }
+
+    public function eventGroups($eventId)
+    {
+        return $this->jsonResponse($this->service->eventGroups($eventId));
+    }
 }

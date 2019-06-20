@@ -25,4 +25,13 @@ class GroupRepository extends Repository {
             $group->save();
         }
     }
+
+    public function getGroupsForEvent($eventId)
+    {
+        return DB::table(TableConstants::GROUPS)
+            ->where('event_id', $eventId)
+            ->groupBy('group_name')
+            ->orderByRaw('cast(group_name as unsigned)')
+            ->get(['group_name', 'group_animator', 'event_id']);
+    }
 }

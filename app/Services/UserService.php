@@ -33,7 +33,8 @@ class UserService extends Service
         PaymentRepository $paymentRepository,
         VolunteersRepository $volunteersRepository,
         OldWebIntegrationRepository $oldWebIntegrationRepository
-    ) {
+    )
+    {
         $this->repository = $repository;
         $this->participantRepository = $participantRepository;
         $this->volunteersRepository = $volunteersRepository;
@@ -55,12 +56,12 @@ class UserService extends Service
                     Mail::to($email)->send(new ForgotPasswordMail($token));
                 } else {
                     $this->logError('Nepodarilo sa ulozit token do databazy pre email '
-                        .$email);
+                        . $email);
                 }
             }
         } catch (\Exception $e) {
-            $this->logWarning('Problem pri reset passworde pre '.$email
-                .'s error '.$e);
+            $this->logWarning('Problem pri reset passworde pre ' . $email
+                . 's error ' . $e);
         }
     }
 
@@ -79,7 +80,7 @@ class UserService extends Service
             }
         } catch (\Exception $e) {
             $this->logWarning('Problem pri updatovani použivateľovho hesla pre token'
-                .$token.'s errorom '.$e);
+                . $token . 's errorom ' . $e);
         }
 
         return false;
@@ -88,11 +89,11 @@ class UserService extends Service
     function userDetail($user)
     {
         return [
-            'email'        => $user->email,
-            'admin'        => $user->is_admin,
-            'editor'       => $user->is_writer,
-            'avatar'       => $user->avatar,
-            'profile'      => $this->repository->getUserProfile($user->id),
+            'email' => $user->email,
+            'admin' => $user->is_admin,
+            'editor' => $user->is_writer,
+            'avatar' => $user->avatar,
+            'profile' => $this->repository->getUserProfile($user->id),
         ];
     }
 
@@ -120,13 +121,13 @@ class UserService extends Service
     {
         try {
             $mappingProfile = [
-                'phone'    => 'phone',
+                'phone' => 'phone',
                 'last_name' => 'lastName',
-                'city'     => 'city',
+                'city' => 'city',
             ];
 
             $mappingUser = [
-                'email'  => 'email',
+                'email' => 'email',
                 'avatar' => 'avatar',
             ];
 
@@ -138,7 +139,7 @@ class UserService extends Service
             return true;
         } catch (\Exception $e) {
             $this->logWarning('Problem pri updatovani použivateľovho hesla s errorom'
-                .$e);
+                . $e);
         }
 
         return false;
@@ -155,7 +156,7 @@ class UserService extends Service
             return true;
         } catch (\Exception $e) {
             $this->logWarning('Problem pri updatovani použivateľovho hesla s errorom'
-                .$e);
+                . $e);
         }
 
         return false;
@@ -165,8 +166,8 @@ class UserService extends Service
     {
         try {
             $userData = [
-                'email'    => $data['email'],
-                'avatar'   => array_get($data, 'avatar', null),
+                'email' => $data['email'],
+                'avatar' => array_get($data, 'avatar', null),
                 'password' => Hash::make($data['password']),
             ];
 
@@ -180,11 +181,12 @@ class UserService extends Service
 
             $profileData = [
                 'first_name' => ucfirst($data['firstName']),
-                'last_name'  => ucfirst($data['lastName']),
-                'city'       => ucfirst($data['city']),
-                'phone'      => $data['phone'],
-                'user_id'    => $user->id,
+                'last_name' => ucfirst($data['lastName']),
+                'city' => ucfirst($data['city']),
+                'phone' => $data['phone'],
+                'user_id' => $user->id,
                 'birth_date' => $data['birthDate'],
+                'sex' => $data['sex'],
                 'date_approved_term_and_condition' => Carbon::now()
             ];
             $this->repository->createUserProfile($profileData);
@@ -196,13 +198,14 @@ class UserService extends Service
             return true;
         } catch (\Exception $e) {
             $this->logWarning('Problem pri vytvarani použivateľa s errorom '
-                .$e);
+                . $e);
         }
 
         return false;
     }
 
-    private function migrateDataFromOldDatabase($email, $userId) {
+    private function migrateDataFromOldDatabase($email, $userId)
+    {
         try {
             $oldUsers = $this->oldWebIntegrationRepository->findOldUser($email);
 
@@ -221,11 +224,11 @@ class UserService extends Service
                 foreach ($oldEvents as $event) {
                     // create record about event registration
                     $this->participantRepository->create([
-                        'note'          => $event->note,
-                        'transport_in'  => '',
+                        'note' => $event->note,
+                        'transport_in' => '',
                         'transport_out' => '',
-                        'user_id'       => $userId,
-                        'event_id'      => $event->action_id,
+                        'user_id' => $userId,
+                        'event_id' => $event->action_id,
                         'was_on_event' => $event->was_on_act === 'true'
                     ]);
 
@@ -249,7 +252,7 @@ class UserService extends Service
                     ]);
                 }
             }
-        } catch(MultipleOldAccounts $e) {
+        } catch (MultipleOldAccounts $e) {
             Mail::to('simko22@gmail.com')->send(new ExceptionMail($e));
         } catch (\Exception $e) {
             Mail::to('simko22@gmail.com')->send(new ExceptionMail($e));
@@ -270,14 +273,15 @@ class UserService extends Service
     {
         try {
             $mappingProfile = [
-                'phone'    => 'phone',
+                'phone' => 'phone',
                 'last_name' => 'lastName',
                 'first_name' => 'firstName',
-                'city'     => 'city',
+                'city' => 'city',
+                'admin_note' => 'note'
             ];
 
             $mappingUser = [
-                'email'  => 'email',
+                'email' => 'email',
                 'is_writer' => 'isEditor',
                 'is_admin' => 'isAdmin',
             ];
@@ -290,7 +294,7 @@ class UserService extends Service
             return true;
         } catch (\Exception $e) {
             $this->logWarning('Problem pri updatovani použivateľovho hesla s errorom'
-                .$e);
+                . $e);
         }
 
         return false;
@@ -310,7 +314,8 @@ class UserService extends Service
         $userId,
         $eventId,
         $wasOnEvent
-    ) {
+    )
+    {
         $this->volunteersRepository->create([
             'volunteer_type_id' => $typeId,
             'event_id' => $eventId,

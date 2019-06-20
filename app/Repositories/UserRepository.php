@@ -9,6 +9,7 @@ use App\Models\NewsletterSubs;
 use App\Models\Profile;
 use App\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UserRepository extends Repository
 {
@@ -67,18 +68,19 @@ class UserRepository extends Repository
 
     public function list($size, $filter)
     {
+
         $query = DB::table(TableConstants::USERS)
             ->join(TableConstants::PROFILES,
                 TableConstants::PROFILES.'.user_id',
-                TableConstants::USERS.'.id')
-            ->where('profiles.first_name', 'like',
-                $this->prepareStringForLikeFilter($filter));
+                TableConstants::USERS.'.id');
 
         return $this->addWhereForFilter($query, $filter, [
+            'profiles.first_name',
             'profiles.last_name',
             'profiles.birth_date',
             'profiles.phone',
             'profiles.city',
+            'profiles.admin_note',
             'users.email',
         ])
             ->orderBy('email', 'desc')
@@ -94,8 +96,8 @@ class UserRepository extends Repository
                 'users.is_writer',
                 DB::raw('(select count(*) from volunteers where users.id = volunteers.user_id and volunteers.was_on_event = 1 ) as volunteer_count'),
                 DB::raw('(select count(*) from participants where users.id = participants.user_id and participants.was_on_event = 1 ) as participant_count'),
-            ])
-            ->paginate($size);
+            ])->paginate($size);
+
     }
 
     public function findUser($userId)
