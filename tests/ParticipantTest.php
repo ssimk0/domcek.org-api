@@ -1,17 +1,20 @@
 <?php
 
 use App\Models\Event;
+use App\Models\EventPrice;
 use App\Models\Participant;
 use App\Models\Payment;
 use App\Models\Profile;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 
 class ParticipantTest extends TestCase
 {
     use DatabaseMigrations;
+    use WithFaker;
 
     function testAuthEvent()
     {
@@ -56,15 +59,23 @@ class ParticipantTest extends TestCase
 
     function testRegisterParticipant()
     {
-
+        $this->setUpFaker();
         $event = factory(App\Models\Event::class)->create();
         $profile = factory(App\Models\Profile::class)->create();
+        $price = new App\Models\EventPrice([
+            'event_id' => $event->id,
+            'need_pay' => $this->faker->randomDigit,
+            'deposit' => $this->faker->randomDigit
+        ]);
+
+        $price->save();
         $token = $this->login();
 
         $this->post('/api/secure/user/events/1', [
             'note' => 'test',
             'transportIn' => 'test',
             'transportOut' => 'test',
+            'priceId' => $price->id,
             'GDPRRegistration' => true,
             'audioVisualKnowledgeAgreement' => true,
         ], [
@@ -76,7 +87,8 @@ class ParticipantTest extends TestCase
             ->where('event_id', $event->id)
             ->first();
 
-        $this->assertEquals($event->need_pay, $payment->need_pay);
+        $this->assertEquals($price->need_pay, $payment->need_pay);
+        $this->assertEquals($price->id, $payment->event_price_id);
         $this->assertEquals('0', $payment->paid);
         $this->assertEquals('1', $payment->event_id);
     }
@@ -91,10 +103,15 @@ class ParticipantTest extends TestCase
             'end_registration' => Carbon::now()->subDays(3)->format('Y-m-d'),
             'end_volunteer_registration' => Carbon::now()->subDays(14)->format('Y-m-d'),
             'start_registration' => Carbon::now()->subDays(30)->format('Y-m-d'),
+        ]);
+        $event->save();
+
+        $price = new App\Models\EventPrice([
+            'event_id' => $event->id,
             'need_pay' => 5,
             'deposit' => 0
         ]);
-        $event->save();
+        $price->save();
         $profile = factory(App\Models\Profile::class)->create();
         $token = $this->login();
 
@@ -102,11 +119,13 @@ class ParticipantTest extends TestCase
             'note' => 'test',
             'transportIn' => 'test',
             'transportOut' => 'test',
+            'priceId' => $price->id,
             'GDPRRegistration' => 'true',
             'audioVisualKnowledgeAgreement' => 'true',
         ], [
             'Authorization' => 'Bearer ' . $token
         ]);
+
 
         $this->assertResponseStatus(201);
 
@@ -114,7 +133,7 @@ class ParticipantTest extends TestCase
             ->where('event_id', $event->id)
             ->first();
         // test fee
-        $this->assertEquals($event->need_pay + 5, $payment->need_pay);
+        $this->assertEquals($price->need_pay + 5, $payment->need_pay);
         $this->assertEquals('0', $payment->paid);
         $this->assertEquals('1', $payment->event_id);
     }
@@ -129,10 +148,15 @@ class ParticipantTest extends TestCase
             'end_registration' => Carbon::now()->subDays(3)->format('Y-m-d'),
             'end_volunteer_registration' => Carbon::now()->subDays(14)->format('Y-m-d'),
             'start_registration' => Carbon::now()->subDays(30)->format('Y-m-d'),
+        ]);
+        $event->save();
+
+        $price = new App\Models\EventPrice([
+            'event_id' => $event->id,
             'need_pay' => 5,
             'deposit' => 0
         ]);
-        $event->save();
+        $price->save();
         $profile = factory(App\Models\Profile::class)->create();
         $token = $this->login();
 
@@ -140,12 +164,12 @@ class ParticipantTest extends TestCase
             'note' => 'test',
             'transportIn' => 'test',
             'transportOut' => 'test',
+            'priceId' => $price->id,
             'GDPRRegistration' => true,
             'audioVisualKnowledgeAgreement' => true,
         ], [
             'Authorization' => 'Bearer ' . $token
         ]);
-
         $this->assertResponseStatus(400);
     }
 

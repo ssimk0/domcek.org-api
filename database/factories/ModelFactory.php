@@ -75,14 +75,21 @@ $factory->define(App\Models\Event::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->sentence,
         'theme' => $faker->sentence,
-        'need_pay' => $faker->randomDigit,
-        'deposit' => $faker->randomDigit,
         'start_date' => \Carbon\Carbon::now()->addYear(1)->format('Y-m-d'),
         'end_date' => $faker->date(),
         'start_registration' => \Carbon\Carbon::now()->addYear(1)->format('Y-m-d'),
         'end_registration' => \Carbon\Carbon::now()->addYear(1)->format('Y-m-d'),
         'end_volunteer_registration' => \Carbon\Carbon::now()->addYear(1)->format('Y-m-d'),
     ];
+});
+
+$factory->define(App\Models\EventPrice::class, function (Faker\Generator $faker) {
+   return [
+       'event_id' => 1,
+       'need_pay' => $faker->randomDigit,
+       'deposit' => $faker->randomDigit,
+       'description' => $faker->sentence
+   ];
 });
 
 
