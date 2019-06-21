@@ -85,17 +85,14 @@ class EventService extends Service
     public function availableEvents()
     {
         $events = $this->event->availableEvents();
-        $ids = [];
 
         foreach ($events as $event) {
-           $ids []= $event->id;
+           $event->prices = $this->event->eventPrices([$event->id]);
+           $event->volunteerTypes = $this->eventVolunteer->eventVolunteerTypes([$event->id]);
+           $event->participantCount = $this->participant->getCountForEvent([$event->id]);
+           $event->busInTimes = $this->event->getEventTransportTimes($event->id, 'in');
+           $event->busOutTimes = $this->event->getEventTransportTimes($event->id, 'out');
         }
-
-        $event->volunteerTypes = $this->eventVolunteer->eventVolunteerTypes($ids);
-        $event->participantCount = $this->participant->getCountForEvent($ids);
-
-        $event->busInTimes = $this->event->getEventTransportTimes($ids, 'in');
-        $event->busOutTimes = $this->event->getEventTransportTimes($ids, 'out');
 
         return $events;
     }
@@ -143,9 +140,10 @@ class EventService extends Service
     public function eventDetail($eventId)
     {
         $event = $this->event->detail($eventId);
+        $price = $this->event->eventPrices([$eventId]);
         $stats = $this->event->stats($eventId);
         if (empty($event)) return $event;
-
+        $event->prices = $price;
         $event->busInTimes = $this->event->getEventTransportTimes([$event->id], 'in');
         $event->busOutTimes = $this->event->getEventTransportTimes([$event->id], 'out');
         $event->volunteerTypes = $this->eventVolunteer->eventVolunteerTypes([$event->id]);
