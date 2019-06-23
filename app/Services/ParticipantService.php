@@ -107,6 +107,8 @@ class ParticipantService extends Service
 
         try {
             $event = $this->eventRepository->detail($eventId);
+            $eventPrice = $this->eventRepository->eventPriceById($data['priceId'], $eventId);
+
             $now = Carbon::now();
 
             if ($now >= Carbon::parse($event->start_date)) {
@@ -119,13 +121,13 @@ class ParticipantService extends Service
                 $this->createVolunteer($volunteerTypeId, $eventId);
             }
 
-            $needPay = $event->need_pay;
+            $needPay = $eventPrice->need_pay;
 
             if ($now > Carbon::parse($event->end_registration)) {
                 // if you register after end of registration you need pay 5 euro fee
                 $needPay += $this->REGISTRATION_FEE;
             }
-            $paymentNumber = $this->createPayment($needPay, $eventId);
+            $paymentNumber = $this->createPayment($needPay, $eventId, $data['priceId']);
 
             $user = Auth::user();
             $profile = $user->profile()->first();
@@ -133,7 +135,7 @@ class ParticipantService extends Service
             $this->generateQrCode($eventId, $user->id, $qrCodePath);
     
             Mail::to($user->email)->send(new RegistrationMail(
-                $event->deposit,
+                $eventPrice->deposit,
                 $profile->first_name,
                 $profile->birth_date,
                 $paymentNumber,
@@ -229,7 +231,10 @@ class ParticipantService extends Service
     }
 
     function sync($data, $eventId) {
-        $event = $this->eventRepository->detail($eventId);
+        $eventPrice = $this->eventRepository->eventPrices([$eventId]);
+        if (!empty($eventPrice)) {
+            $eventPrice = $eventPrice[0];
+        }
         foreach(array_get($data, 'participants', []) as $user) {
             if (array_get($user, 'was_on_event', null)) {
                 try {
@@ -248,13 +253,14 @@ class ParticipantService extends Service
                                 'transportOut' => $transport,
                                 'note' => 'Prihlasený na púti'
                             ], $eventId, true);
-                            $this->createPayment($event->need_pay + $this->REGISTRATION_FEE, $eventId, $payedOnRegistration, $userId);
+                            $this->createPayment($payedOnRegistration, $eventId, empty($eventPrice) ? null : $eventPrice->id, $payedOnRegistration, $userId);
                         } else {
                             $this->repository->registerUser($userId, $eventId, $transport, $payedOnRegistration);
                         }
                     }
                 } catch(\Exception $e) {
                     $this->logError('Problem with register user ' + json_encode($user));
+
                 }
             }
         }
@@ -295,12 +301,13 @@ class ParticipantService extends Service
         ]);
     }
 
-    private function createPayment($needPay, $eventId, $onReg = 0, $userId=false) {
+    private function createPayment($needPay, $eventId, $priceId, $onReg = 0, $userId=false) {
         $paymentNumber = $this->paymentRepository->generatePaymentNumber();
      
         $this->paymentRepository->create([
             'user_id' => $userId ? $userId : $this->userId(),
             'payment_number' => $paymentNumber,
+            'event_price_id' => $priceId,
             'paid' => 0,
             'on_registration' => $onReg,
             'need_pay' => $needPay,

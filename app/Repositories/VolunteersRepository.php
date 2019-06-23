@@ -9,11 +9,11 @@ use Illuminate\Support\Facades\DB;
 
 class VolunteersRepository extends Repository
 {
-    public function eventVolunteerTypes($eventId)
+    public function eventVolunteerTypes($eventIds)
     {
         return DB::table(TableConstants::EVENT_VOLUNTEERS_TYPES)
             ->join(TableConstants::VOLUNTEERS_TYPES, TableConstants::EVENT_VOLUNTEERS_TYPES . '.volunteer_type_id', TableConstants::VOLUNTEERS_TYPES . '.id')
-            ->where(TableConstants::EVENT_VOLUNTEERS_TYPES . '.event_id', $eventId)
+            ->whereIn(TableConstants::EVENT_VOLUNTEERS_TYPES . '.event_id', $eventIds)
             ->get([TableConstants::VOLUNTEERS_TYPES . '.*', TableConstants::EVENT_VOLUNTEERS_TYPES . '.event_id']);
     }
 

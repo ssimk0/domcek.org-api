@@ -170,4 +170,28 @@ class EventRepository extends Repository
                 $type
             )->get();
     }
+
+    public function createPrices($prices, $eventId)
+    {
+        foreach ($prices as $price) {
+            $data = [
+                'event_id' => $eventId,
+                'need_pay' => array_get($price, 'need_pay', false),
+                'deposit' => array_get($price, 'deposit', false),
+                'description' => array_get($price, 'description', false),
+            ];
+
+            DB::table(TableConstants::EVENT_PRICES)->insert($data);
+        }
+    }
+
+    public function eventPrices($ids)
+    {
+        return DB::table(TableConstants::EVENT_PRICES)->whereIn('event_id', $ids)->get();
+    }
+
+    public function eventPriceById($id, $eventId)
+    {
+        return DB::table(TableConstants::EVENT_PRICES)->where('id', $id)->where('event_id', $eventId)->first();
+    }
 }

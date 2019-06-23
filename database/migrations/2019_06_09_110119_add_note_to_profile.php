@@ -14,7 +14,7 @@ class AddNoteToProfile extends Migration
     public function up()
     {
         Schema::table('profiles', function (Blueprint $table) {
-            $table->string('admin_note');
+            $table->string('admin_note')->nullable();
         });
     }
 

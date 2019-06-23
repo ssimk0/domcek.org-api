@@ -229,10 +229,10 @@ class ParticipantRepository extends Repository
             ->update($data);
     }
 
-    public function getCountForEvent($event_id)
+    public function getCountForEvent($event_ids)
     {
         return DB::table(TableConstants::PARTICIPANTS)
-            ->where('event_id', $event_id)
+            ->whereIn('event_id', $event_ids)
             ->where('subscribed', true)
             ->count();
     }

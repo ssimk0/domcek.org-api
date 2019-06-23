@@ -30,6 +30,7 @@ class ParticipantController extends Controller
             'transportOut' => 'required|string',
             'audioVisualKnowledgeAgreement' => 'required|accepted',
             'GDPRRegistration' => 'required|accepted',
+            'priceId' => 'required|integer',
         ]);
 
         $result = $this->service->create($data, $eventId);

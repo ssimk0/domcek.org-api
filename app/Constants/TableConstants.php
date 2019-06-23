@@ -17,6 +17,7 @@ class TableConstants
     const PAGES = 'pages';
     const NEWS_ITEMS = 'news_items';
     const GROUPS = 'groups';
+    const EVENT_PRICES = 'event_prices';
     const PAYMENTS = 'payments';
     const EVENT_TRANSPORT_TIMES = 'event_transport_times';
     const NEWSLETTER_SUBS = 'newsletter_subs';
