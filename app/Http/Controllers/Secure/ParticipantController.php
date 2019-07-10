@@ -137,7 +137,7 @@ class ParticipantController extends Controller
             'volunteerTypeId' => 'integer',
             'paid' => 'integer',
             'adminNote' => 'string',
-            'group_name' => 'string',
+            'group_name' => 'integer',
             'userId' => 'integer',
             'isLeader' => 'bool',
         ]);
@@ -159,7 +159,8 @@ class ParticipantController extends Controller
             'sortBy' => 'string',
             'sortDesc' => 'string',
             'group' => 'string',
-            'type' => 'string'
+            'type' => 'string',
+            'variant' => 'integer',
         ]);
 
         $list = $this->service->list($eventId, $filters);

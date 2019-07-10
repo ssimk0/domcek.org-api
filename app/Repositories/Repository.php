@@ -7,7 +7,8 @@ abstract class Repository {
 
     protected $globalFilters = [
         "volunteer" => TableConstants::VOLUNTEERS.'.volunteer_type_id',
-        "group" => TableConstants::GROUPS.".group_name"
+        "group" => TableConstants::GROUPS.".group_name",
+        "variant" => TableConstants::PAYMENTS.".event_price_id"
     ];
 
     public function prepareStringForLikeFilter($string) {

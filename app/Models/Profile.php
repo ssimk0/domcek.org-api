@@ -8,9 +8,7 @@ class Profile extends Model
 {
     protected $guarded = [];
 
-    protected $hidden = [
-        'birth_date'
-    ];
+    protected $hidden = [];
 
     // protected $dateFormat = 'YYYY-MM-DD';
 
