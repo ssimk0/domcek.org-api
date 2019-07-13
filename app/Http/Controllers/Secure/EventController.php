@@ -119,4 +119,19 @@ class EventController extends Controller
     {
         return $this->jsonResponse($this->service->eventGroups($eventId));
     }
+
+    public function generateGroups(Request $request, $eventId)
+    {
+        $data = $this->validate($request, [
+            'groupsCount' => 'required|integer'
+        ]);
+
+        $result = $this->jsonResponse($this->service->generateGroups($eventId, $data));
+
+        if ($result) {
+            return $this->successResponse();
+        }
+
+        return ErrorMessagesConstant::badAttempt();
+    }
 }
