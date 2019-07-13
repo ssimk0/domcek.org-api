@@ -102,14 +102,16 @@ class EventRepository extends Repository
             ->where('event_id', $eventId)
             ->where('transport_out', 'like', '%:%')
             ->count();
-        $topNames = $this->getTop($eventId, TableConstants::PROFILES.'.first_name', 15);
+        $topNamesF = $this->getTop($eventId, TableConstants::PROFILES.'.first_name', 5, null, 'f');
+        $topNamesM = $this->getTop($eventId, TableConstants::PROFILES.'.first_name', 5, null, 'm');
         $topCities = $this->getTop($eventId, TableConstants::PROFILES.'.city');
         $topAges = $this->getTop($eventId, DB::raw('YEAR(profiles.birth_date) as year'), 5, DB::raw('YEAR(profiles.birth_date)'));
 
         return [
             'ages' => $topAges,
             'cities' => $topCities,
-            'names' => $topNames,
+            'names-male' => $topNamesM,
+            'names-female' => $topNamesF,
             'bus-in' => $countInBusPassengers,
             'bus-out' => $countOutBusPassengers,
             'volunteers' => $countVolunteer,
@@ -141,15 +143,20 @@ class EventRepository extends Repository
         }
     }
 
-    private function getTop($eventId, $column, $limit = 5, $groupBy = null) {
+    private function getTop($eventId, $column, $limit = 5, $groupBy = null, $sex = null) {
         $groupBy = $groupBy ? $groupBy : $column;
-        return DB::table(TableConstants::PROFILES)
+        $query = DB::table(TableConstants::PROFILES)
             ->leftJoin(TableConstants::PARTICIPANTS, function ($join) {
                 $join->on(TableConstants::PARTICIPANTS . '.user_id', TableConstants::PROFILES . '.user_id');
             })
             ->where(TableConstants::PARTICIPANTS.'.event_id', $eventId)
-            ->where(TableConstants::PARTICIPANTS.'.was_on_event', true)
-            ->groupBy($groupBy)
+            ->where(TableConstants::PARTICIPANTS.'.was_on_event', true);
+
+        if (!empty($sex)) {
+            $query->where(TableConstants::PROFILES.'.sex', $sex);
+        }
+
+        return $query->groupBy($groupBy)
             ->orderByRaw('COUNT(*) desc')
             ->select(
                 DB::raw('COUNT(*) as count'),
