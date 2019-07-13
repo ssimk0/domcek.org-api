@@ -345,4 +345,21 @@ class ParticipantRepository extends Repository
 
         return array_merge($registered, $notRegistered);
     }
+
+
+    public function getParticipantsForMakeGroup($eventId) {
+
+        return DB::table(TableConstants::PARTICIPANTS)
+            ->join(TableConstants::PROFILES, TableConstants::PROFILES . '.user_id', TableConstants::PARTICIPANTS . '.user_id')
+            ->join(TableConstants::USERS, TableConstants::USERS . '.id', TableConstants::PARTICIPANTS . '.user_id')
+            ->leftJoin(TableConstants::VOLUNTEERS, function ($join) {
+                $join->on(TableConstants::VOLUNTEERS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
+                $join->on(TableConstants::VOLUNTEERS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
+            })
+            ->where(TableConstants::PARTICIPANTS.'.event_id', $eventId)
+            ->where(TableConstants::VOLUNTEERS.'.id', null)
+            ->orderByRaw('YEAR(profiles.birth_date), participants.created_at')
+            ->groupBy(TableConstants::PROFILES.'.user_id')
+            ->get([TableConstants::PROFILES.'.birth_date', TableConstants::PROFILES.'.user_id', TableConstants::PARTICIPANTS.'.id']);
+    }
 }

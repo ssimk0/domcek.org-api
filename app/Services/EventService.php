@@ -165,7 +165,44 @@ class EventService extends Service
 
     public function eventGroups($eventId)
     {
-        return $this->group->getGroupsForEvent($eventId);
+        $groups = $this->group->getGroupsForEvent($eventId);
+
+        foreach ($groups as $group) {
+            $group->info = $this->group->getGroupInfo($eventId, $group->group_name);
+        }
+
+        return $groups;
+    }
+
+    public function generateGroups($eventId, $data)
+    {
+
+        $participants =  $this->participant->getParticipantsForMakeGroup($eventId)->toArray();
+        $countGroupMembers = floor(count($participants) / $data['groupsCount']);
+        $countBiggerGroups = count($participants) % $data['groupsCount'];
+        $startOffset = 0;
+
+        try {
+            foreach (range(0, $data['groupsCount'] - 1) as $groupNumber) {
+                $memberCount = $countGroupMembers;
+                $start = $countGroupMembers * $groupNumber;
+                if (($data['groupsCount'] - $groupNumber) <= $countBiggerGroups) {
+                    $memberCount++;
+                    $start += $startOffset;
+                    $startOffset++;
+                }
+                $group = array_slice($participants, $start, $memberCount);
+                foreach ($group as $member) {
+                    $this->group->editGroupByParticipantAndEventId($groupNumber + 1, $member->id, $eventId);
+                };
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            $this->logError('Problem with assign event group to participants with error: ' . $e);
+        }
+
+        return false;
     }
 
 }

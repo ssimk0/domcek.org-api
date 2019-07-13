@@ -88,6 +88,7 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
 
             $router->get('events/{id}/participants', 'Secure\ParticipantController@list');
             $router->get('events/{id}/groups', 'Secure\EventController@eventGroups');
+            $router->put('events/{id}/groups', 'Secure\EventController@generateGroups');
             $router->put('events/{id}/participants/{participantId}', 'Secure\ParticipantController@edit');
             $router->get('events/{eventId}/participants/{userId}', 'Secure\ParticipantController@adminDetail');
 
