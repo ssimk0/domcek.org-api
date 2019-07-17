@@ -127,7 +127,8 @@ class ParticipantRepository extends Repository
                 $join->on(TableConstants::GROUPS . '.participant_id', TableConstants::PARTICIPANTS . '.id');
                 $join->on(TableConstants::GROUPS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
-            ->where(TableConstants::PARTICIPANTS . '.event_id', $eventId);
+            ->where(TableConstants::PARTICIPANTS . '.event_id', $eventId)
+            ->where(TableConstants::PARTICIPANTS . '.subscribed', true);
 
             $query = $this->filterQuery($query, $filters);
 
