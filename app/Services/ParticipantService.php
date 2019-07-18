@@ -123,7 +123,7 @@ class ParticipantService extends Service
 
             $needPay = $eventPrice->need_pay;
 
-            if ($now > Carbon::parse($event->end_registration)) {
+            if ($now >= Carbon::parse($event->end_registration)) {
                 // if you register after end of registration you need pay 5 euro fee
                 $needPay += $this->REGISTRATION_FEE;
             }
