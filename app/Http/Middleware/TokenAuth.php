@@ -22,7 +22,7 @@ class TokenAuth
         $token = $request->token;
         if ($token) {
             $tokenData = $this->service->checkToken($type, $token);
-            if ($tokenData && Carbon::now()->greaterThanOrEqualTo($tokenData->valid_until)) {
+            if ($tokenData && Carbon::now()->lessThanOrEqualTo($tokenData->valid_until)) {
                 $request->event_id = $tokenData->event_id;
                 return $next($request);
             } else {
