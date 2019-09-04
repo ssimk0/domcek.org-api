@@ -60,6 +60,11 @@ class EventService extends Service
                 $this->event->createEventTransportTime($event->id, $time, 'out');
             }
 
+            $this->event->generateRegistrationToken(
+                $event->id,
+                array_get($data, 'endDate', false)
+            );
+
             return true;
         } catch (\Exception $e) {
             $this->logError('Problem with creating event with error: ' . $e);
@@ -141,6 +146,7 @@ class EventService extends Service
     {
         $event = $this->event->detail($eventId);
         $price = $this->event->eventPrices([$eventId]);
+        $registrationToken = $this->event->registrationToken($eventId);
         $stats = $this->event->stats($eventId);
         if (empty($event)) return $event;
         $event->prices = $price;
@@ -149,6 +155,7 @@ class EventService extends Service
         $event->volunteerTypes = $this->eventVolunteer->eventVolunteerTypes([$event->id]);
         $event->participantCount = $this->participant->getCountForEvent([$event->id]);
         $event->stats = $stats;
+        $event->registrationToken = $registrationToken;
         return $event;
     }
 

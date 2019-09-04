@@ -8,6 +8,8 @@ use App\Constants\TableConstants;
 use App\Models\Event;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class EventRepository extends Repository
 {
@@ -200,5 +202,25 @@ class EventRepository extends Repository
     public function eventPriceById($id, $eventId)
     {
         return DB::table(TableConstants::EVENT_PRICES)->where('id', $id)->where('event_id', $eventId)->first();
+    }
+
+    public function generateRegistrationToken($eventId, $endDate)
+    {
+        try {
+            DB::table(TableConstants::AUTH_TOKEN)
+                ->insert([
+                    'event_id' => $eventId,
+                    'valid_until' => $endDate,
+                    'type' => 'registration',
+                    'token' => Str::random(10)
+                ]);
+        } catch (\Exception $e) {
+            Log::warning("Error while generating token: " . $e);
+        }
+    }
+
+    public function registrationToken($eventId)
+    {
+        return DB::table(TableConstants::AUTH_TOKEN)->where('event_id', $eventId)->first();
     }
 }
