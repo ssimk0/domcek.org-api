@@ -155,7 +155,7 @@ class EventService extends Service
         $event->volunteerTypes = $this->eventVolunteer->eventVolunteerTypes([$event->id]);
         $event->participantCount = $this->participant->getCountForEvent([$event->id]);
         $event->stats = $stats;
-        $event->registrationToken = empty($registrationToken) ? $registrationToken['token'] : '';
+        $event->registrationToken = empty($registrationToken) ? null : $registrationToken['token'];
         return $event;
     }
 
