@@ -54,6 +54,7 @@ class UserController extends Controller
             'phone' => 'required|string',
             'email' => 'required|string',
             'lastName' => 'required|string',
+            'nick' => 'string',
             'avatar' => 'url'
         ]);
 

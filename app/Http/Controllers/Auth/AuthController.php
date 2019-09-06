@@ -98,6 +98,7 @@ class AuthController extends Controller
             'password' => 'required|string|confirmed|min:6',
             'firstName' => 'required|string',
             'lastName' => 'required|string',
+            'nick' => 'string',
             'birthDate' => 'required|date_format:Y-m-d',
             'city' => 'required|string',
             'phone' => 'required|string',

@@ -124,6 +124,7 @@ class UserService extends Service
                 'phone' => 'phone',
                 'last_name' => 'lastName',
                 'city' => 'city',
+                'nick' => 'nick'
             ];
 
             $mappingUser = [
@@ -187,6 +188,7 @@ class UserService extends Service
                 'user_id' => $user->id,
                 'birth_date' => $data['birthDate'],
                 'sex' => $data['sex'],
+                'nick' => array_get($data, 'nick', null),
                 'date_approved_term_and_condition' => Carbon::now()
             ];
             $this->repository->createUserProfile($profileData);
