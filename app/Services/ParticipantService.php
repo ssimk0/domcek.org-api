@@ -136,6 +136,7 @@ class ParticipantService extends Service
     
             Mail::to($user->email)->send(new RegistrationMail(
                 $eventPrice->deposit,
+                $eventPrice->need_pay,
                 $profile->first_name,
                 $profile->birth_date,
                 $paymentNumber,

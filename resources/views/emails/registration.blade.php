@@ -13,22 +13,26 @@ IBAN účtu: SK52 1100 0000 0029 4304 5043
 
 Variabilný symbol: {{ $paymentNumber }} (tento VS je platný len a len pre teba a len na túto púť)
 
-Suma: {{ $deposit }} EUR (viac info o príspevkoch nájdeš tu: https://domcek.org/page/pute/prispevky)
+Účastnícky poplatok: {{ $price }}
+Záloha: {{ $deposit }} EUR (viac info o príspevkoch nájdeš tu: https://domcek.org/page/pute/prispevky)
 
 Správa pre prijímateľa: Príspevok na činnosť
 @endcomponent
 
 <pre style="color:black">
-Viac info nájdeš vo svojom profile.
+Zálohu, resp. účastnícky poplatok je potrebné uhradiť najneskôr týždeň pred podujatím. Viac informácií nájdeš vo svojom profile.
 
-Vezmi si so sebou aj <strong>QR kod</strong> ktory najdes v prilohe emailu, alebo na stranke po prihlásení v sekcii "Moje prihlásenia"
-a <strong>potvrdenie o platbe</strong> pre prípad, že systém nedokáže spárovať tvoju platbu.
+Prosím, ulož si do mobilu <strong>QR kod</strong>, ktorý nájdeš v prílohe tohto e-mailu (alebo po prihlásení na stránke <a href="https://domcek.org">www.domcek.org</a>, v sekcii "Moje prihlásenia").
+
+A vezmi si so sebou aj <strong>potvrdenie o platbe</strong>  pre prípad, že systém nedokáže spárovať tvoju platbu.
+
 Ak zaplatíš poštovou poukážkou, určite so sebou prines aj ústrižok (stáva sa, že platby cez poštu neprejdú ani za týždeň). Ak máš možnosť uhradiť účastnícky poplatok cez internet banking, využi prosím túto možnosť.
 
-Ďakujeme za tvoje prihlásenie na púť a tešíme sa na teba.
+Ďakujeme za tvoje prihlásenie na púť a tešíme sa na teba!
 
-V prípade, že sa z púte odhlásiš v termíne otvoreného prihlasovania, odoslaním mailu na <a href="mailto:registrácia@domcek.org">registrácia@domcek.org</a> môžeš požiadať o vrátenie vyplatenej zálohy.
-V prípade, že chceš zmeniť svoje prihlásenie alebo sa chceš odhlásiť, môžeš tak urobiť na stráke v sekcii "Moje prihlásenia".
+V prípade, že chceš zmeniť svoje prihlásenie alebo sa chceš odhlásiť, môžeš tak urobiť na stránke <a href="https://domcek.org">www.domcek.org</a> v sekcii "Moje prihlásenia".
+
+V prípade, že sa z púte odhlásiš v termíne otvoreného prihlasovania, odoslaním mailu na <a href="mailto:putradosti@domcek.org">putradosti@domcek.org</a> môžeš požiadať o vrátenie vyplatenej zálohy.
 </pre>
 
 <div style="margin-top: 40px;color:black" >

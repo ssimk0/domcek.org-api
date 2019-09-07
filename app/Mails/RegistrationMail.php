@@ -20,15 +20,17 @@ class RegistrationMail extends Mailable
 
     public $deposit;
     public $userName;
+    public $price;
     public $paymentNumber;
     public $url;
     private $eventName;
     private $birthDate;
     private $qrCodePath;
 
-    public function __construct($deposit, $userName, $birthDate, $paymentNumber, $eventName, $url, $qrCodePath)
+    public function __construct($deposit, $price, $userName, $birthDate, $paymentNumber, $eventName, $url, $qrCodePath)
     {
         $this->deposit = $deposit;
+        $this->price = $price;
         $this->userName = $userName;
         $this->birthDate = $birthDate;
         $this->paymentNumber = $paymentNumber;
@@ -51,6 +53,7 @@ class RegistrationMail extends Mailable
                 ->with([
                     'url' => $this->url,
                     'deposit' => $this->deposit,
+                    'price' => $this->price,
                     'paymentNumber' => $this->paymentNumber,
                     'userName' => $this->userName,
                     'eventName' => $this->eventName
@@ -64,6 +67,7 @@ class RegistrationMail extends Mailable
                 ->with([
                     'url' => $this->url,
                     'deposit' => $this->deposit,
+                    'price' => $this->price,
                     'paymentNumber' => $this->paymentNumber,
                     'userName' => $this->userName,
                     'eventName' => $this->eventName
