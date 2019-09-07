@@ -13,7 +13,7 @@ IBAN účtu: SK52 1100 0000 0029 4304 5043
 
 Variabilný symbol: {{ $paymentNumber }} (tento VS je platný len a len pre teba a len na túto púť)
 
-Účastnícky poplatok: {{ $price }}
+Účastnícky poplatok: {{ $price }} EUR
 Záloha: {{ $deposit }} EUR (viac info o príspevkoch nájdeš tu: https://domcek.org/page/pute/prispevky)
 
 Správa pre prijímateľa: Príspevok na činnosť
@@ -43,5 +43,5 @@ Domček
 
 ------
 ###### V prípade akýchkoľvek problémov s používateľským kontom nás kontaktuj na podpora@domcek.org.
-###### V prípade akýchkoľvek otázok súvisiacich s tvojou účasťou na podujatí nás kontaktuj na registracia@domček.org.
+###### V prípade akýchkoľvek otázok súvisiacich s tvojou účasťou na podujatí nás kontaktuj na putradosti@domček.org.
 @endcomponent
