@@ -91,7 +91,8 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
             $router->put('events/{id}/groups', 'Secure\EventController@generateGroups');
             $router->put('events/{id}/participants/{participantId}', 'Secure\ParticipantController@edit');
             $router->get('events/{eventId}/participants/{userId}', 'Secure\ParticipantController@adminDetail');
-            $router->delete('events/{eventId}/participants/{userId}', 'Secure\ParticipantController@adminUnsubscribe');
+            $router->put('events/{eventId}/participants/{userId}/unsubscribe', 'Secure\ParticipantController@adminUnsubscribe');
+            $router->put('events/{eventId}/participants/{userId}/subscribe', 'Secure\ParticipantController@adminSubscribe');
 
             $router->get('users', 'Secure\UserController@list');
             $router->put('users/{userId}', 'Secure\UserController@editUserAdmin');
