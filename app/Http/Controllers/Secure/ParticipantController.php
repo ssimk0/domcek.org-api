@@ -83,6 +83,18 @@ class ParticipantController extends Controller
         return ErrorMessagesConstant::badAttempt();
     }
 
+    // Admin unsubscribe user from event after registration
+    function adminUnsubscribe(Request $request, $userId, $eventId)
+    {
+        $result = $this->service->unsubscribe($eventId, $userId);
+
+        if ($result) {
+            return $this->successResponse();
+        }
+
+        return ErrorMessagesConstant::badAttempt();
+    }
+
     function eventQRCode(Request $request, $eventId)
     {
         $userId = $request->user()->id;

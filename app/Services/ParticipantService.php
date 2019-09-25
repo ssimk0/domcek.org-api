@@ -153,10 +153,10 @@ class ParticipantService extends Service
         return false;
     }
 
-    public function unsubscribe($eventId)
+    public function unsubscribe($eventId, $userId=null)
     {
         try {
-            $this->repository->unsubscribeToEvent($eventId, $this->userId());
+            $this->repository->unsubscribeToEvent($eventId, $userId ? $userId : $this->userId());
         } catch (\Exception $e) {
             $this->logError("Problem with unsubscribe to event with error: " . $e);
             return false;
