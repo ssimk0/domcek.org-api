@@ -77,6 +77,8 @@ class ParticipantService extends Service
 
             if (!empty($group)) {
                 $this->groupRepository->editGroupByParticipantAndEventId($group, $participantId, $eventId);
+            } else {
+                $this->groupRepository->deleteGroupByParticipantAndEventId($participantId, $eventId);
             }
 
             $this->repository->edit($participantId, $this->userId(), [
