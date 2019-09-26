@@ -77,6 +77,8 @@ class ParticipantService extends Service
 
             if (!empty($group)) {
                 $this->groupRepository->editGroupByParticipantAndEventId($group, $participantId, $eventId);
+            } else {
+                $this->groupRepository->deleteGroupByParticipantAndEventId($participantId, $eventId);
             }
 
             $this->repository->edit($participantId, $this->userId(), [
@@ -153,10 +155,10 @@ class ParticipantService extends Service
         return false;
     }
 
-    public function unsubscribe($eventId)
+    public function unsubscribe($eventId, $userId=null)
     {
         try {
-            $this->repository->unsubscribeToEvent($eventId, $this->userId());
+            $this->repository->unsubscribeToEvent($eventId, $userId ?? $this->userId());
         } catch (\Exception $e) {
             $this->logError("Problem with unsubscribe to event with error: " . $e);
             return false;
@@ -165,10 +167,10 @@ class ParticipantService extends Service
         return true;
     }
 
-    public function subscribe($eventId)
+    public function subscribe($eventId, $userId=null)
     {
         try {
-            $this->repository->resubscribeToEvent($eventId, $this->userId());
+            $this->repository->resubscribeToEvent($eventId, $userId ?? $this->userId());
         } catch (Exception $e) {
             $this->logError("Problem with subscribe to event with error: " . $e);
             return false;
