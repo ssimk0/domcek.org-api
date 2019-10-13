@@ -385,4 +385,16 @@ class ParticipantRepository extends Repository
             ->select([TableConstants::PROFILES . '.nick', TableConstants::PROFILES . '.first_name', TableConstants::GROUPS . '.group_name'])
             ->get();
     }
+
+    public function getCountOfParticipationOnEvents($userId)
+    {
+        DB::table(TableConstants::PARTICIPANTS)
+            ->leftJoin(TableConstants::VOLUNTEERS, function ($join) {
+                $join->on(TableConstants::VOLUNTEERS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
+                $join->on(TableConstants::VOLUNTEERS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
+            })
+            ->where(TableConstants::VOLUNTEERS . '.id', '=', null)
+            ->where(TableConstants::PARTICIPANTS.'user_id', $userId)
+            ->count();
+    }
 }
