@@ -123,8 +123,10 @@ $app->alias('mailer', Illuminate\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
 
-class_alias(Barryvdh\Snappy\Facades\SnappyPdf::class, 'PDF');
-class_alias(Barryvdh\Snappy\Facades\SnappyImage::class, 'SnappyImage');
+if(!class_exists('PDF')) {
+    class_alias(Barryvdh\Snappy\Facades\SnappyPdf::class, 'PDF');
+    class_alias(Barryvdh\Snappy\Facades\SnappyImage::class, 'SnappyImage');
+}
 
 /*
 |--------------------------------------------------------------------------
