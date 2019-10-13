@@ -6,6 +6,7 @@ use App\Repositories\EventRepository;
 use App\Repositories\GroupRepository;
 use App\Repositories\ParticipantRepository;
 use App\Repositories\VolunteersRepository;
+use Carbon\Carbon;
 
 class EventService extends Service
 {
@@ -157,6 +158,53 @@ class EventService extends Service
         $event->stats = $stats;
         $event->registrationToken = empty($registrationToken) ? null : $registrationToken->token;
         return $event;
+    }
+
+    public function detailedStatsFile($eventId)
+    {
+        $stats = $this->event->detailedStats($eventId);
+        return sprintf("
+        Počet Dobrovolníkov: %d\n
+        Počet Učasničok: %d\n
+        Počet Učasnikov: %d\n
+        Počet Všetkych Dokopy: %d\n
+        Top Vek: \n 
+          1. Počet: %d Vek: %d
+          2. Počet: %d Vek: %d
+          3. Počet: %d Vek: %d
+          
+        Top Mestá:\n
+          1. Počet: %d Mesto: %s
+          2. Počet: %d Mesto: %s
+          3. Počet: %d Mesto: %s
+        
+        Top Ženské mená:\n
+          1. Počet: %d Meno: %s
+          2. Počet: %d Meno: %s
+          3. Počet: %d Meno: %s
+          
+        Top Mužské mená:\n
+          1. Počet: %d Meno: %s
+          2. Počet: %d Meno: %s
+          3. Počet: %d Meno: %s
+        ",
+        $stats['volunteers'],
+        $stats['participants-female'],
+        $stats['participants-male'],
+        $stats['count-all'],
+        array_get($stats, 'ages.0')->count, array_get($stats, 'ages.0')->year ? Carbon::now()->year - array_get($stats, 'ages.0')->year : '',
+        array_get($stats, 'ages.1')->count, array_get($stats, 'ages.1')->year ? Carbon::now()->year - array_get($stats, 'ages.1')->year : '',
+        array_get($stats, 'ages.2')->count, array_get($stats, 'ages.2')->year ? Carbon::now()->year - array_get($stats, 'ages.2')->year : '',
+        array_get($stats, 'cities.0')->count,  array_get($stats, 'cities.0')->city,
+        array_get($stats, 'cities.1')->count,  array_get($stats, 'cities.1')->city,
+        array_get($stats, 'cities.2')->count,  array_get($stats, 'cities.2')->city,
+        array_get($stats, 'names-female.0')->count,  array_get($stats, 'names-female.0')->first_name,
+        array_get($stats, 'names-female.1')->count,  array_get($stats, 'names-female.1')->first_name,
+        array_get($stats, 'names-female.2')->count,  array_get($stats, 'names-female.2')->first_name,
+        array_get($stats, 'names-male.0')->count,  array_get($stats, 'names-male.0')->first_name,
+        array_get($stats, 'names-male.1')->count,  array_get($stats, 'names-male.1')->first_name,
+        array_get($stats, 'names-male.2')->count,  array_get($stats, 'names-male.2')->first_name
+        );
     }
 
     public function delete($eventId)
