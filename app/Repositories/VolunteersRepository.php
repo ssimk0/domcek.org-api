@@ -88,4 +88,27 @@ class VolunteersRepository extends Repository
             $query->delete();
         }
     }
+
+    public function getNameplateDetail($eventId)
+    {
+        return DB::table(TableConstants::PARTICIPANTS)
+            ->join(TableConstants::PROFILES, TableConstants::PROFILES . '.user_id', TableConstants::PARTICIPANTS . '.user_id')
+            ->join(TableConstants::USERS, TableConstants::USERS . '.id', TableConstants::PARTICIPANTS . '.user_id')
+            ->leftJoin(TableConstants::VOLUNTEERS, function ($join) {
+                $join->on(TableConstants::VOLUNTEERS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
+                $join->on(TableConstants::VOLUNTEERS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
+            })
+            ->leftJoin(TableConstants::GROUPS, function ($join) {
+                $join->on(TableConstants::GROUPS . '.participant_id', TableConstants::PARTICIPANTS . '.id');
+                $join->on(TableConstants::GROUPS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
+            })
+            ->join(TableConstants::VOLUNTEERS_TYPES, TableConstants::VOLUNTEERS_TYPES.'.id', TableConstants::VOLUNTEERS . '.volunteer_type_id')
+            ->where(TableConstants::PARTICIPANTS . '.event_id', $eventId)
+            ->where(TableConstants::VOLUNTEERS . '.id', '!=', null)
+            ->orderBy(TableConstants::GROUPS.'.group_name')
+            ->orderBy(TableConstants::PROFILES.'.last_name')
+            ->orderBy(TableConstants::PROFILES.'.first_name')
+            ->select([TableConstants::VOLUNTEERS_TYPES . '.name', TableConstants::PROFILES . '.nick', TableConstants::PROFILES . '.first_name', TableConstants::GROUPS . '.group_name'])
+            ->get();
+    }
 }

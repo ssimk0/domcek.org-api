@@ -38,6 +38,7 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
         ]);
         $router->get('slider-images', 'Unsecure\SliderImagesController@list');
         $router->get('events', 'Secure\EventController@availableEvents');
+        $router->post('events/{id}/nameplates', 'Secure\ParticipantController@generateNameplates');
     });
 
     // REGISTRATION
