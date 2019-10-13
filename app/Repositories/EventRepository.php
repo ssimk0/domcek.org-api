@@ -104,16 +104,8 @@ class EventRepository extends Repository
             ->where('event_id', $eventId)
             ->where('transport_out', 'like', '%:%')
             ->count();
-        $topNamesF = $this->getTop($eventId, TableConstants::PROFILES.'.first_name', 5, null, 'f');
-        $topNamesM = $this->getTop($eventId, TableConstants::PROFILES.'.first_name', 5, null, 'm');
-        $topCities = $this->getTop($eventId, TableConstants::PROFILES.'.city');
-        $topAges = $this->getTop($eventId, DB::raw('YEAR(profiles.birth_date) as year'), 5, DB::raw('YEAR(profiles.birth_date)'));
 
         return [
-            'ages' => $topAges,
-            'cities' => $topCities,
-            'names-male' => $topNamesM,
-            'names-female' => $topNamesF,
             'bus-in' => $countInBusPassengers,
             'bus-out' => $countOutBusPassengers,
             'volunteers' => $countVolunteer,
@@ -122,9 +114,32 @@ class EventRepository extends Repository
         ];
     }
 
+    public function detailedStats($eventId)
+    {
+        $countParticipantsFemale = $this->getCountParticipant('participant', $eventId, 'f');
+        $countParticipantsMale = $this->getCountParticipant('participant', $eventId, 'm');
+        $countVolunteer = $this->getCountParticipant('volunteer', $eventId);
 
-    private function getCountParticipant($type, $eventId) {
+        $topNamesF = $this->getTop($eventId, TableConstants::PROFILES.'.first_name', 5, null, 'f');
+        $topNamesM = $this->getTop($eventId, TableConstants::PROFILES.'.first_name', 5, null, 'm');
+        $topCities = $this->getTop($eventId, TableConstants::PROFILES.'.city');
+        $topAges = $this->getTop($eventId, DB::raw('YEAR(profiles.birth_date) as year'), 5, DB::raw('YEAR(profiles.birth_date)'));
+        return [
+            'ages' => $topAges->toArray(),
+            'cities' => $topCities->toArray(),
+            'names-male' => $topNamesM->toArray(),
+            'names-female' => $topNamesF->toArray(),
+            'volunteers' => $countVolunteer,
+            'participants-female' => $countParticipantsFemale,
+            'participants-male' => $countParticipantsMale,
+            'count-all' => $countVolunteer + $countParticipantsFemale + $countParticipantsMale
+        ];
+    }
+
+
+    private function getCountParticipant($type, $eventId, $sex=null) {
         $query = DB::table(TableConstants::PARTICIPANTS)
+            ->join(TableConstants::PROFILES, TableConstants::PROFILES.'.user_id', TableConstants::PARTICIPANTS . '.user_id')
             ->leftJoin(TableConstants::VOLUNTEERS, function ($join) {
                 $join->on(TableConstants::VOLUNTEERS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
                 $join->on(TableConstants::VOLUNTEERS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
@@ -133,16 +148,19 @@ class EventRepository extends Repository
             ->where(TableConstants::PARTICIPANTS.'.was_on_event', true);
 
         if ($type == 'volunteer') {
-            return $query
-                ->where(TableConstants::VOLUNTEERS . '.id', '!=', null)
-                ->count();
+            $query =  $query
+                ->where(TableConstants::VOLUNTEERS . '.id', '!=', null);
         } else if ($type == 'participant') {
-            return $query
-                ->where(TableConstants::VOLUNTEERS . '.id', '=', null)
-                ->count();
-        } else {
-            return $query->count();
+            $query = $query
+                ->where(TableConstants::VOLUNTEERS . '.id', '=', null);
         }
+
+        if ($sex != null) {
+            $query = $query->
+                where(TableConstants::PROFILES.'.sex', $sex);
+        }
+
+        return $query->count();
     }
 
     private function getTop($eventId, $column, $limit = 5, $groupBy = null, $sex = null) {
