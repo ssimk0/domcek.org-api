@@ -29,11 +29,13 @@ class NewsService extends Service
     function newsBySlug($slug)
     {
         $news = $this->repository->findNewsDetail($slug);
-        try {
-            $this->repository->updateViewed($slug, $news->viewed + 1);
-        } catch (\Exception $e) {
-            // this error can be ignored
-            $this->logWarning("Problem with updating news with slug: $slug");
+        if ($news) {
+            try {
+                $this->repository->updateViewed($slug, $news->viewed + 1);
+            } catch (\Exception $e) {
+                // this error can be ignored
+                $this->logWarning("Problem with updating news with slug: $slug");
+            }
         }
 
         return $news;
