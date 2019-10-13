@@ -320,4 +320,31 @@ class ParticipantService extends Service
         return $paymentNumber;
     }
 
+    public function getNameplateDetail($eventId)
+    {
+        $volunteers = $this->volunteersRepository->getNameplateDetail($eventId)->toArray();
+        $participants = $this->repository->getNameplateDetail($eventId)->toArray();
+
+
+        return [
+            'volunteers' => $this->getPagedNameplatesData($volunteers),
+            'participants' => $this->getPagedNameplatesData($participants)
+        ];
+    }
+
+    private function getPagedNameplatesData($participants) {
+        $pages = [];
+        $allpages = ceil(count($participants)/9);
+        foreach(range(0, $allpages -1 ) as $page_num) {
+            $from = $page_num * 9;
+            if ($page_num == $allpages) {
+                $pages[$page_num] = array_slice($participants, $from);
+            } else {
+                $pages[$page_num] = array_slice($participants, $from, 9);
+            }
+        }
+
+        return $pages;
+    }
+
 }

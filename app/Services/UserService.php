@@ -94,6 +94,7 @@ class UserService extends Service
             'editor' => $user->is_writer,
             'avatar' => $user->avatar,
             'profile' => $this->repository->getUserProfile($user->id),
+            'participantionCount' => $this->participantRepository->getCountOfParticipationOnEvents($user->id),
         ];
     }
 

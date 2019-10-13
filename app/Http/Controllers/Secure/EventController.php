@@ -8,6 +8,7 @@ use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
 use App\Services\EventService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 class EventController extends Controller
 {
@@ -100,6 +101,17 @@ class EventController extends Controller
         }
 
         return ErrorMessagesConstant::notFound();
+    }
+
+    public function statsFile($eventId)
+    {
+        $content = $this->service->detailedStatsFile($eventId);
+
+
+        $headers = ['Content-type'=>'text/plain',
+            'Content-Disposition'=>sprintf('attachment; filename="%s"', 'stats.txt'),
+        ];
+        return Response::make($content, 200, $headers);
     }
 
 

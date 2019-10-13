@@ -36,6 +36,7 @@ $app->configure('mail');
 $app->configure('app');
 $app->configure('filesystems');
 $app->configure('queue');
+$app->configure('snappy');
 
 
 $app->withFacades();
@@ -117,9 +118,15 @@ $app->register(App\Providers\CatchAllOptionsRequestsProvider::class);
 $app->register(AlbertCht\InvisibleReCaptcha\InvisibleReCaptchaServiceProvider::class);
 $app->register(\Illuminate\Queue\QueueServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
+$app->register(Barryvdh\Snappy\ServiceProvider::class);
 $app->alias('mailer', Illuminate\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
+
+if(!class_exists('PDF')) {
+    class_alias(Barryvdh\Snappy\Facades\SnappyPdf::class, 'PDF');
+    class_alias(Barryvdh\Snappy\Facades\SnappyImage::class, 'SnappyImage');
+}
 
 /*
 |--------------------------------------------------------------------------

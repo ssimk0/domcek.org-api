@@ -79,6 +79,8 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
             $router->get('events/{id}', 'Secure\EventController@detail');
             $router->get('events/{eventId}/volunteers', 'Secure\VolunteerController@list');
             $router->post('events/{id}/payments', 'Secure\PaymentController@uploadTransferLog');
+            $router->post('events/{id}/nameplates', 'Secure\ParticipantController@generateNameplates');
+            $router->get('events/{id}/stats', 'Secure\EventController@statsFile');
 
             $router->put('volunteers/{id}', 'Secure\VolunteerController@edit');
             $router->get('volunteers/{id}', 'Secure\VolunteerController@detail');
