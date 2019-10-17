@@ -208,6 +208,7 @@ class ParticipantRepository extends Repository
             ->select(
                 TableConstants::PROFILES . '.first_name',
                 TableConstants::PROFILES . '.birth_date',
+                TableConstants::PROFILES . '.nick',
                 TableConstants::PARTICIPANTS . '.*',
                 TableConstants::VOLUNTEERS . '.is_leader',
                 TableConstants::VOLUNTEERS_TYPES . '.name',
@@ -240,22 +241,30 @@ class ParticipantRepository extends Repository
 
     public function unsubscribeToEvent($eventId, $userId)
     {
-        DB::table(TableConstants::PARTICIPANTS)
+/// NEED TEST
+        Participant::all()
             ->where('event_id', $eventId)
             ->where('user_id', $userId)
-            ->update([
-                'subscribed' => false
-            ]);
+            ->first()
+            ->update(
+                [
+                    'subscribed' => false
+                ]
+            );
     }
 
     public function resubscribeToEvent($eventId, $userId)
     {
-        DB::table(TableConstants::PARTICIPANTS)
+/// NEED TEST
+        Participant::all()
             ->where('event_id', $eventId)
             ->where('user_id', $userId)
-            ->update([
-                'subscribed' => true
-            ]);
+            ->first()
+            ->update(
+                [
+                    'subscribed' => true
+                ]
+            );
     }
 
     public function registerUser($userId, $eventId, $transportOut, $payedOnRegistration) {
@@ -379,6 +388,7 @@ class ParticipantRepository extends Repository
             })
             ->where(TableConstants::PARTICIPANTS . '.event_id', $eventId)
             ->where(TableConstants::VOLUNTEERS . '.id', '=', null)
+            ->where(TableConstants::PARTICIPANTS . '.subscribed', true)
             ->orderBy(TableConstants::GROUPS.'.group_name')
             ->orderBy(TableConstants::PROFILES.'.last_name')
             ->orderBy(TableConstants::PROFILES.'.first_name')
