@@ -404,7 +404,7 @@ class ParticipantRepository extends Repository
                 $join->on(TableConstants::VOLUNTEERS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
             ->where(TableConstants::VOLUNTEERS . '.id', '=', null)
-            ->where(TableConstants::PARTICIPANTS.'user_id', $userId)
+            ->where(TableConstants::PARTICIPANTS.'.user_id', $userId)
             ->count();
     }
 }
