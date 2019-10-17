@@ -105,6 +105,7 @@ class VolunteersRepository extends Repository
             ->join(TableConstants::VOLUNTEERS_TYPES, TableConstants::VOLUNTEERS_TYPES.'.id', TableConstants::VOLUNTEERS . '.volunteer_type_id')
             ->where(TableConstants::PARTICIPANTS . '.event_id', $eventId)
             ->where(TableConstants::VOLUNTEERS . '.id', '!=', null)
+            ->where(TableConstants::PARTICIPANTS . '.subscribed', true)
             ->orderBy(TableConstants::GROUPS.'.group_name')
             ->orderBy(TableConstants::PROFILES.'.last_name')
             ->orderBy(TableConstants::PROFILES.'.first_name')
