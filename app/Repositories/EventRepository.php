@@ -97,8 +97,6 @@ class EventRepository extends Repository
 
     public function stats($eventId)
     {
-        $countParticipants = $this->getCountParticipant('participant', $eventId);
-        $countVolunteer = $this->getCountParticipant('volunteer', $eventId);
         $countInBusPassengers = $this->getCountBusPassengers($eventId, 'transport_in');
         $countOutBusPassengers = DB::table(TableConstants::PARTICIPANTS)
             ->where('event_id', $eventId)
@@ -107,10 +105,7 @@ class EventRepository extends Repository
 
         return [
             'bus-in' => $countInBusPassengers,
-            'bus-out' => $countOutBusPassengers,
-            'volunteers' => $countVolunteer,
-            'participants' => $countParticipants,
-            'count-all' => $countVolunteer + $countParticipants
+            'bus-out' => $countOutBusPassengers
         ];
     }
 

@@ -398,12 +398,13 @@ class ParticipantRepository extends Repository
 
     public function getCountOfParticipationOnEvents($userId)
     {
-        DB::table(TableConstants::PARTICIPANTS)
+        return DB::table(TableConstants::PARTICIPANTS)
+            ->join(TableConstants::USERS, TableConstants::USERS.'.id', TableConstants::PARTICIPANTS.'.user_id')
             ->leftJoin(TableConstants::VOLUNTEERS, function ($join) {
                 $join->on(TableConstants::VOLUNTEERS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
                 $join->on(TableConstants::VOLUNTEERS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
-            ->where(TableConstants::VOLUNTEERS . '.id', '=', null)
+            ->whereNull(TableConstants::VOLUNTEERS . '.id')
             ->where(TableConstants::PARTICIPANTS.'.user_id', $userId)
             ->count();
     }
