@@ -24,10 +24,18 @@ class AuthController extends Controller
     {
         $errMessage = ErrorMessagesConstant::WRONG_CREDENTIALS;
         try {
-            $data = $this->validateWithCaptcha($request, [
-                'username' => 'required',
-                'password' => 'required'
-            ]);
+            if(env('APP_DEBUG')) {
+                $data = $this->validate($request, [
+                    'username' => 'required',
+                    'password' => 'required'
+                ]);
+            } else {
+                $data = $this->validateWithCaptcha($request, [
+                    'username' => 'required',
+                    'password' => 'required'
+                ]);
+            }
+
         } catch (\Exception $e) {
             $this->logDebug("Validation exception for login user: " . $e->getMessage());
 
@@ -41,6 +49,9 @@ class AuthController extends Controller
 
         if ($token) {
             return $this->respondWithToken($token);
+        } else {
+            $this->logDebug("Validation exception for login user: no token");
+
         }
 
         return $this->error(401, $errMessage);

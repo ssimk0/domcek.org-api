@@ -13,14 +13,12 @@ class EventService extends Service
     private $participant;
     private $event;
     private $eventVolunteer;
-    private $group;
 
-    public function __construct(EventRepository $event, ParticipantRepository $participant, VolunteersRepository $eventVolunteer, GroupRepository $group)
+    public function __construct(EventRepository $event, ParticipantRepository $participant, VolunteersRepository $eventVolunteer)
     {
         $this->event = $event;
         $this->participant = $participant;
         $this->eventVolunteer = $eventVolunteer;
-        $this->group = $group;
     }
 
     public function createEvent(array $data)
@@ -163,6 +161,24 @@ class EventService extends Service
     public function detailedStatsFile($eventId)
     {
         $stats = $this->event->detailedStats($eventId);
+        // SETUP DEFAULTS
+        if (array_get($stats, 'ages.0', true)) {
+            $stats['ages'] = $this->getStatDefault();
+        }
+
+        if (array_get($stats, 'cities.0', true)) {
+            $stats['cities'] = $this->getStatDefault();
+        }
+
+        if (array_get($stats, 'names-female.0', true)) {
+            $stats['names-female'] = $this->getStatDefault();
+        }
+
+        if (array_get($stats, 'names-male.0', true)) {
+            $stats['names-male'] = $this->getStatDefault();
+        }
+
+
         return sprintf("
         Počet Dobrovolníkov: %d\n
         Počet Učasničok: %d\n
@@ -218,46 +234,27 @@ class EventService extends Service
         return false;
     }
 
-    public function eventGroups($eventId)
-    {
-        $groups = $this->group->getGroupsForEvent($eventId);
-
-        foreach ($groups as $group) {
-            $group->info = $this->group->getGroupInfo($eventId, $group->group_name);
-        }
-
-        return $groups;
-    }
-
-    public function generateGroups($eventId, $data)
-    {
-
-        $participants =  $this->participant->getParticipantsForMakeGroup($eventId)->toArray();
-        $countGroupMembers = floor(count($participants) / $data['groupsCount']);
-        $countBiggerGroups = count($participants) % $data['groupsCount'];
-        $startOffset = 0;
-
-        try {
-            foreach (range(0, $data['groupsCount'] - 1) as $groupNumber) {
-                $memberCount = $countGroupMembers;
-                $start = $countGroupMembers * $groupNumber;
-                if (($data['groupsCount'] - $groupNumber) <= $countBiggerGroups) {
-                    $memberCount++;
-                    $start += $startOffset;
-                    $startOffset++;
-                }
-                $group = array_slice($participants, $start, $memberCount);
-                foreach ($group as $member) {
-                    $this->group->editGroupByParticipantAndEventId($groupNumber + 1, $member->id, $eventId);
-                };
+    private function getStatDefault() {
+        return [
+            new class {
+                public $count = 0;
+                public $first_name = '';
+                public $city = '';
+                public $year = '';
+            },
+            new class {
+                public $count = 0;
+                public $first_name = '';
+                public $city = '';
+                public $year = '';
+            },
+            new class {
+                public $count = 0;
+                public $first_name = '';
+                public $city = '';
+                public $year = '';
             }
-
-            return true;
-        } catch (\Exception $e) {
-            $this->logError('Problem with assign event group to participants with error: ' . $e);
-        }
-
-        return false;
+        ];
     }
 
 }

@@ -83,7 +83,9 @@ class UserRepository extends Repository
             'profiles.admin_note',
             'users.email',
         ])
-            ->orderBy('email', 'desc')
+            ->orderBy('last_name')
+            ->orderBy('first_name')
+            ->orderBy('email')
             ->select([
                 'profiles.first_name',
                 'profiles.last_name',

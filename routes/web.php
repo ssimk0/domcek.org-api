@@ -89,8 +89,8 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
             $router->get('volunteers/{id}', 'Secure\VolunteerController@detail');
 
             $router->get('events/{id}/participants', 'Secure\ParticipantController@list');
-            $router->get('events/{id}/groups', 'Secure\EventController@eventGroups');
-            $router->put('events/{id}/groups', 'Secure\EventController@generateGroups');
+            $router->get('events/{id}/groups', 'Secure\GroupController@eventGroups');
+            $router->put('events/{id}/groups', 'Secure\GroupController@generateGroups');
             $router->put('events/{id}/participants/{participantId}', 'Secure\ParticipantController@edit');
             $router->get('events/{eventId}/participants/{userId}', 'Secure\ParticipantController@adminDetail');
             $router->put('events/{eventId}/participants/{userId}/unsubscribe', 'Secure\ParticipantController@adminUnsubscribe');
