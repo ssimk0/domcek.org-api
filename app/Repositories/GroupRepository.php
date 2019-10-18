@@ -46,4 +46,12 @@ class GroupRepository extends Repository {
             ->selectRaw('MIN(YEAR(profiles.birth_date)) as min, MAX(YEAR(profiles.birth_date)) as max, COUNT(*) as count')
             ->first();
     }
+
+    public function deleteGroupByParticipantAndEventId($participantId, $eventId)
+    {
+        $query = DB::table(TableConstants::GROUPS)
+            ->where('participant_id', $participantId)
+            ->where('event_id', $eventId);
+        $query->delete();
+    }
 }
