@@ -145,7 +145,7 @@ class AuthController extends Controller
             'birthDate' => 'required|date_format:Y-m-d',
             'city' => 'required|string',
             'phone' => 'required|string',
-            'email' => 'required|email',
+            'email' => 'required|email|confirmed',
             'terms_and_condition' => 'required|accepted',
             'newsletter' => 'boolean',
             'sex' => ['required', Rule::in(['f', 'm'])],
