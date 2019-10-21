@@ -22,6 +22,8 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
             $router->get('logout/', 'Auth\AuthController@logout');
             $router->get('refresh-token/', 'Auth\AuthController@refresh');
             $router->post('register-user', 'Auth\AuthController@registerUser');
+            $router->put('verify-email', 'Auth\AuthController@verifyEmail');
+            $router->post('verify-email', 'Auth\AuthController@sendVerificationEmail');
         });
     // PAGE UNSECURE
     $router->group(

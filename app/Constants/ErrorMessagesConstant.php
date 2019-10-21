@@ -20,6 +20,7 @@ class ErrorMessagesConstant
     const CONFLICT = 'CONFLICT';
     const MULTI_SERVER_USER = 'MULTI_SERVER_USER';
     const USER_ALREADY_EXIST = 'USER_ALREADY_EXIST';
+    const NOT_VERIFIED_EMAIL = 'NOT_VERIFIED_EMAIL';
 
 
     static public function badRequest() {

@@ -7,7 +7,9 @@ namespace App\Repositories;
 use App\Constants\TableConstants;
 use App\Models\NewsletterSubs;
 use App\Models\Profile;
+use App\Models\VerificationToken;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -134,5 +136,31 @@ class UserRepository extends Repository
                     'active' => true
                 ]);
         }
+    }
+
+    public function addVerificationEmailToken($email, string $token)
+    {
+        $token = new VerificationToken([
+            'email' => $email,
+            'token' => $token,
+            'valid_until' => Carbon::now()->addHour(2)
+        ]);
+
+        return $token->save();
+    }
+
+    public function existVerificationEmailToken($email, $token)
+    {
+        return VerificationToken::all()
+            ->where('token', $token)
+            ->where('email', $email)
+            ->first();
+    }
+
+    public function verifyUser($userId)
+    {
+        return User::where('id', $userId)->update([
+            'is_verified' => true
+        ]);
     }
 }

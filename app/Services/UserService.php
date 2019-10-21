@@ -9,6 +9,7 @@ use App\Exceptions\MultipleOldAccounts;
 use App\Mails\ExceptionMail;
 use App\Mails\ForgotPasswordMail;
 use App\Mails\ResetPasswordMail;
+use App\Mails\VerifyMail;
 use App\Repositories\OldWebIntegrationRepository;
 use App\Repositories\ParticipantRepository;
 use App\Repositories\PaymentRepository;
@@ -110,11 +111,7 @@ class UserService extends Service
         if ($perm === 'editor') {
             return $user->is_writer == 1 || $admin;
         } else {
-            if ($perm === 'registration') {
-                return $user->is_registration == 1 || $admin;
-            } else {
-                return $admin;
-            }
+            return $admin;
         }
     }
 
@@ -129,7 +126,6 @@ class UserService extends Service
             ];
 
             $mappingUser = [
-                'email' => 'email',
                 'avatar' => 'avatar',
             ];
 
@@ -197,7 +193,7 @@ class UserService extends Service
                 $this->repository->registerToNewsLetter($data['email']);
             }
             $this->migrateDataFromOldDatabase($user->email, $user->id);
-
+            $this->verificationEmail($user->email);
             return true;
         } catch (\Exception $e) {
             $this->logWarning('Problem pri vytvarani použivateľa s errorom '
@@ -262,11 +258,6 @@ class UserService extends Service
         }
     }
 
-    public function userEvents()
-    {
-        return $this->participantRepository->userEvents($this->userId());
-    }
-
     public function list($size, $filter)
     {
         return $this->repository->list($size, $filter);
@@ -307,9 +298,12 @@ class UserService extends Service
     {
         $user = $this->repository->findUser($userId);
         $password = Str::random(12);
+        if ($user) {
+            Mail::to($user->email)->send(new ResetPasswordMail($password));
+            return $this->updateUserPassword($password, $userId);
+        }
 
-        Mail::to($user->email)->send(new ResetPasswordMail($password));
-        return $this->updateUserPassword($password, $userId);
+        return false;
     }
 
     private function registerVolunteer(
@@ -325,5 +319,37 @@ class UserService extends Service
             'user_id' => $userId,
             'was_on_event' => $wasOnEvent
         ]);
+    }
+
+    public function verificationEmail($email)
+    {
+        $user = $this->repository->findUserByEmail($email);
+
+        if ($user) {
+            $token = Str::random(32);
+            Mail::to($user->email)->send(new VerifyMail($token, $email));
+            return $this->repository->addVerificationEmailToken($email, $token);
+        }
+
+        return false;
+    }
+
+    public function verifyEmail($token, $email)
+    {
+        $user = $this->repository->findUserByEmail($email);
+        $verificationToken = $this->repository->existVerificationEmailToken($email, $token);
+
+        if ($user && !$verificationToken->used && Carbon::now()->lessThanOrEqualTo($verificationToken->valid_until)) {
+            return $this->repository->verifyUser($user->id);
+        }
+
+        return false;
+    }
+
+    public function isVerifiedUser($email)
+    {
+        $user = $this->repository->findUserByEmail($email);
+
+        return $user->is_verified;
     }
 }
