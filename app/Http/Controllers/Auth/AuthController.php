@@ -42,6 +42,10 @@ class AuthController extends Controller
             return $this->error(401, $errMessage);
         }
 
+        if (!$this->service->isVerifiedUser($data['username'])) {
+            return $this->error(403,ErrorMessagesConstant::NOT_VERIFIED_EMAIL);
+        }
+
         $token = Auth::attempt([
             'email' => $data['username'],
             'password' => $data['password'],
@@ -49,9 +53,6 @@ class AuthController extends Controller
 
         if ($token) {
             return $this->respondWithToken($token);
-        } else {
-            $this->logDebug("Validation exception for login user: no token");
-
         }
 
         return $this->error(401, $errMessage);
@@ -94,6 +95,37 @@ class AuthController extends Controller
         ]);
 
         $result = $this->service->resetPassword($data['token'], $data['password']);
+
+        if ($result) {
+            return $this->successResponse();
+        }
+
+        return ErrorMessagesConstant::badAttempt();
+    }
+
+    function sendVerificationEmail(Request $request)
+    {
+        $data = $this->validateWithCaptcha($request, [
+            'email' => 'required|string'
+        ]);
+
+        $result =  $this->service->verificationEmail($data['email']);
+
+        if ($result) {
+            return $this->successResponse();
+        }
+
+        return ErrorMessagesConstant::badAttempt();
+    }
+
+    function verifyEmail(Request $request)
+    {
+        $data = $this->validateWithCaptcha($request, [
+            'token' => 'required|string',
+            'email' => 'required|string'
+        ]);
+
+        $result = $this->service->verifyEmail($data['token'], $data['email']);
 
         if ($result) {
             return $this->successResponse();

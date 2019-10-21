@@ -241,7 +241,7 @@ class ParticipantService extends Service
         foreach(array_get($data, 'participants', []) as $user) {
             if (array_get($user, 'was_on_event', null)) {
                 try {
-                    $transport = array_get($user, 'transport_out');
+                    $transport = array_get($user, 'transport_out', null);
                     $userId = $user['user_id'];
                     $payedOnRegistration = $user['on_registration'];
                     // registered before event
@@ -287,8 +287,8 @@ class ParticipantService extends Service
         $this->repository->create([
             'admin_note' => array_get($data, 'note', ''),
             'note' => '',
-            'transport_in' => array_get($data, 'transportIn'),
-            'transport_out' => array_get($data, 'transportOut'),
+            'transport_in' => array_get($data, 'transportIn', null),
+            'transport_out' => array_get($data, 'transportOut', null),
             'user_id' => array_get($data, 'user_id', false) ? $data['user_id'] : $this->userId(),
             'event_id' => $eventId,
             'was_on_event' => $wasOnEvent
