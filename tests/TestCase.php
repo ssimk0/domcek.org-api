@@ -22,7 +22,6 @@ abstract class TestCase extends Laravel\Lumen\Testing\TestCase
         $user->id = 1;
         $user->is_admin = $admin;
         $user->is_writer = $editor;
-        $user->is_registration = $reg;
         $user->email = 'test@test.com';
         return Auth::login($user);
     }

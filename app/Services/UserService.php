@@ -111,11 +111,7 @@ class UserService extends Service
         if ($perm === 'editor') {
             return $user->is_writer == 1 || $admin;
         } else {
-            if ($perm === 'registration') {
-                return $user->is_registration == 1 || $admin;
-            } else {
-                return $admin;
-            }
+            return $admin;
         }
     }
 
