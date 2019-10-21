@@ -37,6 +37,7 @@ $app->configure('app');
 $app->configure('filesystems');
 $app->configure('queue');
 $app->configure('snappy');
+$app->configure('image-optimizer');
 
 
 $app->withFacades();

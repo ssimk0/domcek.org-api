@@ -14,7 +14,9 @@ class AddVerifyEmailTokenTableAndFlag extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('is_registration');
+            if (Schema::hasColumn('users', 'is_registration')) {
+                $table->dropColumn('is_registration');
+            }
             $table->boolean('is_verified')->default(false);
         });
 
@@ -34,6 +36,14 @@ class AddVerifyEmailTokenTableAndFlag extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('verification_token');
+        Schema::table('users',function (Blueprint $table) {
+            $table->boolean('is_registration')->default(false);
+
+            if (Schema::hasColumn('users', 'is_verified')) {
+                $table->dropColumn('is_verified');
+
+            }
+        });
     }
 }

@@ -193,7 +193,7 @@ class UserService extends Service
                 $this->repository->registerToNewsLetter($data['email']);
             }
             $this->migrateDataFromOldDatabase($user->email, $user->id);
-
+            $this->verificationEmail($user->email);
             return true;
         } catch (\Exception $e) {
             $this->logWarning('Problem pri vytvarani použivateľa s errorom '
