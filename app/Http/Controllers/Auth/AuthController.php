@@ -42,6 +42,10 @@ class AuthController extends Controller
             return $this->error(401, $errMessage);
         }
 
+        if (!$this->service->isVerifiedUser($data['username'])) {
+            return $this->error(403,ErrorMessagesConstant::NOT_VERIFIED_EMAIL);
+        }
+
         $token = Auth::attempt([
             'email' => $data['username'],
             'password' => $data['password'],
@@ -49,9 +53,6 @@ class AuthController extends Controller
 
         if ($token) {
             return $this->respondWithToken($token);
-        } else {
-            $this->logDebug("Validation exception for login user: no token");
-
         }
 
         return $this->error(401, $errMessage);
@@ -102,6 +103,37 @@ class AuthController extends Controller
         return ErrorMessagesConstant::badAttempt();
     }
 
+    function sendVerificationEmail(Request $request)
+    {
+        $data = $this->validateWithCaptcha($request, [
+            'email' => 'required|string'
+        ]);
+
+        $result =  $this->service->verificationEmail($data['email']);
+
+        if ($result) {
+            return $this->successResponse();
+        }
+
+        return ErrorMessagesConstant::badAttempt();
+    }
+
+    function verifyEmail(Request $request)
+    {
+        $data = $this->validateWithCaptcha($request, [
+            'token' => 'required|string',
+            'email' => 'required|string'
+        ]);
+
+        $result = $this->service->verifyEmail($data['token'], $data['email']);
+
+        if ($result) {
+            return $this->successResponse();
+        }
+
+        return ErrorMessagesConstant::badAttempt();
+    }
+
     function registerUser(Request $request)
     {
         $data = $this->validateWithCaptcha($request, [
@@ -113,7 +145,7 @@ class AuthController extends Controller
             'birthDate' => 'required|date_format:Y-m-d',
             'city' => 'required|string',
             'phone' => 'required|string',
-            'email' => 'required|email',
+            'email' => 'required|email|confirmed',
             'terms_and_condition' => 'required|accepted',
             'newsletter' => 'boolean',
             'sex' => ['required', Rule::in(['f', 'm'])],

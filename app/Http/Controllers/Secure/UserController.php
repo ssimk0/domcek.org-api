@@ -52,7 +52,6 @@ class UserController extends Controller
         $data = $this->validate($request, [
             'city' => 'required|string',
             'phone' => 'required|string',
-            'email' => 'required|string',
             'lastName' => 'required|string',
             'nick' => 'string',
             'avatar' => 'url'
