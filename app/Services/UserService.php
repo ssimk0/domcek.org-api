@@ -349,7 +349,10 @@ class UserService extends Service
     public function isVerifiedUser($email)
     {
         $user = $this->repository->findUserByEmail($email);
+        if ($user) {
+            return $user->is_verified;
+        }
 
-        return $user->is_verified;
+        return false;
     }
 }
