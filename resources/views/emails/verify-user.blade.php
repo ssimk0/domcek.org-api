@@ -6,7 +6,7 @@ Ahoj,
 toto je posledný krok k dokončeniu tvojej registrácie. Ak si želáš pokračovať, klikni na
 
 @component('mail::button', ['url' => $url, 'color' => 'primary'])
-    Overiť emailu
+    Overiť email
 @endcomponent
 
 <div style="margin-top: 40px">
