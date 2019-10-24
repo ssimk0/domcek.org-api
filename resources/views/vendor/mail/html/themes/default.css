@@ -108,11 +108,11 @@ img {
 }
 
 .header a {
-    color: #fff;
     font-size: 19px;
     font-weight: bold;
     text-decoration: none;
     text-shadow: 0 1px 0 white;
+    color: #777 !important;
 }
 
 /* Body */
@@ -164,7 +164,7 @@ img {
 }
 
 .footer p {
-    color: #fff;
+    color: #777 !important;
     font-size: 12px;
     text-align: center;
 }
