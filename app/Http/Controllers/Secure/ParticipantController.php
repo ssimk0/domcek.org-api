@@ -180,7 +180,7 @@ class ParticipantController extends Controller
     {
         $filters = $this->validate($request, [
             'filter' => 'string',
-            'volunteer' => 'array',
+            'volunteer' => 'string',
             'sortBy' => 'string',
             'sortDesc' => 'string',
             'group' => 'string',
@@ -190,7 +190,7 @@ class ParticipantController extends Controller
 
         $list = $this->service->list($eventId, $filters);
 
-        return $this->jsonResponse($list);
+        return response()->json($list);
     }
 
     function registrationList(Request $request) {
