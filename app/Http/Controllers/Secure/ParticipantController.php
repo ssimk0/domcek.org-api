@@ -3,7 +3,6 @@
 
 namespace App\Http\Controllers\Secure;
 
-
 use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
 use App\Services\ParticipantService;
@@ -22,7 +21,7 @@ class ParticipantController extends Controller
     }
 
     // Register user to event
-    function register(Request $request, $eventId)
+    public function register(Request $request, $eventId)
     {
         $data = $this->validate($request, [
             'volunteerTypeId' => 'integer',
@@ -43,7 +42,7 @@ class ParticipantController extends Controller
         return ErrorMessagesConstant::badAttempt();
     }
 
-    function userEdit(Request $request, $eventId)
+    public function userEdit(Request $request, $eventId)
     {
         $data = $this->validate($request, [
             'note' => 'string',
@@ -60,20 +59,20 @@ class ParticipantController extends Controller
         return ErrorMessagesConstant::badAttempt();
     }
 
-     // Subscribe user to event after unsubscribe
-     function subscribe(Request $request, $eventId)
-     {
-         $result = $this->service->subscribe($eventId);
+    // Subscribe user to event after unsubscribe
+    public function subscribe(Request $request, $eventId)
+    {
+        $result = $this->service->subscribe($eventId);
  
-         if ($result) {
-             return $this->successResponse();
-         }
+        if ($result) {
+            return $this->successResponse();
+        }
  
-         return ErrorMessagesConstant::badAttempt();
-     }
+        return ErrorMessagesConstant::badAttempt();
+    }
 
     // Unsubscribe user from event after registration
-    function unsubscribe(Request $request, $eventId)
+    public function unsubscribe(Request $request, $eventId)
     {
         $result = $this->service->unsubscribe($eventId);
 
@@ -85,7 +84,7 @@ class ParticipantController extends Controller
     }
 
     // Admin unsubscribe user from event after registration
-    function adminUnsubscribe(Request $request, $userId, $eventId)
+    public function adminUnsubscribe(Request $request, $userId, $eventId)
     {
         $result = $this->service->unsubscribe($eventId, $userId);
 
@@ -97,7 +96,7 @@ class ParticipantController extends Controller
     }
 
     // Admin unsubscribe user from event after registration
-    function adminSubscribe(Request $request, $userId, $eventId)
+    public function adminSubscribe(Request $request, $userId, $eventId)
     {
         $result = $this->service->subscribe($eventId, $userId);
 
@@ -108,18 +107,18 @@ class ParticipantController extends Controller
         return ErrorMessagesConstant::badAttempt();
     }
 
-    function eventQRCode(Request $request, $eventId)
+    public function eventQRCode(Request $request, $eventId)
     {
         $userId = $request->user()->id;
         $path = storage_path()."/app/qrcodes/".Str::random(40).".png";
         $this->service->generateQrCode($eventId, $userId, $path);
         $headers = ['Content-Type' => "image/png"];
-        $response = new BinaryFileResponse($path, 200 , $headers);
+        $response = new BinaryFileResponse($path, 200, $headers);
         ob_end_clean();
         return $response;
     }
 
-    function userEvents()
+    public function userEvents()
     {
         $detail = $this->service->userEvents();
 
@@ -130,7 +129,7 @@ class ParticipantController extends Controller
         return ErrorMessagesConstant::notFound();
     }
 
-    function adminDetail($eventId, $userId)
+    public function adminDetail($eventId, $userId)
     {
         $detail = $this->service->adminDetail($eventId, $userId);
 
@@ -141,7 +140,8 @@ class ParticipantController extends Controller
         return ErrorMessagesConstant::notFound();
     }
 
-    function sync(Request $request) {
+    public function sync(Request $request)
+    {
         $data = $this->validate($request, [
             'participants' => 'array',
             'wrong-payments' => 'array'
@@ -156,7 +156,7 @@ class ParticipantController extends Controller
         return ErrorMessagesConstant::badAttempt();
     }
 
-    function edit(Request $request, $participantId, $eventId)
+    public function edit(Request $request, $participantId, $eventId)
     {
         $data = $this->validate($request, [
             'volunteerTypeId' => 'integer',
@@ -176,7 +176,7 @@ class ParticipantController extends Controller
         return ErrorMessagesConstant::badAttempt();
     }
 
-    function list(Request $request, $eventId)
+    public function list(Request $request, $eventId)
     {
         $filters = $this->validate($request, [
             'filter' => 'string',
@@ -190,17 +190,19 @@ class ParticipantController extends Controller
 
         $list = $this->service->list($eventId, $filters);
 
-        return response()->json($list);
+        return $this->jsonResponse($list, 200, 0);
     }
 
-    function registrationList(Request $request) {
+    public function registrationList(Request $request)
+    {
         $eventId = $request->event_id;
         $list = $this->service->registrationList($eventId);
 
         return $this->jsonResponse($list);
     }
 
-    function detailedRegistrationList(Request $request) {
+    public function detailedRegistrationList(Request $request)
+    {
         $eventId = $request->event_id;
         $list = $this->service->detailedRegistrationList($eventId);
 
@@ -208,7 +210,8 @@ class ParticipantController extends Controller
     }
 
 
-    function generateNameplates(Request $request, $eventId) {
+    public function generateNameplates(Request $request, $eventId)
+    {
         $data = $this->validate($request, [
             'image' => ['required', 'regex:(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'],
             'image_back' => ['required', 'regex:(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'],
@@ -220,6 +223,5 @@ class ParticipantController extends Controller
 
         $pdf = PDF::loadView('participants.nameplates', array_merge($data, $result))->setPaper('a4')->setOrientation('landscape');
         return $pdf->download("menovky-$eventId.pdf");
-
     }
 }

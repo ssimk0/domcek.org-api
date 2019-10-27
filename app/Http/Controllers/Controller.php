@@ -19,9 +19,9 @@ class Controller extends BaseController
         ], $status);
     }
 
-    public function jsonResponse($responseData, $status = 200)
+    public function jsonResponse($responseData, $status = 200, $options = JSON_NUMERIC_CHECK)
     {
-        return response()->json($responseData, $status, [], JSON_NUMERIC_CHECK);
+        return response()->json($responseData, $status, [], $options);
     }
 
     public function successResponse($status = 200)

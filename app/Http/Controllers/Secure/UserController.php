@@ -23,7 +23,7 @@ class UserController extends Controller
         $user = $request->user();
         $detail = $this->service->userDetail($user);
 
-        return $this->jsonResponse($detail);
+        return $this->jsonResponse($detail, 200, 0);
     }
 
     public function changePassword(Request $request)
@@ -77,7 +77,7 @@ class UserController extends Controller
             array_get($data, 'filter', '%')
         );
 
-        return response()->json($list);
+        return $this->jsonResponse($list, 200, 0);
     }
 
     public function editUserAdmin(Request $request, $userId)
@@ -107,7 +107,7 @@ class UserController extends Controller
         $user = $this->service->findUser($userId);
         $detail = $this->service->userDetail($user);
 
-        return $this->jsonResponse($detail);
+        return $this->jsonResponse($detail, 200, 0);
     }
 
     public function resetPassword($userId)
