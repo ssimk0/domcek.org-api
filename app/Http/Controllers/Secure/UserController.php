@@ -3,7 +3,6 @@
 
 namespace App\Http\Controllers\Secure;
 
-
 use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
 use App\Services\UserService;
@@ -19,7 +18,7 @@ class UserController extends Controller
         $this->service = $service;
     }
 
-    function userDetail(Request $request)
+    public function userDetail(Request $request)
     {
         $user = $request->user();
         $detail = $this->service->userDetail($user);
@@ -27,14 +26,14 @@ class UserController extends Controller
         return $this->jsonResponse($detail);
     }
 
-    function changePassword(Request $request)
+    public function changePassword(Request $request)
     {
         $data = $this->validate($request, [
             'oldPassword' => 'required',
             'password' => 'required|string|confirmed|min:6'
         ]);
 
-        if (!Hash::check($data['oldPassword'], $request->user()->password ))  {
+        if (!Hash::check($data['oldPassword'], $request->user()->password)) {
             return ErrorMessagesConstant::error(400, ErrorMessagesConstant::WRONG_CREDENTIALS);
         }
 
@@ -47,7 +46,7 @@ class UserController extends Controller
         ErrorMessagesConstant::badAttempt();
     }
 
-    function updateProfile(Request $request)
+    public function updateProfile(Request $request)
     {
         $data = $this->validate($request, [
             'city' => 'required|string',
@@ -66,7 +65,8 @@ class UserController extends Controller
         ErrorMessagesConstant::badAttempt();
     }
 
-    function list(Request $request) {
+    public function list(Request $request)
+    {
         $data = $this->validate($request, [
             'size' => 'integer',
             'filter' => 'string'
@@ -77,10 +77,11 @@ class UserController extends Controller
             array_get($data, 'filter', '%')
         );
 
-        return $this->jsonResponse($list);
+        return response()->json($list);
     }
 
-    function editUserAdmin(Request $request, $userId) {
+    public function editUserAdmin(Request $request, $userId)
+    {
         $data = $this->validate($request, [
             'firstName' => 'string',
             'lastName' => 'string',
@@ -101,7 +102,7 @@ class UserController extends Controller
         return ErrorMessagesConstant::badAttempt();
     }
 
-    function adminUserDetail($userId)
+    public function adminUserDetail($userId)
     {
         $user = $this->service->findUser($userId);
         $detail = $this->service->userDetail($user);
@@ -109,8 +110,8 @@ class UserController extends Controller
         return $this->jsonResponse($detail);
     }
 
-    function resetPassword($userId) {
-
+    public function resetPassword($userId)
+    {
         $result = $this->service->generateNewPassword($userId);
 
         if ($result) {
@@ -119,6 +120,4 @@ class UserController extends Controller
 
         return ErrorMessagesConstant::badAttempt();
     }
-
-
 }
