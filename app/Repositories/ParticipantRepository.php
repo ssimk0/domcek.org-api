@@ -135,13 +135,16 @@ class ParticipantRepository extends Repository
             if (array_get($filters, 'sortBy') != null) {
                 $sortBy = $filters['sortBy'];
                 $sort = array_get($filters, 'sortDesc', 'false') == 'false' ? 'asc' : 'desc';
-                $profileFields = ['birth_date'];
+                $profileFields = ['birth_date', 'last_name'];
                 $groupFields = ['group_name'];
+                $participantFields = ['note'];
 
                 if ( in_array($sortBy, $profileFields) ) { 
                     $query->orderBy(TableConstants::PROFILES.'.'.$sortBy, $sort);
                 } else if (in_array($sortBy, $groupFields)) {
                     $query->orderBy(TableConstants::GROUPS.'.'.$sortBy, $sort);
+                } else if (in_array($sortBy, $participantFields)) {
+                    $query->orderBy(TableConstants::PARTICIPANTS.'.'.$sortBy, $sort);
                 }
             }
 

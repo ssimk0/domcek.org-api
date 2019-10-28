@@ -254,7 +254,7 @@ class ParticipantService extends Service
                             $this->createParticipant([
                                 'user_id' => $userId,
                                 'transportOut' => $transport,
-                                'note' => 'Prihlasený na púti'
+                                'admin_note' => 'Prihlasený na púti'
                             ], $eventId, true);
                             $this->createPayment($payedOnRegistration, $eventId, empty($eventPrice) ? null : $eventPrice->id, $payedOnRegistration, $userId);
                         } else {
@@ -285,8 +285,8 @@ class ParticipantService extends Service
 
     private function createParticipant($data, $eventId, $wasOnEvent=false) {
         $this->repository->create([
-            'admin_note' => array_get($data, 'note', ''),
-            'note' => '',
+            'admin_note' => array_get($data, 'admin_note', ''),
+            'note' => array_get($data, 'note', ''),
             'transport_in' => array_get($data, 'transportIn', null),
             'transport_out' => array_get($data, 'transportOut', null),
             'user_id' => array_get($data, 'user_id', false) ? $data['user_id'] : $this->userId(),

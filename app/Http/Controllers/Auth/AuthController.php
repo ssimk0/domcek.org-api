@@ -42,16 +42,16 @@ class AuthController extends Controller
             return $this->error(401, $errMessage);
         }
 
-        if (!$this->service->isVerifiedUser($data['username'])) {
-            return $this->error(403,ErrorMessagesConstant::NOT_VERIFIED_EMAIL);
-        }
-
         $token = Auth::attempt([
             'email' => $data['username'],
             'password' => $data['password'],
         ]);
 
         if ($token) {
+            if (!$this->service->isVerifiedUser($data['username'])) {
+                return $this->error(403,ErrorMessagesConstant::NOT_VERIFIED_EMAIL);
+            }
+
             return $this->respondWithToken($token);
         }
 
