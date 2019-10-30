@@ -34,9 +34,9 @@ Ak zaplatíš poštovou poukážkou, určite so sebou prines aj ústrižok (stá
 
 V prípade, že chceš zmeniť svoje prihlásenie alebo sa chceš odhlásiť, môžeš tak urobiť na stránke <a href="https://domcek.org">www.domcek.org</a> v sekcii "Moje prihlásenia".
 
-V prípade, že sa z púte odhlásiš v termíne otvoreného prihlasovania, odoslaním mailu na <a href="mailto:pute@domcek.org">putradosti@domcek.org</a> môžeš požiadať o vrátenie vyplatenej zálohy.
+V prípade, že sa z púte odhlásiš v termíne otvoreného prihlasovania, odoslaním mailu na <a href="mailto:pute@domcek.org">pute@domcek.org</a> môžeš požiadať o vrátenie vyplatenej zálohy.
 
-V prípade akýchkoľvek otázok nás môžeš kontaktovať na mailovú adresu <a href="mailto:pute@domcek.org">putzrelosti@domcek.org</a> alebo nám napíš na Domčekovkú FB stránku.
+V prípade akýchkoľvek otázok nás môžeš kontaktovať na mailovú adresu <a href="mailto:pute@domcek.org">pute@domcek.org</a> alebo nám napíš na Domčekovkú FB stránku.
 
 </pre>
 
