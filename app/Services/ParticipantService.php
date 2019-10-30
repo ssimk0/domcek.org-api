@@ -27,13 +27,13 @@ class ParticipantService extends Service
     private $eventRepository;
     private $groupRepository;
 
-    public function __construct(ParticipantRepository $repository, 
-    VolunteersRepository $volunteersRepository, 
-    PaymentRepository $paymentRepository,
-    EventRepository $eventRepository,
-    GroupRepository $groupRepository
-    )
-    {
+    public function __construct(
+        ParticipantRepository $repository,
+        VolunteersRepository $volunteersRepository,
+        PaymentRepository $paymentRepository,
+        EventRepository $eventRepository,
+        GroupRepository $groupRepository
+    ) {
         $this->repository = $repository;
         $this->eventRepository = $eventRepository;
         $this->paymentRepository = $paymentRepository;
@@ -86,7 +86,6 @@ class ParticipantService extends Service
             ]);
 
             return true;
-
         } catch (\Exception $e) {
             $this->logError("Problem with editing participant with error: " . $e);
         }
@@ -110,8 +109,8 @@ class ParticipantService extends Service
         try {
             $event = $this->eventRepository->detail($eventId);
             $eventPrice = $this->eventRepository->eventPriceById($data['priceId'], $eventId);
-
             $now = Carbon::now();
+            $isVolunteer = $volunteerTypeId && $now <= Carbon::parse($event->end_volunteer_registration);
 
             if ($now >= Carbon::parse($event->start_date)) {
                 return false;
@@ -119,7 +118,7 @@ class ParticipantService extends Service
 
             $this->createParticipant($data, $eventId);
 
-            if ($volunteerTypeId && $now <= Carbon::parse($event->end_volunteer_registration)) {
+            if ($isVolunteer) {
                 $this->createVolunteer($volunteerTypeId, $eventId);
             }
 
@@ -144,7 +143,8 @@ class ParticipantService extends Service
                 $paymentNumber,
                 $event->name,
                 "https://domcek.org/login?next=/user/registrations",
-                $qrCodePath
+                $qrCodePath,
+                $isVolunteer
             ));
 
             return true;
@@ -233,12 +233,13 @@ class ParticipantService extends Service
         ];
     }
 
-    function sync($data, $eventId) {
+    public function sync($data, $eventId)
+    {
         $eventPrice = $this->eventRepository->eventPrices([$eventId]);
         if (!empty($eventPrice)) {
             $eventPrice = $eventPrice[0];
         }
-        foreach(array_get($data, 'participants', []) as $user) {
+        foreach (array_get($data, 'participants', []) as $user) {
             if (array_get($user, 'was_on_event', null)) {
                 try {
                     $transport = array_get($user, 'transport_out', null);
@@ -246,7 +247,7 @@ class ParticipantService extends Service
                     $payedOnRegistration = $user['on_registration'];
                     // registered before event
                     if (array_get($user, 'payment_number', false)) {
-                    $this->repository->registerUser($userId, $eventId, $transport, $payedOnRegistration);
+                        $this->repository->registerUser($userId, $eventId, $transport, $payedOnRegistration);
                     } else {
                         $exist = $this->repository->participantExist($eventId, $userId);
                         if (!$exist) {
@@ -261,20 +262,19 @@ class ParticipantService extends Service
                             $this->repository->registerUser($userId, $eventId, $transport, $payedOnRegistration);
                         }
                     }
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     $this->logError('Problem with register user ' + json_encode($user));
-
                 }
             }
         }
 
-        foreach(array_get($data, 'wrong-payments', []) as $payment) {
+        foreach (array_get($data, 'wrong-payments', []) as $payment) {
             $userId = array_get($payment, 'user_id', false);
-            if ($userId) { 
+            if ($userId) {
                 try {
                     $this->paymentRepository->edit($userId, $eventId, $payment['amount']);
                     $this->paymentRepository->deleteWrongPaymentById($payment['id']);
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     $this->logError('Problem with edit payment ' + $payment['id'] + 'for user ' + $payment['user_id']);
                 }
             }
@@ -283,7 +283,8 @@ class ParticipantService extends Service
         return true;
     }
 
-    private function createParticipant($data, $eventId, $wasOnEvent=false) {
+    private function createParticipant($data, $eventId, $wasOnEvent=false)
+    {
         $this->repository->create([
             'admin_note' => array_get($data, 'admin_note', ''),
             'note' => array_get($data, 'note', ''),
@@ -295,7 +296,8 @@ class ParticipantService extends Service
         ]);
     }
 
-    private function createVolunteer($volunteerTypeId, $eventId, $wasOnEvent=false) {
+    private function createVolunteer($volunteerTypeId, $eventId, $wasOnEvent=false)
+    {
         $this->volunteersRepository->create([
             'volunteer_type_id' => $volunteerTypeId,
             'event_id' => $eventId,
@@ -304,7 +306,8 @@ class ParticipantService extends Service
         ]);
     }
 
-    private function createPayment($needPay, $eventId, $priceId, $onReg = 0, $userId=false) {
+    private function createPayment($needPay, $eventId, $priceId, $onReg = 0, $userId=false)
+    {
         $paymentNumber = $this->paymentRepository->generatePaymentNumber();
      
         $this->paymentRepository->create([
@@ -332,10 +335,11 @@ class ParticipantService extends Service
         ];
     }
 
-    private function getPagedNameplatesData($participants) {
+    private function getPagedNameplatesData($participants)
+    {
         $pages = [];
         $allpages = ceil(count($participants)/9);
-        foreach(range(0, $allpages -1 ) as $page_num) {
+        foreach (range(0, $allpages -1) as $page_num) {
             $from = $page_num * 9;
             if ($page_num == $allpages) {
                 $pages[$page_num] = array_slice($participants, $from);
@@ -346,5 +350,4 @@ class ParticipantService extends Service
 
         return $pages;
     }
-
 }
