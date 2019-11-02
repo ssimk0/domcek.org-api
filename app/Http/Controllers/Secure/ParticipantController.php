@@ -31,6 +31,7 @@ class ParticipantController extends Controller
             'audioVisualKnowledgeAgreement' => 'required|accepted',
             'GDPRRegistration' => 'required|accepted',
             'priceId' => 'required|integer',
+            'wantBeAnimatorOnPZ' => 'boolean'
         ]);
 
         $result = $this->service->create($data, $eventId);
