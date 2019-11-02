@@ -292,7 +292,8 @@ class ParticipantService extends Service
             'transport_out' => array_get($data, 'transportOut', null),
             'user_id' => array_get($data, 'user_id', false) ? $data['user_id'] : $this->userId(),
             'event_id' => $eventId,
-            'was_on_event' => $wasOnEvent
+            'was_on_event' => $wasOnEvent,
+            'want_to_be_animator_on_pz' => array_get($data, 'wantBeAnimatorOnPZ', null)
         ]);
     }
 
