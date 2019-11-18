@@ -274,14 +274,13 @@ class UserService extends Service
                 'admin_note' => 'note'
             ];
 
-            $mappingUser = [
-                'email' => 'email',
-                'is_writer' => 'isEditor',
-                'is_admin' => 'isAdmin',
+            $userData = [
+              'email' => $data['email'],
+              'is_admin' => $data['isAdmin'],
+              'is_writer' => $data['isEditor']
             ];
 
-            $this->repository->updateUser($this->parseExistingData($data,
-                $mappingUser), $userId);
+            $this->repository->updateUser($userData, $userId);
             $this->repository->updateUserProfile($this->parseExistingData($data,
                 $mappingProfile), $userId);
 
