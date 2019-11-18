@@ -91,8 +91,8 @@ class UserService extends Service
     {
         return [
             'email' => $user->email,
-            'admin' => $user->is_admin,
-            'editor' => $user->is_writer,
+            'admin' => boolval($user->is_admin),
+            'editor' => boolval($user->is_writer),
             'avatar' => $user->avatar,
             'profile' => $this->repository->getUserProfile($user->id),
             'participantionCount' => $this->participantRepository->getCountOfParticipationOnEvents($user->id),
