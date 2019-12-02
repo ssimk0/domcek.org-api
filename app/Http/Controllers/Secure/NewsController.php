@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Secure;
 
-
 use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
 use App\Services\NewsService;
@@ -17,7 +16,7 @@ class NewsController extends Controller
         $this->service = $service;
     }
 
-    function create(Request $request)
+    public function create(Request $request)
     {
         $data = $this->validate($request, [
             'title' => 'required|string',
@@ -30,16 +29,13 @@ class NewsController extends Controller
 
         $result = $this->service->create($data);
         if ($result) {
-            return $this->jsonResponse([
-                'success' => true,
-                'news' => $result
-            ], 201);
+            return $this->successResponse(201);
         }
 
         return ErrorMessagesConstant::badAttempt();
     }
 
-    function edit($slug, Request $request)
+    public function edit($slug, Request $request)
     {
         $data = $this->validate($request, [
             'title' => 'required|string',
@@ -53,16 +49,13 @@ class NewsController extends Controller
         $result = $this->service->edit($data, $slug);
 
         if ($result) {
-            return $this->jsonResponse([
-                'success' => true,
-                'news' => $result
-            ], 200);
+            return $this-> successResponse();
         }
 
         return ErrorMessagesConstant::badAttempt();
     }
 
-    function listUnpublished(Request $request)
+    public function listUnpublished(Request $request)
     {
         $data = $this->validate($request, [
             'order' => 'in:best,featured',
@@ -74,7 +67,7 @@ class NewsController extends Controller
         );
     }
 
-    function unpublished($slug)
+    public function unpublished($slug)
     {
         $news = $this->service->unpublishedDetail($slug);
         return $this->jsonResponse($news);

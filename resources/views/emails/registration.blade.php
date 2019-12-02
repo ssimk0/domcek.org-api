@@ -3,6 +3,7 @@
 Milý/á {{ $userName }},
 
 prihlásenie na {{ $eventName }} prebehlo úspešne. <br/>
+##Až keď zaplatíš a máš potrvdenú platbu mailom tak si oficialne prihlásený a máš zaistene ubytovanie !!!
 
 @component('mail::panel')
 Údaje pre platbu zálohy:
@@ -27,8 +28,6 @@ Prosím, ulož si do mobilu <strong>QR kod</strong>, ktorý nájdeš v prílohe 
 A vezmi si so sebou aj <strong>potvrdenie o platbe</strong>  pre prípad, že systém nedokáže spárovať tvoju platbu.
 
 Ak zaplatíš poštovou poukážkou, určite so sebou prines aj ústrižok (stáva sa, že platby cez poštu neprejdú ani za týždeň). Ak máš možnosť uhradiť účastnícky poplatok cez internet banking, využi prosím túto možnosť.
-
-<strong>Ubytovanie počas púte zrelosti NEPOSKYTUJEME ! Ubytovanie si zabezpečuje každý sám.</strong> 
 
 Ďakujeme za tvoje prihlásenie na púť a tešíme sa na teba!
 

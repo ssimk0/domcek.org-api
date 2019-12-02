@@ -22,7 +22,6 @@ class UserController extends Controller
     {
         $user = $request->user();
         $detail = $this->service->userDetail($user);
-
         return $this->jsonResponse($detail, 200, 0);
     }
 
@@ -86,10 +85,10 @@ class UserController extends Controller
             'firstName' => 'string',
             'lastName' => 'string',
             'city' => 'string',
-            'isAdmin' => 'boolean',
-            'isEditor' => 'boolean',
+            'isAdmin' => 'boolean|required',
+            'isEditor' => 'boolean|required',
             'phone' => 'string',
-            'email' => 'string',
+            'email' => 'string|required',
             'note' => 'string'
         ]);
 
