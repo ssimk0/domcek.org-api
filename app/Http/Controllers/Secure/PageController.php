@@ -3,7 +3,6 @@
 
 namespace App\Http\Controllers\Secure;
 
-
 use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
 use App\Services\PageService;
@@ -18,7 +17,7 @@ class PageController extends Controller
         $this->service = $service;
     }
 
-    function create(Request $request)
+    public function create(Request $request)
     {
         $data = $this->validate($request, [
             'title' => 'required|string',
@@ -30,16 +29,13 @@ class PageController extends Controller
 
         $result = $this->service->create($data);
         if ($result) {
-            return $this->jsonResponse([
-                'success' => true,
-                'page' => $result
-            ], 201);
+            return $this->successResponse(201);
         }
 
         return ErrorMessagesConstant::badAttempt();
     }
 
-    function edit($slug, Request $request)
+    public function edit($slug, Request $request)
     {
         $data = $this->validate($request, [
             'title' => 'required|string',
@@ -52,18 +48,15 @@ class PageController extends Controller
         $result = $this->service->edit($data, $slug);
 
         if ($result) {
-            return $this->jsonResponse([
-                'success' => true,
-                'page' => $result
-            ], 200);
+            return $this->successResponse();
         }
 
         return ErrorMessagesConstant::badAttempt();
     }
 
-    function detail($slug)
+    public function detail($slug)
     {
-       $result =  $this->service->detail($slug);
+        $result =  $this->service->detail($slug);
 
         if ($result) {
             return $this->jsonResponse($result, 200);

@@ -3,6 +3,7 @@
 Milý/á {{ $userName }},
 
 prihlásenie na {{ $eventName }} prebehlo úspešne. <br/>
+##Až keď zaplatíš a máš potrvdenú platbu mailom tak si oficialne prihlásený a máš zaistene ubytovanie !!!
 
 @component('mail::panel')
 Údaje pre platbu zálohy:
@@ -28,19 +29,13 @@ A vezmi si so sebou aj <strong>potvrdenie o platbe</strong>  pre prípad, že sy
 
 Ak zaplatíš poštovou poukážkou, určite so sebou prines aj ústrižok (stáva sa, že platby cez poštu neprejdú ani za týždeň). Ak máš možnosť uhradiť účastnícky poplatok cez internet banking, využi prosím túto možnosť.
 
-<strong>Ubytovanie počas púte zrelosti budeš mať zabezpečené v Domčeku!</strong> 
-
 Ďakujeme za tvoje prihlásenie na púť a tešíme sa na teba!
 
 V prípade, že chceš zmeniť svoje prihlásenie alebo sa chceš odhlásiť, môžeš tak urobiť na stránke <a href="https://domcek.org">www.domcek.org</a> v sekcii "Moje prihlásenia".
 
 V prípade, že sa z púte odhlásiš v termíne otvoreného prihlasovania, odoslaním mailu na <a href="mailto:pute@domcek.org">pute@domcek.org</a> môžeš požiadať o vrátenie vyplatenej zálohy.
 
-V prípade akýchkoľvek otázok nás môžeš kontaktovať na mailovú adresu <a href="mailto:pute@domcek.org">pute@domcek.org</a> alebo nám napíš na Domčekovkú FB stránku alebo organizátorov púte zrelosti môžeš kontaktovať na tel.č. : 
-
-09182812019   - Peťo
-
-0944766899    - Miška
+V prípade akýchkoľvek otázok nás môžeš kontaktovať na mailovú adresu <a href="mailto:pute@domcek.org">pute@domcek.org</a> alebo nám napíš na Domčekovkú FB stránku.
 
 </pre>
 
