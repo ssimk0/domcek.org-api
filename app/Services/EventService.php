@@ -162,19 +162,19 @@ class EventService extends Service
     {
         $stats = $this->event->detailedStats($eventId);
         // SETUP DEFAULTS
-        if (array_get($stats, 'ages.0', true)) {
+        if (!array_get($stats, 'ages.0', true)) {
             $stats['ages'] = $this->getStatDefault();
         }
 
-        if (array_get($stats, 'cities.0', true)) {
+        if (!array_get($stats, 'cities.0', true)) {
             $stats['cities'] = $this->getStatDefault();
         }
 
-        if (array_get($stats, 'names-female.0', true)) {
+        if (!array_get($stats, 'names-female.0', true)) {
             $stats['names-female'] = $this->getStatDefault();
         }
 
-        if (array_get($stats, 'names-male.0', true)) {
+        if (!array_get($stats, 'names-male.0', true)) {
             $stats['names-male'] = $this->getStatDefault();
         }
 

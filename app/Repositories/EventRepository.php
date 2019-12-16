@@ -115,8 +115,8 @@ class EventRepository extends Repository
         $countParticipantsMale = $this->getCountParticipant('participant', $eventId, 'm');
         $countVolunteer = $this->getCountParticipant('volunteer', $eventId);
 
-        $topNamesF = $this->getTop($eventId, TableConstants::PROFILES.'.first_name', 5, null, 'f');
-        $topNamesM = $this->getTop($eventId, TableConstants::PROFILES.'.first_name', 5, null, 'm');
+        $topNamesF = $this->getTop($eventId, TableConstants::PROFILES.'.first_name', 5, null, "f");
+        $topNamesM = $this->getTop($eventId, TableConstants::PROFILES.'.first_name', 5, null, "m");
         $topCities = $this->getTop($eventId, TableConstants::PROFILES.'.city');
         $topAges = $this->getTop($eventId, DB::raw('YEAR(profiles.birth_date) as year'), 5, DB::raw('YEAR(profiles.birth_date)'));
         return [
@@ -161,9 +161,7 @@ class EventRepository extends Repository
     private function getTop($eventId, $column, $limit = 5, $groupBy = null, $sex = null) {
         $groupBy = $groupBy ? $groupBy : $column;
         $query = DB::table(TableConstants::PROFILES)
-            ->leftJoin(TableConstants::PARTICIPANTS, function ($join) {
-                $join->on(TableConstants::PARTICIPANTS . '.user_id', TableConstants::PROFILES . '.user_id');
-            })
+            ->leftJoin(TableConstants::PARTICIPANTS, TableConstants::PARTICIPANTS . '.user_id', TableConstants::PROFILES . '.user_id')
             ->where(TableConstants::PARTICIPANTS.'.event_id', $eventId)
             ->where(TableConstants::PARTICIPANTS.'.was_on_event', true);
 
@@ -171,14 +169,15 @@ class EventRepository extends Repository
             $query->where(TableConstants::PROFILES.'.sex', $sex);
         }
 
-        return $query->groupBy($groupBy)
-            ->orderByRaw('COUNT(*) desc')
+        $query = $query->groupBy($groupBy)
+            ->orderByRaw('count desc')
             ->select(
                 DB::raw('COUNT(*) as count'),
                 $column
             )
-            ->limit($limit)
-            ->get();
+            ->limit($limit);
+
+        return $query->get();
     }
 
     private function getCountBusPassengers($eventId, $type)
