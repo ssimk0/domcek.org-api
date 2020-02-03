@@ -98,18 +98,15 @@ class VolunteersRepository extends Repository
                 $join->on(TableConstants::VOLUNTEERS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
                 $join->on(TableConstants::VOLUNTEERS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
             })
-            ->leftJoin(TableConstants::GROUPS, function ($join) {
-                $join->on(TableConstants::GROUPS . '.participant_id', TableConstants::PARTICIPANTS . '.id');
-                $join->on(TableConstants::GROUPS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
-            })
+            ->leftJoin(TableConstants::EVENT_GROUPS, TableConstants::EVENT_GROUPS . '.id', TableConstants::PARTICIPANTS . '.group_id')
             ->join(TableConstants::VOLUNTEERS_TYPES, TableConstants::VOLUNTEERS_TYPES.'.id', TableConstants::VOLUNTEERS . '.volunteer_type_id')
             ->where(TableConstants::PARTICIPANTS . '.event_id', $eventId)
             ->where(TableConstants::VOLUNTEERS . '.id', '!=', null)
             ->where(TableConstants::PARTICIPANTS . '.subscribed', true)
-            ->orderBy(TableConstants::GROUPS.'.group_name')
+            ->orderBy(TableConstants::EVENT_GROUPS.'.group_name')
             ->orderBy(TableConstants::PROFILES.'.last_name')
             ->orderBy(TableConstants::PROFILES.'.first_name')
-            ->select([TableConstants::VOLUNTEERS_TYPES . '.name', TableConstants::PROFILES . '.nick', TableConstants::PROFILES . '.first_name', TableConstants::GROUPS . '.group_name'])
+            ->select([TableConstants::VOLUNTEERS_TYPES . '.name', TableConstants::PROFILES . '.nick', TableConstants::PROFILES . '.first_name', TableConstants::EVENT_GROUPS . '.group_name'])
             ->get();
     }
 }

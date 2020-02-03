@@ -24,21 +24,24 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
             $router->post('register-user', 'Auth\AuthController@registerUser');
             $router->put('verify-email', 'Auth\AuthController@verifyEmail');
             $router->post('verify-email', 'Auth\AuthController@sendVerificationEmail');
-        });
+        }
+    );
     // PAGE UNSECURE
     $router->group(
-        ['prefix' => '/', 'middleware' => 'cors'], function () use ($router) {
-        $router->post('media/upload', 'Unsecure\MediaController@upload');
-        $router->get('pages', 'Unsecure\PageController@menuPages');
-        $router->get('pages/{slug}', 'Unsecure\PageController@page');
-        $router->get('news', 'Unsecure\NewsController@list');
-        $router->get('news/{slug}', [
+        ['prefix' => '/', 'middleware' => 'cors'],
+        function () use ($router) {
+            $router->post('media/upload', 'Unsecure\MediaController@upload');
+            $router->get('pages', 'Unsecure\PageController@menuPages');
+            $router->get('pages/{slug}', 'Unsecure\PageController@page');
+            $router->get('news', 'Unsecure\NewsController@list');
+            $router->get('news/{slug}', [
             'uses' => 'Unsecure\NewsController@news',
             'as' => 'news.detail',
         ]);
-        $router->get('slider-images', 'Unsecure\SliderImagesController@list');
-        $router->get('events', 'Secure\EventController@availableEvents');
-    });
+            $router->get('slider-images', 'Unsecure\SliderImagesController@list');
+            $router->get('events', 'Secure\EventController@availableEvents');
+        }
+    );
 
     // REGISTRATION
     $router->group(['prefix' => '/registration', 'middleware' => ['cors', 'token_auth:registration']], function () use ($router) {
@@ -50,69 +53,71 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
 
     // PAGE SECURE
     $router->group(
-        ['prefix' => 'secure', 'middleware' => ['cors', 'auth:api']], function () use ($router) {
+        ['prefix' => 'secure', 'middleware' => ['cors', 'auth:api']],
+        function () use ($router) {
 
         // EDITOR
-        $router->group(['prefix' => '/', 'middleware' => 'perm:editor'], function () use ($router) {
-            $router->get('news', 'Secure\NewsController@listUnpublished');
-            $router->post('news', 'Secure\NewsController@create');
-            $router->put('news/{slug}', 'Secure\NewsController@edit');
-            $router->get('news/{slug}', 'Secure\NewsController@unpublished');
+            $router->group(['prefix' => '/', 'middleware' => 'perm:editor'], function () use ($router) {
+                $router->get('news', 'Secure\NewsController@listUnpublished');
+                $router->post('news', 'Secure\NewsController@create');
+                $router->put('news/{slug}', 'Secure\NewsController@edit');
+                $router->get('news/{slug}', 'Secure\NewsController@unpublished');
 
-            $router->post('pages', 'Secure\PageController@create');
-            $router->put('pages/{slug}', 'Secure\PageController@edit');
-            $router->get('pages/{slug}', 'Secure\PageController@detail');
+                $router->post('pages', 'Secure\PageController@create');
+                $router->put('pages/{slug}', 'Secure\PageController@edit');
+                $router->get('pages/{slug}', 'Secure\PageController@detail');
 
-            $router->post('slider-images', 'Secure\SliderImagesController@create');
-            $router->get('slider-images', 'Secure\SliderImagesController@list');
-            $router->put('slider-images/{id}', 'Secure\SliderImagesController@edit');
-            $router->delete('slider-images/{id}', 'Secure\SliderImagesController@delete');
-        });
+                $router->post('slider-images', 'Secure\SliderImagesController@create');
+                $router->get('slider-images', 'Secure\SliderImagesController@list');
+                $router->put('slider-images/{id}', 'Secure\SliderImagesController@edit');
+                $router->delete('slider-images/{id}', 'Secure\SliderImagesController@delete');
+            });
 
-        // ADMIN
-        $router->group(['prefix' => '/admin', 'middleware' => 'perm:admin'], function () use ($router) {
+            // ADMIN
+            $router->group(['prefix' => '/admin', 'middleware' => 'perm:admin'], function () use ($router) {
+                $router->post('events', 'Secure\EventController@create');
+                $router->get('events', 'Secure\EventController@list');
+                $router->put('events/{id}', 'Secure\EventController@edit');
+                $router->delete('events/{id}', 'Secure\EventController@delete');
+                $router->get('events/{id}', 'Secure\EventController@detail');
+                $router->get('events/{eventId}/volunteers', 'Secure\VolunteerController@list');
+                $router->post('events/{id}/payments', 'Secure\PaymentController@uploadTransferLog');
+                $router->post('events/{id}/nameplates', 'Secure\ParticipantController@generateNameplates');
+                $router->get('events/{id}/stats', 'Secure\EventController@statsFile');
 
-            $router->post('events', 'Secure\EventController@create');
-            $router->get('events', 'Secure\EventController@list');
-            $router->put('events/{id}', 'Secure\EventController@edit');
-            $router->delete('events/{id}', 'Secure\EventController@delete');
-            $router->get('events/{id}', 'Secure\EventController@detail');
-            $router->get('events/{eventId}/volunteers', 'Secure\VolunteerController@list');
-            $router->post('events/{id}/payments', 'Secure\PaymentController@uploadTransferLog');
-            $router->post('events/{id}/nameplates', 'Secure\ParticipantController@generateNameplates');
-            $router->get('events/{id}/stats', 'Secure\EventController@statsFile');
+                $router->put('volunteers/{id}', 'Secure\VolunteerController@edit');
+                $router->get('volunteers/{id}', 'Secure\VolunteerController@detail');
 
-            $router->put('volunteers/{id}', 'Secure\VolunteerController@edit');
-            $router->get('volunteers/{id}', 'Secure\VolunteerController@detail');
+                $router->put('volunteers/{id}', 'Secure\VolunteerController@edit');
+                $router->get('volunteers/{id}', 'Secure\VolunteerController@detail');
 
-            $router->put('volunteers/{id}', 'Secure\VolunteerController@edit');
-            $router->get('volunteers/{id}', 'Secure\VolunteerController@detail');
+                $router->get('events/{id}/participants', 'Secure\ParticipantController@list');
+                $router->get('events/{id}/groups', 'Secure\GroupController@eventGroups');
+                $router->put('events/{id}/groups', 'Secure\GroupController@generateGroups');
+                $router->put('events/{id}/groups/animator', 'Secure\GroupController@AssignAnimator');
+                $router->put('events/{id}/participants/{participantId}', 'Secure\ParticipantController@edit');
+                $router->get('events/{eventId}/participants/{userId}', 'Secure\ParticipantController@adminDetail');
+                $router->put('events/{eventId}/participants/{userId}/unsubscribe', 'Secure\ParticipantController@adminUnsubscribe');
+                $router->put('events/{eventId}/participants/{userId}/subscribe', 'Secure\ParticipantController@adminSubscribe');
 
-            $router->get('events/{id}/participants', 'Secure\ParticipantController@list');
-            $router->get('events/{id}/groups', 'Secure\GroupController@eventGroups');
-            $router->put('events/{id}/groups', 'Secure\GroupController@generateGroups');
-            $router->put('events/{id}/participants/{participantId}', 'Secure\ParticipantController@edit');
-            $router->get('events/{eventId}/participants/{userId}', 'Secure\ParticipantController@adminDetail');
-            $router->put('events/{eventId}/participants/{userId}/unsubscribe', 'Secure\ParticipantController@adminUnsubscribe');
-            $router->put('events/{eventId}/participants/{userId}/subscribe', 'Secure\ParticipantController@adminSubscribe');
+                $router->get('users', 'Secure\UserController@list');
+                $router->put('users/{userId}', 'Secure\UserController@editUserAdmin');
+                $router->get('users/{userId}', 'Secure\UserController@adminUserDetail');
+                $router->put('users/{userId}/reset-password', 'Secure\UserController@resetPassword');
+            });
 
-            $router->get('users', 'Secure\UserController@list');
-            $router->put('users/{userId}', 'Secure\UserController@editUserAdmin');
-            $router->get('users/{userId}', 'Secure\UserController@adminUserDetail');
-            $router->put('users/{userId}/reset-password', 'Secure\UserController@resetPassword');
-        });
+            // USER
+            $router->get('user', 'Secure\UserController@userDetail');
+            $router->put('user', 'Secure\UserController@updateProfile');
+            $router->get('volunteers-types', 'Secure\VolunteerController@types');
 
-        // USER
-        $router->get('user', 'Secure\UserController@userDetail');
-        $router->put('user', 'Secure\UserController@updateProfile');
-        $router->get('volunteers-types', 'Secure\VolunteerController@types');
-
-        $router->put('user/change-password', 'Secure\UserController@changePassword');
-        $router->get('user/events', 'Secure\ParticipantController@userEvents');
-        $router->post('user/events/{id}', 'Secure\ParticipantController@register');
-        $router->put('user/events/{id}', 'Secure\ParticipantController@userEdit');
-        $router->put('user/events/{id}/unsubscribe', 'Secure\ParticipantController@unsubscribe');
-        $router->put('user/events/{id}/subscribe', 'Secure\ParticipantController@subscribe');
-        $router->get('user/events/{id}/qr', 'Secure\ParticipantController@eventQRCode');
-    });
+            $router->put('user/change-password', 'Secure\UserController@changePassword');
+            $router->get('user/events', 'Secure\ParticipantController@userEvents');
+            $router->post('user/events/{id}', 'Secure\ParticipantController@register');
+            $router->put('user/events/{id}', 'Secure\ParticipantController@userEdit');
+            $router->put('user/events/{id}/unsubscribe', 'Secure\ParticipantController@unsubscribe');
+            $router->put('user/events/{id}/subscribe', 'Secure\ParticipantController@subscribe');
+            $router->get('user/events/{id}/qr', 'Secure\ParticipantController@eventQRCode');
+        }
+    );
 });

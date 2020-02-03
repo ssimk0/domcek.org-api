@@ -3,55 +3,84 @@ namespace App\Repositories;
 
 use Illuminate\Support\Facades\DB;
 use App\Constants\TableConstants;
+use App\Models\EventsGroup;
 use App\Models\Group;
 
-class GroupRepository extends Repository {
-
-    function editGroupByParticipantAndEventId($group, $participantId, $eventId) {
-        $query = DB::table(TableConstants::GROUPS)
-        ->where('participant_id', $participantId)
+class GroupRepository extends Repository
+{
+    public function editGroupByParticipantAndEventId($group, $participantId, $eventId)
+    {
+        
+        $eventGroup = DB::table(TableConstants::EVENT_GROUPS)
+        ->where('group_name', $group)
         ->where('event_id', $eventId);
 
-        if ($query->exists()) {
-            $query->update([
-                'group_name' => $group
-            ]);
+        if ($eventGroup->exists()) {
+            $eventGroup = $eventGroup->get(["id"])->first();
         } else {
-            $group = new Group([
+            $eventGroup = new EventsGroup([
                 'group_name' => $group,
-                'group_animator' => null,
-                'event_id' => $eventId,
-                'participant_id' => $participantId
+                'animator' => null,
+                'event_id' => $eventId
             ]);
-            $group->save();
+
+            $eventGroup->save();
+
+            $eventGroup = DB::table(TableConstants::EVENT_GROUPS)
+            ->where('group_name', $group)
+            ->where('event_id', $eventId)
+            ->get(["id"])
+            ->first();
         }
+
+       return DB::table(TableConstants::PARTICIPANTS)
+            ->where('id', $participantId)
+            ->update([
+                'group_id' => empty($eventGroup) ? null : $eventGroup->id,
+            ]);
     }
 
     public function getGroupsForEvent($eventId)
     {
-        return DB::table(TableConstants::GROUPS)
-            ->where('event_id', $eventId)
-            ->groupBy('group_name')
-            ->orderByRaw('cast(group_name as unsigned)')
-            ->get(['group_name', 'group_animator', 'event_id']);
+        return DB::table(TableConstants::EVENT_GROUPS)
+            ->where('events_group.event_id', $eventId)
+            ->leftJoin(TableConstants::PARTICIPANTS, TableConstants::PARTICIPANTS.'.group_id', TableConstants::EVENT_GROUPS.'.id')
+            ->groupBy(TableConstants::EVENT_GROUPS.'.group_name')
+            ->orderByRaw('cast(events_group.group_name as unsigned)')
+            ->get([
+                'group_name',
+                DB::raw('(select CONCAT(first_name, " ", last_name) from profiles where profiles.user_id = animator ) as group_animator'),
+                'animator',
+                'events_group.event_id',
+                'events_group.id'
+            ]);
     }
 
     public function getGroupInfo($eventId, $groupName)
     {
-        return DB::table(TableConstants::GROUPS)
-            ->join(TableConstants::PARTICIPANTS, TableConstants::PARTICIPANTS.'.id', TableConstants::GROUPS.'.participant_id')
+        return DB::table(TableConstants::PARTICIPANTS)
             ->join(TableConstants::PROFILES, TableConstants::PROFILES.'.user_id', TableConstants::PARTICIPANTS.'.user_id')
             ->where(TableConstants::PARTICIPANTS.'.event_id', $eventId)
-            ->where(TableConstants::GROUPS.'.group_name', $groupName)
+            ->where(TableConstants::PARTICIPANTS.'.group_id', $groupName)
             ->selectRaw('MIN(YEAR(profiles.birth_date)) as min, MAX(YEAR(profiles.birth_date)) as max, COUNT(*) as count')
             ->first();
     }
 
     public function deleteGroupByParticipantAndEventId($participantId, $eventId)
     {
-        $query = DB::table(TableConstants::GROUPS)
-            ->where('participant_id', $participantId)
+        $query = DB::table(TableConstants::PARTICIPANTS)
+            ->where('id', $participantId)
             ->where('event_id', $eventId);
         $query->delete();
+    }
+
+    public function addAnimatorToGroup($eventId, $groupName, $userId)
+    {
+        return DB::table(TableConstants::EVENT_GROUPS)
+        ->where('group_name', $groupName)
+        ->where('event_id', $eventId)
+        ->update([
+            "animator" => $userId
+        ]);
     }
 }
