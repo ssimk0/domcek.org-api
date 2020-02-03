@@ -3,7 +3,6 @@
 
 namespace App\Http\Controllers\Secure;
 
-
 use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
 use App\Services\GroupService;
@@ -31,6 +30,21 @@ class GroupController extends Controller
 
         $result = $this->jsonResponse($this->service->generateGroups($eventId, $data));
 
+        if ($result) {
+            return $this->successResponse();
+        }
+
+        return ErrorMessagesConstant::badAttempt();
+    }
+
+    public function AssignAnimator(Request $request, $eventId)
+    {
+        $data = $this->validate($request, [
+            'groupName' => 'required|integer',
+            'userId' => 'required|integer'
+        ]);
+
+        $result = $this->service->assignAnimator($eventId, $data['groupName'], $data['userId']);
         if ($result) {
             return $this->successResponse();
         }

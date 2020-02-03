@@ -3,7 +3,6 @@
 
 namespace App\Services;
 
-
 use App\Repositories\GroupRepository;
 use App\Repositories\ParticipantRepository;
 
@@ -23,7 +22,7 @@ class GroupService extends Service
         $groups = $this->repository->getGroupsForEvent($eventId);
 
         foreach ($groups as $group) {
-            $group->info = $this->repository->getGroupInfo($eventId, $group->group_name);
+            $group->info = $this->repository->getGroupInfo($eventId, $group->id);
         }
 
         return $groups;
@@ -31,7 +30,6 @@ class GroupService extends Service
 
     public function generateGroups($eventId, $data)
     {
-
         $participants =  $this->participant->getParticipantsForMakeGroup($eventId)->toArray();
         $countGroupMembers = floor(count($participants) / $data['groupsCount']);
         $countBiggerGroups = count($participants) % $data['groupsCount'];
@@ -60,4 +58,8 @@ class GroupService extends Service
         return false;
     }
 
+    public function assignAnimator($eventId, $groupName, $userId)
+    {
+        return $this->repository->addAnimatorToGroup($eventId, $groupName, $userId);
+    }
 }
