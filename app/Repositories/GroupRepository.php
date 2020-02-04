@@ -71,7 +71,9 @@ class GroupRepository extends Repository
         $query = DB::table(TableConstants::PARTICIPANTS)
             ->where('id', $participantId)
             ->where('event_id', $eventId);
-        $query->delete();
+        $query->update([
+            'group_id' => null
+        ]);
     }
 
     public function addAnimatorToGroup($eventId, $groupName, $userId)
