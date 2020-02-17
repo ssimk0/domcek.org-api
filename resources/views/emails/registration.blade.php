@@ -3,41 +3,24 @@
 Milý/á {{ $userName }},
 
 prihlásenie na {{ $eventName }} prebehlo úspešne. <br/>
-##Až keď zaplatíš a máš potrvdenú platbu mailom tak si oficialne prihlásený a máš zaistene ubytovanie !!!
+Ďakujeme ti, že si sa prihlásil na víkend dobrovoľníkov.
+Už teraz sa na ten čas veľmi tešíme.
 
-@component('mail::panel')
-Údaje pre platbu zálohy:
+<b>Čo budeš potrebovať ?</b>
+Ako klasicky-  nezabudni si zobrať spacak a prezuvky.
 
-Banka: Tatrabanka
+<b>Príspevok ?</b>
+Príspevok na víkend dobrovolnikov je dobrovoľný. Odporúčaná cena je 15€ , avšak nechávame to na teba.
 
-IBAN účtu: SK52 1100 0000 0029 4304 5043
+<b>Program?</b>
+Program bude prebiehať v Domčeku.  Začneme  piatok večer približne o 18:00 a ukončíme ho v nedeľu obedom.
+Čo presne sa bude diať, uvidis až na mieste :) ale ver nám, že to bude naozaj skvelý čas :)
 
-Variabilný symbol: {{ $paymentNumber }} (tento VS je platný len a len pre teba a len na túto púť)
+<b>Ak by si mal akékoľvek otázky napis nám na</b>
 
-Účastnícky poplatok: {{ $price }} EUR
-Záloha: {{ $deposit }} EUR (viac info o príspevkoch nájdeš tu: https://domcek.org/page/pute/prispevky)
+<a href="mailto:pute@domcek.org">pute@domcek.org</a>
 
-Správa pre prijímateľa: Príspevok na činnosť
-@endcomponent
-
-<pre style="color:black">
-Zálohu, resp. účastnícky poplatok je potrebné uhradiť najneskôr týždeň pred podujatím. Viac informácií nájdeš vo svojom profile.
-
-Prosím, ulož si do mobilu <strong>QR kod</strong>, ktorý nájdeš v prílohe tohto e-mailu (alebo po prihlásení na stránke <a href="https://domcek.org">www.domcek.org</a>, v sekcii "Moje prihlásenia").
-
-A vezmi si so sebou aj <strong>potvrdenie o platbe</strong>  pre prípad, že systém nedokáže spárovať tvoju platbu.
-
-Ak zaplatíš poštovou poukážkou, určite so sebou prines aj ústrižok (stáva sa, že platby cez poštu neprejdú ani za týždeň). Ak máš možnosť uhradiť účastnícky poplatok cez internet banking, využi prosím túto možnosť.
-
-Ďakujeme za tvoje prihlásenie na púť a tešíme sa na teba!
-
-V prípade, že chceš zmeniť svoje prihlásenie alebo sa chceš odhlásiť, môžeš tak urobiť na stránke <a href="https://domcek.org">www.domcek.org</a> v sekcii "Moje prihlásenia".
-
-V prípade, že sa z púte odhlásiš v termíne otvoreného prihlasovania, odoslaním mailu na <a href="mailto:pute@domcek.org">pute@domcek.org</a> môžeš požiadať o vrátenie vyplatenej zálohy.
-
-V prípade akýchkoľvek otázok nás môžeš kontaktovať na mailovú adresu <a href="mailto:pute@domcek.org">pute@domcek.org</a> alebo nám napíš na Domčekovkú FB stránku.
-
-</pre>
+Vidíme saaa  už čoskoro :)
 
 <div style="margin-top: 40px;color:black" >
 Pekný deň praje team,
