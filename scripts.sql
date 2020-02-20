@@ -1,17 +1,17 @@
 UPDATE pages
-SET pages.body = REPLACE(pages.body, '/uploads/', 'https://s3.eu-central-1.amazonaws.com/org.domcek.public/reduced/')
+SET pages.body = REPLACE(pages.body, '/uploads/', 'https://s3.nl-ams.scw.cloud/org.domcek/reduced/')
 WHERE pages.body LIKE '%/uploads/%';
 
 UPDATE news_items
-SET news_items.body = REPLACE(news_items.body, '/uploads/', 'https://s3.eu-central-1.amazonaws.com/org.domcek.public/reduced/')
+SET news_items.body = REPLACE(news_items.body, '/uploads/', 'https://s3.nl-ams.scw.cloud/org.domcek/reduced/')
 WHERE news_items.body LIKE '%/uploads/%';
 
 UPDATE news_items
-SET news_items.image = CONCAT('https://s3.eu-central-1.amazonaws.com/org.domcek.public/reduced/', news_items.image_file_name)
+SET news_items.image = CONCAT('https://s3.nl-ams.scw.cloud/org.domcek/reduced/', news_items.image_file_name)
 where news_items.image_file_name IS NOT NULL;
 
 UPDATE slider_images
-SET slider_images.image = CONCAT('https://s3.eu-central-1.amazonaws.com/org.domcek.public/reduced/', slider_images.image_file_name)
+SET slider_images.image = CONCAT('https://s3.nl-ams.scw.cloud/org.domcek/reduced/', slider_images.image_file_name)
 where slider_images.image_file_name IS NOT NULL;
 
 
