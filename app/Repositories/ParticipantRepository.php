@@ -143,6 +143,10 @@ class ParticipantRepository extends Repository
                 $query->where(TableConstants::VOLUNTEERS.'.volunteer_type_id', '!=', null);
             } else if (array_get($filters, 'type') == 'participant') {
                 $query->where(TableConstants::VOLUNTEERS.'.volunteer_type_id', '=', null);
+            } else if (array_get($filters, 'type') == 'was_on_event') {
+                $query->where(TableConstants::PARTICIPANTS.'.was_on_event', '=', true);
+            } else if (array_get($filters, 'type') == 'not_was_on_event') {
+                $query->where(TableConstants::PARTICIPANTS.'.was_on_event', '=', false);
             }
 
             return $this->addWhereForFilter($query, array_get($filters, 'filter', ''), [
