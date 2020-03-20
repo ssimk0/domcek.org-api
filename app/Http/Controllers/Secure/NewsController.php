@@ -24,6 +24,7 @@ class NewsController extends Controller
             'short' => 'required|string|max:300',
             'image' => ['required', 'regex:(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'],
             'status' => 'required|in:draft,archived,published',
+            'category' => 'required|in:news,message',
             'is_featured' => 'required|boolean'
         ]);
 

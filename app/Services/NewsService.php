@@ -15,15 +15,15 @@ class NewsService extends Service
         $this->repository = $repository;
     }
 
-    function newsList($order, $size, $offset)
+    function newsList($order, $size, $offset, $category)
     {
         if ($order === 'best') {
-            return $this->repository->findAllMostViewedPublishedNews($size, $offset);
+            return $this->repository->findAllMostViewedPublishedNews($size, $offset, $category);
         } else if ($order === 'featured') {
-            return $this->repository->findAllLatestFeaturedPublishedNews($size, $offset);
+            return $this->repository->findAllLatestFeaturedPublishedNews($size, $offset, $category);
         }
 
-        return $this->repository->findAllLatestPublishedNews($size, $offset);
+        return $this->repository->findAllLatestPublishedNews($size, $offset, $category);
     }
 
     function newsBySlug($slug)
