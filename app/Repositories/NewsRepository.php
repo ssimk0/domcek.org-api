@@ -10,29 +10,32 @@ use Illuminate\Support\Facades\DB;
 
 class NewsRepository extends Repository
 {
-    function findAllLatestPublishedNews($size, $offset)
+    function findAllLatestPublishedNews($size, $offset, $category)
     {
         return DB::table('news_items')
             ->where('status', NewsConstant::PUBLISHED)
+            ->where('category', $category)
             ->orderBy('created_at', 'desc')
             ->skip($offset)
             ->paginate($size);
     }
 
-    function findAllMostViewedPublishedNews($size, $offset)
+    function findAllMostViewedPublishedNews($size, $offset, $category)
     {
         return DB::table('news_items')
             ->where('status', NewsConstant::PUBLISHED)
+            ->where('category', $category)
             ->orderBy('viewed', 'desc')
             ->skip($offset)
             ->paginate($size);
     }
 
-    function findAllLatestFeaturedPublishedNews($size, $offset)
+    function findAllLatestFeaturedPublishedNews($size, $offset, $category)
     {
         if ($offset == 0 ) {
             return DB::table('news_items')
                 ->where('status', NewsConstant::PUBLISHED)
+                ->where('category', $category)
                 ->where('is_featured', true)
                 ->orderBy('created_at', 'desc')
                 ->offset(2)
@@ -40,6 +43,7 @@ class NewsRepository extends Repository
         } else {
              $skiped = DB::table('news_items')
                 ->where('status', NewsConstant::PUBLISHED)
+                ->where('category', $category)
                 ->where('is_featured', true)
                 ->orderBy('created_at', 'desc')
                 ->limit($offset)
@@ -51,6 +55,7 @@ class NewsRepository extends Repository
 
             return DB::table('news_items')
                 ->where('status', NewsConstant::PUBLISHED)
+                ->where('category', $category)
                 ->where('is_featured', true)
                 ->whereNotIn('id', $ids)
                 ->orderBy('created_at', 'desc')
