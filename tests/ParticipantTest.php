@@ -7,7 +7,6 @@ use App\Models\Payment;
 use App\Models\Profile;
 use App\Models\User;
 use Carbon\Carbon;
-use Faker\Generator as Faker;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 
@@ -58,7 +57,7 @@ class ParticipantTest extends TestCase
 
     function testRegisterParticipant()
     {
-        $faker = new Faker();
+        $faker = Faker\Factory::create();
         $event = factory(App\Models\Event::class)->create();
         $profile = factory(App\Models\Profile::class)->create();
         $price = new App\Models\EventPrice([

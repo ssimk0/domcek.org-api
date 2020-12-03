@@ -18,10 +18,10 @@ class VolunteersRepository extends Repository
             ->get([TableConstants::VOLUNTEERS_TYPES . '.*', TableConstants::EVENT_VOLUNTEERS_TYPES . '.event_id']);
     }
 
-    public function edit(array $data, $volunteerId)
+    public function edit(array $data, $id)
     {
         DB::table(TableConstants::VOLUNTEERS)
-            ->where('id', $volunteerId)
+            ->where('id', $id)
             ->update($data);
     }
 

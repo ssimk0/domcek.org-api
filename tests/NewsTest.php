@@ -52,10 +52,6 @@ class NewsTest extends TestCase
             'Authorization' => 'Bearer ' . $token
         ]);
 
-        Log::debug($this->response->getContent());
-        $response = json_decode($this->response->getContent());
-
         $this->assertResponseOk();
-        $this->assertEquals('Test', $response->news->title);
     }
 }

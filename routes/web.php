@@ -81,9 +81,9 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
                 $router->delete('events/{id}', 'Secure\EventController@delete');
                 $router->get('events/{id}', 'Secure\EventController@detail');
                 $router->get('events/{eventId}/volunteers', 'Secure\VolunteerController@list');
-                $router->post('events/{id}/payments', 'Secure\PaymentController@uploadTransferLog');
-                $router->post('events/{id}/nameplates', 'Secure\ParticipantController@generateNameplates');
-                $router->get('events/{id}/stats', 'Secure\EventController@statsFile');
+                $router->post('events/{eventId}/payments', 'Secure\PaymentController@uploadTransferLog');
+                $router->post('events/{eventId}/nameplates', 'Secure\ParticipantController@generateNameplates');
+                $router->get('events/{eventId}/stats', 'Secure\EventController@statsFile');
 
                 $router->put('volunteers/{id}', 'Secure\VolunteerController@edit');
                 $router->get('volunteers/{id}', 'Secure\VolunteerController@detail');
@@ -91,11 +91,11 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
                 $router->put('volunteers/{id}', 'Secure\VolunteerController@edit');
                 $router->get('volunteers/{id}', 'Secure\VolunteerController@detail');
 
-                $router->get('events/{id}/participants', 'Secure\ParticipantController@list');
-                $router->get('events/{id}/groups', 'Secure\GroupController@eventGroups');
-                $router->put('events/{id}/groups', 'Secure\GroupController@generateGroups');
-                $router->put('events/{id}/groups/animator', 'Secure\GroupController@AssignAnimator');
-                $router->put('events/{id}/participants/{participantId}', 'Secure\ParticipantController@edit');
+                $router->get('events/{eventId}/participants', 'Secure\ParticipantController@list');
+                $router->get('events/{eventId}/groups', 'Secure\GroupController@eventGroups');
+                $router->put('events/{eventId}/groups', 'Secure\GroupController@generateGroups');
+                $router->put('events/{eventId}/groups/animator', 'Secure\GroupController@AssignAnimator');
+                $router->put('events/{eventId}/participants/{participantId}', 'Secure\ParticipantController@edit');
                 $router->get('events/{eventId}/participants/{userId}', 'Secure\ParticipantController@adminDetail');
                 $router->put('events/{eventId}/participants/{userId}/unsubscribe', 'Secure\ParticipantController@adminUnsubscribe');
                 $router->put('events/{eventId}/participants/{userId}/subscribe', 'Secure\ParticipantController@adminSubscribe');
@@ -113,11 +113,11 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
 
             $router->put('user/change-password', 'Secure\UserController@changePassword');
             $router->get('user/events', 'Secure\ParticipantController@userEvents');
-            $router->post('user/events/{id}', 'Secure\ParticipantController@register');
-            $router->put('user/events/{id}', 'Secure\ParticipantController@userEdit');
-            $router->put('user/events/{id}/unsubscribe', 'Secure\ParticipantController@unsubscribe');
-            $router->put('user/events/{id}/subscribe', 'Secure\ParticipantController@subscribe');
-            $router->get('user/events/{id}/qr', 'Secure\ParticipantController@eventQRCode');
+            $router->post('user/events/{eventId}', 'Secure\ParticipantController@register');
+            $router->put('user/events/{eventId}', 'Secure\ParticipantController@userEdit');
+            $router->put('user/events/{eventId}/unsubscribe', 'Secure\ParticipantController@unsubscribe');
+            $router->put('user/events/{eventId}/subscribe', 'Secure\ParticipantController@subscribe');
+            $router->get('user/events/{eventId}/qr', 'Secure\ParticipantController@eventQRCode');
         }
     );
 });
