@@ -48,7 +48,7 @@ class RegistrationMail extends Mailable
     public function build()
     {
         $template = $this->isVolunteer ? 'emails.registrationVolunteer' : 'emails.registration';
-        $min = Carbon::now()->subYear(18);
+        $min = Carbon::now()->subYears(18);
 
         if ($min->lt(Carbon::parse($this->birthDate))) {
             return $this->markdown($template)

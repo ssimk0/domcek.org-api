@@ -5,6 +5,7 @@ namespace App\Services;
 
 
 use App\Repositories\VolunteersRepository;
+use Illuminate\Support\Arr;
 
 class VolunteerService extends Service
 {
@@ -19,8 +20,8 @@ class VolunteerService extends Service
     public function editVolunteer(array $data, $volunteerId)
     {
         $data = [
-            'volunteer_type_id' => array_get($data, 'volunteerTypeId', false),
-            'is_leader' => array_get($data, 'isLeader', false)
+            'volunteer_type_id' => Arr::get($data, 'volunteerTypeId', false),
+            'is_leader' => Arr::get($data, 'isLeader', false)
         ];
 
         try {

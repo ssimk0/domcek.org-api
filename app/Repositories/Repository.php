@@ -2,6 +2,7 @@
 namespace App\Repositories;
 
 use App\Constants\TableConstants;
+use Illuminate\Support\Arr;
 
 abstract class Repository {
 
@@ -31,7 +32,7 @@ abstract class Repository {
 
     public function filterQuery($query, $filters) {
         foreach ( $this->globalFilters as $filterName => $filterField) {
-            if (array_get($filters, $filterName) != null) {
+            if (Arr::get($filters, $filterName) != null) {
                 if (is_array($filters[$filterName])) {
                     $query->whereIn($filterField, $filters[$filterName]);
                 } else {

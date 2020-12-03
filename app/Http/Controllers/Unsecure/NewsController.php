@@ -6,6 +6,7 @@ use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
 use App\Services\NewsService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class NewsController extends Controller
 {
@@ -25,10 +26,10 @@ class NewsController extends Controller
         ]);
 
         $news = $this->service->newsList(
-            array_get($data, 'order'),
-            array_get($data, 'size', 3),
-            array_get($data, 'offset', 0),
-            array_get($data, 'category', 'news')
+            Arr::get($data, 'order'),
+            Arr::get($data, 'size', 3),
+            Arr::get($data, 'offset', 0),
+            Arr::get($data, 'category', 'news')
         );
 
         return $this->jsonResponse($news);

@@ -5,16 +5,15 @@ use App\Models\EventPrice;
 use App\Models\Participant;
 use App\Models\Payment;
 use App\Models\Profile;
-use App\User;
+use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\WithFaker;
+use Faker\Generator as Faker;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 
 class ParticipantTest extends TestCase
 {
     use DatabaseMigrations;
-    use WithFaker;
 
     function testAuthEvent()
     {
@@ -59,13 +58,13 @@ class ParticipantTest extends TestCase
 
     function testRegisterParticipant()
     {
-        $this->setUpFaker();
+        $faker = new Faker();
         $event = factory(App\Models\Event::class)->create();
         $profile = factory(App\Models\Profile::class)->create();
         $price = new App\Models\EventPrice([
             'event_id' => $event->id,
-            'need_pay' => $this->faker->randomDigit,
-            'deposit' => $this->faker->randomDigit
+            'need_pay' => $faker->randomDigit,
+            'deposit' => $faker->randomDigit
         ]);
 
         $price->save();

@@ -2,15 +2,14 @@
 
 
 use App\Models\Event;
-use App\Models\VolunteerType;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Laravel\Lumen\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\WithFaker;
 
 class EventTest extends TestCase
 {
     use DatabaseMigrations;
-    use WithFaker;
 
     function testAuthEvent()
     {
@@ -80,7 +79,7 @@ class EventTest extends TestCase
 
     function testEventDetail()
     {
-        $this->markTestSkipped('must be fixed problem with YEAR in sqlite.');
+//        $this->markTestSkipped('must be fixed problem with YEAR in sqlite.');
 
         $types = factory(App\Models\VolunteerType::class, 5)->create();
         $events = factory(App\Models\Event::class, 11)->create();
@@ -101,7 +100,7 @@ class EventTest extends TestCase
 
     function testEventDetailNotFound()
     {
-        $this->markTestSkipped('must be fixed problem with YEAR in sqlite.');
+//        $this->markTestSkipped('must be fixed problem with YEAR in sqlite.');
 
         $this->get('/api/secure/admin/events/notFound', [
             'Authorization' => 'Bearer ' . $this->login(true)
@@ -169,36 +168,36 @@ class EventTest extends TestCase
 
     function testAvailableEvents()
     {
-        $this->setUpFaker();
+        $faker = \Faker\Factory::create();
 
         $types = factory(App\Models\VolunteerType::class, 5)->create();
 
         $eventAvailable = new App\Models\Event([
-            'name' => $this->faker->sentence,
-            'theme' => $this->faker->sentence,
-            'start_date' => \Carbon\Carbon::now()->addYear(1)->format('Y-m-d'),
-            'end_date' => $this->faker->date(),
-            'start_registration' => \Carbon\Carbon::now()->format('Y-m-d'),
-            'end_registration' => \Carbon\Carbon::now()->addDays(5)->format('Y-m-d'),
-            'end_volunteer_registration' => $this->faker->date(),
+            'name' => $faker->sentence(),
+            'theme' => $faker->sentence(),
+            'start_date' => Carbon::now()->addYear()->format('Y-m-d'),
+            'end_date' => $faker->date(),
+            'start_registration' => Carbon::now()->format('Y-m-d'),
+            'end_registration' => Carbon::now()->addDays(5)->format('Y-m-d'),
+            'end_volunteer_registration' => $faker->date(),
         ]);
 
 
         $eventNotAvailable = new App\Models\Event([
-            'name' => $this->faker->sentence,
-            'theme' => $this->faker->sentence,
-            'start_date' => \Carbon\Carbon::now()->addYear(1)->format('Y-m-d'),
-            'end_date' => $this->faker->date(),
+            'name' => $faker->sentence,
+            'theme' => $faker->sentence,
+            'start_date' => \Carbon\Carbon::now()->addYear()->format('Y-m-d'),
+            'end_date' => $faker->date(),
             'start_registration' => \Carbon\Carbon::now()->addDay()->format('Y-m-d'),
             'end_registration' => \Carbon\Carbon::now()->addDays(5)->format('Y-m-d'),
-            'end_volunteer_registration' => $this->faker->date(),
+            'end_volunteer_registration' => $faker->date(),
         ]);
 
         $eventNotAvailable->save();
         $eventAvailable->save();
 
         $participant = new App\Models\Participant([
-            'note' => $this->faker->sentence,
+            'note' => $faker->sentence,
             'event_id' => $eventAvailable->id,
             'user_id' => 1
         ]);

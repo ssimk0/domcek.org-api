@@ -7,6 +7,7 @@ namespace App\Repositories;
 use App\Constants\TableConstants;
 use App\Models\Participant;
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class ParticipantRepository extends Repository
@@ -123,9 +124,9 @@ class ParticipantRepository extends Repository
 
             $query = $this->filterQuery($query, $filters);
 
-            if (array_get($filters, 'sortBy') != null) {
+            if (Arr::get($filters, 'sortBy') != null) {
                 $sortBy = $filters['sortBy'];
-                $sort = array_get($filters, 'sortDesc', 'false') == 'false' ? 'asc' : 'desc';
+                $sort = Arr::get($filters, 'sortDesc', 'false') == 'false' ? 'asc' : 'desc';
                 $profileFields = ['birth_date', 'last_name'];
                 $groupFields = ['group_name'];
                 $participantFields = ['note'];
@@ -139,17 +140,17 @@ class ParticipantRepository extends Repository
                 }
             }
 
-            if (array_get($filters, 'type') == 'volunteer') {
+            if (Arr::get($filters, 'type') == 'volunteer') {
                 $query->where(TableConstants::VOLUNTEERS.'.volunteer_type_id', '!=', null);
-            } else if (array_get($filters, 'type') == 'participant') {
+            } else if (Arr::get($filters, 'type') == 'participant') {
                 $query->where(TableConstants::VOLUNTEERS.'.volunteer_type_id', '=', null);
-            } else if (array_get($filters, 'type') == 'was_on_event') {
+            } else if (Arr::get($filters, 'type') == 'was_on_event') {
                 $query->where(TableConstants::PARTICIPANTS.'.was_on_event', '=', true);
-            } else if (array_get($filters, 'type') == 'not_was_on_event') {
+            } else if (Arr::get($filters, 'type') == 'not_was_on_event') {
                 $query->where(TableConstants::PARTICIPANTS.'.was_on_event', '=', false);
             }
 
-            return $this->addWhereForFilter($query, array_get($filters, 'filter', ''), [
+            return $this->addWhereForFilter($query, Arr::get($filters, 'filter', ''), [
                 'profiles.last_name',
                 'profiles.first_name',
                 'profiles.birth_date',
@@ -217,9 +218,9 @@ class ParticipantRepository extends Repository
 
     public function edit($participantId, $changedBy, $data = [])
     {
-        $data = array_merge($data, [
+        $data = Arr::collapse([$data, [
             'changed_by_user_id' => $changedBy
-        ]);
+        ]]);
 
         DB::table(TableConstants::PARTICIPANTS)
             ->where('id', $participantId)
@@ -345,7 +346,7 @@ class ParticipantRepository extends Repository
             return $notMatched;
         });
 
-        return array_merge($registered, $notRegistered);
+        return Arr::collapse([$registered, $notRegistered]);
     }
 
 

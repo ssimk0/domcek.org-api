@@ -12,6 +12,7 @@ use App\Repositories\GroupRepository;
 use Carbon\Carbon;
 use Endroid\QrCode\QrCode;
 use Exception;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -53,12 +54,12 @@ class ParticipantService extends Service
 
     public function edit(array $data, $eventId, $participantId)
     {
-        $userId = array_get($data, 'userId');
-        $paid = array_get($data, 'paid');
-        $adminNote = array_get($data, 'adminNote', '');
-        $isLeader = array_get($data, 'isLeader', false);
-        $volunteerTypeId = array_get($data, 'volunteerTypeId');
-        $group = array_get($data, 'group_name');
+        $userId = Arr::get($data, 'userId');
+        $paid = Arr::get($data, 'paid');
+        $adminNote = Arr::get($data, 'adminNote', '');
+        $isLeader = Arr::get($data, 'isLeader', false);
+        $volunteerTypeId = Arr::get($data, 'volunteerTypeId');
+        $group = Arr::get($data, 'group_name');
 
         try {
             if (!empty($paid)) {
@@ -104,7 +105,7 @@ class ParticipantService extends Service
 
     public function create(array $data, $eventId)
     {
-        $volunteerTypeId = array_get($data, 'volunteerTypeId');
+        $volunteerTypeId = Arr::get($data, 'volunteerTypeId');
 
         try {
             $event = $this->eventRepository->detail($eventId);
@@ -183,9 +184,9 @@ class ParticipantService extends Service
     {
         try {
             $this->repository->userEdit([
-                'note' => array_get($data, 'note'),
-                'transport_in' => array_get($data, 'transportIn'),
-                'transport_out' => array_get($data, 'transportOut')
+                'note' => Arr::get($data, 'note'),
+                'transport_in' => Arr::get($data, 'transportIn'),
+                'transport_out' => Arr::get($data, 'transportOut')
             ], $this->userId(), $eventId);
         } catch (Exception $e) {
             $this->logError("Problem with user edit participant detail with error: " . $e);
@@ -239,14 +240,14 @@ class ParticipantService extends Service
         if (!empty($eventPrice)) {
             $eventPrice = $eventPrice[0];
         }
-        foreach (array_get($data, 'participants', []) as $user) {
-            if (array_get($user, 'was_on_event', null)) {
+        foreach (Arr::get($data, 'participants', []) as $user) {
+            if (Arr::get($user, 'was_on_event', null)) {
                 try {
-                    $transport = array_get($user, 'transport_out', null);
+                    $transport = Arr::get($user, 'transport_out', null);
                     $userId = $user['user_id'];
                     $payedOnRegistration = $user['on_registration'];
                     // registered before event
-                    if (array_get($user, 'payment_number', false)) {
+                    if (Arr::get($user, 'payment_number', false)) {
                         $this->repository->registerUser($userId, $eventId, $transport, $payedOnRegistration);
                     } else {
                         $exist = $this->repository->participantExist($eventId, $userId);
@@ -268,8 +269,8 @@ class ParticipantService extends Service
             }
         }
 
-        foreach (array_get($data, 'wrong-payments', []) as $payment) {
-            $userId = array_get($payment, 'user_id', false);
+        foreach (Arr::get($data, 'wrong-payments', []) as $payment) {
+            $userId = Arr::get($payment, 'user_id', false);
             if ($userId) {
                 try {
                     $this->paymentRepository->edit($userId, $eventId, $payment['amount']);
@@ -286,14 +287,14 @@ class ParticipantService extends Service
     private function createParticipant($data, $eventId, $wasOnEvent=false)
     {
         $this->repository->create([
-            'admin_note' => array_get($data, 'admin_note', ''),
-            'note' => array_get($data, 'note', ''),
-            'transport_in' => array_get($data, 'transportIn', null),
-            'transport_out' => array_get($data, 'transportOut', null),
-            'user_id' => array_get($data, 'user_id', false) ? $data['user_id'] : $this->userId(),
+            'admin_note' => Arr::get($data, 'admin_note', ''),
+            'note' => Arr::get($data, 'note', ''),
+            'transport_in' => Arr::get($data, 'transportIn', null),
+            'transport_out' => Arr::get($data, 'transportOut', null),
+            'user_id' => Arr::get($data, 'user_id', false) ? $data['user_id'] : $this->userId(),
             'event_id' => $eventId,
             'was_on_event' => $wasOnEvent,
-            'want_to_be_animator_on_pz' => array_get($data, 'wantBeAnimatorOnPZ', null)
+            'want_to_be_animator_on_pz' => Arr::get($data, 'wantBeAnimatorOnPZ', null)
         ]);
     }
 

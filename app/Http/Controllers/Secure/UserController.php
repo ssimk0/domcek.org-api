@@ -7,6 +7,7 @@ use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
 use App\Services\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -72,8 +73,8 @@ class UserController extends Controller
         ]);
 
         $list = $this->service->list(
-            array_get($data, 'size', 10),
-            array_get($data, 'filter', '%')
+            Arr::get($data, 'size', 10),
+            Arr::get($data, 'filter', '%')
         );
 
         return $this->jsonResponse($list, 200, 0);

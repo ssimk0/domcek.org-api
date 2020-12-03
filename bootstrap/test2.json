@@ -1,0 +1,14 @@
+{
+  "name": "pk test 10",
+  "authType": "oauth",
+  "format": "json/v1",
+  "url": "https://test.com",
+  "authData": {
+    "authEndpoint": "https://test.com",
+    "grantType": "jwt_bearer",
+    "username": "test"
+  },
+  "secret": "test",
+  "privateKey": "-----BEGIN RSA PRIVATE KEY-----\nProc-Type: 4,ENCRYPTED\nDEK-Info: DES-EDE3-CBC,BD12892017760BCB\nMMGLezMdjMQp2rWlbNfU1URa5VBVxYQmDEfEuvB6m6YKaaUeCJUc0LTYFgwhYlKI\nIcfPrV9M4sOwCRSaK1UxnH+j0oApg1WS2aXJNdAylmp1YEmrXHIc2p1fkz4Ce2kA\nLl0g+O33f5CMlz+HsUZWygbtnToifapVQiU9S/OtxcMD0ZO0MSxorgT6Y16MC8Xw\n1tLKPQXvLHymY/gYxRTzvhR/JIMBbIn+hpM+LMGtE6RIhpqZLR1xNp29EgIUoZzL\nnqfTa1aHe307Th0OB4SC+FjU0Xeudd1CB7O02RHaNxgdNhnJg8U2k4SWv+LEmXv2\nqBhaWQqU3bGZCM09ybsjGjs4odkZjIGPBxvkcvlEnh8zAvPG6IpwAZhY8gxAbS2H\nDSWFJ2FxcF9QQwsBiqKAztGcn4tfhwtolhU4Tqd1cJ7pZPwOehwjzz1snU6KPqva\nkwLeq+tXMBwCjicosiWVebJRvD3li+xdWfz9WwN8wpQP+xtkoUBcqS5vu/I2TLSO\nvqVIa+kAMSoc2w4WVpvS7RWNV1FLX8vVTQoHYbmsmcYd80Ad5GckZBFDcdAXkqeZ\n7x11A1frOBU4RrLcxet4m8RKx/SIYqyzdIGGPbKifpMjzusdc4ZkRKPann5l0lw0\nhV/hVuSHyGiFJZwBcbIidAB/naX875F2Bbk728yBVQFhOfUfzGHgNRtYcKnw1bvX\nETjllS/KHlVzDuA+c9swVjeQt3korETQgYfuORBrrNDm1n0PbvJ0BW4ZTELHKXaN\nXGOzlCpdDKqoH5ITzYgy01kUXmUQ2oLUTzCax/Cfx96hgwPiBDHSmOiCRvm0BLn1\nDdzy64C96fPiqn2dlDPbV19+wwkP9tuCvIXcbapr0YQ7m9TKnPgufgT63tOM5tOM\nEAp4NYdGEbc/SleyBaIrNNPRIYssA3Y7yP1ssR5HKT/f9xYsp/d5fhRWOk4RzaMk\npLpOnXzQNBVMrOxEf6Vc0eHP7xwKuBrNBuYd6DYMszSYyv8uHZbtiij56X+W8G7m\nILzCK26pKAUYkkeOPmE+N8GQ/z9gwtj8e6I9z39/n+dkzKE5MWwlT38VsQ2RkpwZ\nX+NcvqFAMkl0xXpjC4+nURzv3J8ijot5Lkh3ZT6SuMWRIf1Awr4hF43I2c2brGMx\n6neZ4/Ct7r7COEQ/gnfFacQPM+5VFWUNGcaR2Q/WsYu9NCxrkZc4lDLXi+nU5VjY\nd3gkJGguoY1CxWZzxRy65e68cIhys6x4bN/j70HguHSavjhXrRY0Y+hi5UyOFy26\nI7y42f5IojxqHa8nt3ANKJKzMiJPGOM6BYV/WrB3pb5IiWQL0++gwmZ5OMpkvQ57\ns/axEAQIdzjPiN8sWwYL5zt5TPPDWVAcWWbrFZZFMqxxmLWhcR+q6U65lFZvzpi/\nrfUfT/jQANrwtT5UJ/s5Dacx3XYTU7AI4i5E92m2QuseysUpSYoCqcZgoRJUk+wH\nvVQ0CoQ6IxpsEGs4sRwYud5orKz/PKgaQ3vTSPqLLcTIJc7wUtg6ijI3YxD0gSx8\n6qt23ej6EfUQS3JxmCFRKWlzgXPjd9+KlE50ZM0lt4XiV3e/y5XE2fr4DB5BR1OQ\n-----END RSA PRIVATE KEY-----",
+  "privateKeyPassword": "medisante"
+}

@@ -5,6 +5,7 @@ namespace App\Repositories;
 
 use App\Constants\TableConstants;
 use App\Models\Volunteer;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class VolunteersRepository extends Repository
@@ -36,10 +37,10 @@ class VolunteersRepository extends Repository
                 ->where('event_id', $eventId)
                 ->update($data);
         } else {
-            $this->create(array_merge([
+            $this->create(Arr::collapse([[
                 'event_id' => $eventId,
                 'user_id' => $userId
-            ], $data));
+            ], $data]));
         }
     }
 

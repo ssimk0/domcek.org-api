@@ -8,6 +8,7 @@ use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
 use App\Services\EventService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Response;
 
 class EventController extends Controller
@@ -47,7 +48,7 @@ class EventController extends Controller
 
     }
 
-    public function edit(Request $request, $eventId)
+    public function edit(Request $request, $id)
     {
         $data = $this->validate($request, [
             'name' => 'required|string',
@@ -63,7 +64,7 @@ class EventController extends Controller
             'transportTimesOut' => 'array',
         ]);
 
-        $result = $this->service->editEvent($data, $eventId);
+        $result = $this->service->editEvent($data, $id);
 
         if ($result) {
             return $this->successResponse(200);
@@ -81,8 +82,8 @@ class EventController extends Controller
         ]);
 
         return $this->jsonResponse($this->service->eventList(
-            array_get($data, 'size', 10),
-            array_get($data, 'filter', '%')
+            Arr::get($data, 'size', 10),
+            Arr::get($data, 'filter', '%')
         ));
     }
 
@@ -91,9 +92,9 @@ class EventController extends Controller
         return $this->jsonResponse($this->service->availableEvents());
     }
 
-    public function detail($eventId)
+    public function detail($id)
     {
-        $event = $this->service->eventDetail($eventId);
+        $event = $this->service->eventDetail($id);
 
 
         if ($event) {
@@ -103,9 +104,9 @@ class EventController extends Controller
         return ErrorMessagesConstant::notFound();
     }
 
-    public function statsFile($eventId)
+    public function statsFile($id)
     {
-        $content = $this->service->detailedStatsFile($eventId);
+        $content = $this->service->detailedStatsFile($id);
 
 
         $headers = ['Content-type'=>'text/plain',
@@ -115,9 +116,9 @@ class EventController extends Controller
     }
 
 
-    public function delete($eventId)
+    public function delete($id)
     {
-        $result = $this->service->delete($eventId);
+        $result = $this->service->delete($id);
 
 
         if ($result) {

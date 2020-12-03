@@ -16,6 +16,7 @@ use App\Repositories\PaymentRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\VolunteersRepository;
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -70,7 +71,7 @@ class UserService extends Service
     {
         try {
             $tokenResult = $this->repository->findResetPasswordToken($token);
-            $now = Carbon::now()->addHour(2);
+            $now = Carbon::now()->addHours(2);
             if ($tokenResult
                 && $now->greaterThanOrEqualTo($tokenResult->created_at)
             ) {
@@ -165,7 +166,7 @@ class UserService extends Service
         try {
             $userData = [
                 'email' => $data['email'],
-                'avatar' => array_get($data, 'avatar', null),
+                'avatar' => Arr::get($data, 'avatar', null),
                 'password' => Hash::make($data['password']),
             ];
 
@@ -185,11 +186,11 @@ class UserService extends Service
                 'user_id' => $user->id,
                 'birth_date' => $data['birthDate'],
                 'sex' => $data['sex'],
-                'nick' => array_get($data, 'nick', null),
+                'nick' => Arr::get($data, 'nick', null),
                 'date_approved_term_and_condition' => Carbon::now()
             ];
             $this->repository->createUserProfile($profileData);
-            if (array_get($data, 'newsletter', false)) {
+            if (Arr::get($data, 'newsletter', false)) {
                 $this->repository->registerToNewsLetter($data['email']);
             }
             $this->migrateDataFromOldDatabase($user->email, $user->id);

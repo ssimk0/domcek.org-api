@@ -6,6 +6,7 @@ use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
 use App\Services\NewsService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class NewsController extends Controller
 {
@@ -64,7 +65,7 @@ class NewsController extends Controller
         ]);
 
         return $this->service->unpublished(
-            array_get($data, 'size', 5)
+            Arr::get($data, 'size', 5)
         );
     }
 

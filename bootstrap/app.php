@@ -4,11 +4,9 @@ use Laravel\Lumen\Http\ResponseFactory;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-try {
-    (new Dotenv\Dotenv(dirname(__DIR__)))->load();
-} catch (Dotenv\Exception\InvalidPathException $e) {
-    //
-}
+(new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
+    dirname(__DIR__)
+))->bootstrap();
 
 /*
 |--------------------------------------------------------------------------
@@ -37,7 +35,6 @@ $app->configure('app');
 $app->configure('filesystems');
 $app->configure('queue');
 $app->configure('snappy');
-$app->configure('image-optimizer');
 
 
 $app->withFacades();
@@ -119,7 +116,8 @@ $app->register(App\Providers\CatchAllOptionsRequestsProvider::class);
 $app->register(AlbertCht\InvisibleReCaptcha\InvisibleReCaptchaServiceProvider::class);
 $app->register(\Illuminate\Queue\QueueServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
-$app->register(Barryvdh\Snappy\ServiceProvider::class);
+//class_alias('Barryvdh\Snappy\Facades\SnappyPdf', 'PDF');
+$app->register(Barryvdh\Snappy\LumenServiceProvider::class);
 $app->alias('mailer', Illuminate\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
