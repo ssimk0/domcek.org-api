@@ -8,7 +8,7 @@ use App\Constants\TableConstants;
 use App\Models\NewsletterSubs;
 use App\Models\Profile;
 use App\Models\VerificationToken;
-use App\User;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -143,7 +143,7 @@ class UserRepository extends Repository
         $token = new VerificationToken([
             'email' => $email,
             'token' => $token,
-            'valid_until' => Carbon::now()->addHour(2)
+            'valid_until' => Carbon::now()->addHours(2)
         ]);
 
         return $token->save();

@@ -11,7 +11,7 @@
 |
 */
 
-$factory->define(App\User::class, function (Faker\Generator $faker) {
+$factory->define(\App\Models\User::class, function (Faker\Generator $faker) {
     return [
         'password' => $faker->password,
         'avatar' => $faker->imageUrl(),
@@ -19,21 +19,21 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\Models\Profile::class, function (Faker\Generator $faker) {
+$factory->define(\App\Models\Profile::class, function (Faker\Generator $faker) {
     return [
         'user_id' => function () {
-            return factory(App\User::class)->create()->id;
+            return factory(\App\Models\User::class)->create()->id;
         },
         'first_name' => $faker->name,
         'last_name' => $faker->name,
         'city' => $faker->word,
-        'birth_date' => \Carbon\Carbon::now()->subYear(18)->format('Y-m-d'),
+        'birth_date' => \Carbon\Carbon::now()->subYears(18)->format('Y-m-d'),
         'phone' => $faker->phoneNumber,
     ];
 });
 
 
-$factory->define(App\Models\Page::class, function (Faker\Generator $faker) {
+$factory->define(\App\Models\Page::class, function (Faker\Generator $faker) {
     return [
         'title' => $faker->sentence,
         'body' => $faker->text,
@@ -75,11 +75,11 @@ $factory->define(App\Models\Event::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->sentence,
         'theme' => $faker->sentence,
-        'start_date' => \Carbon\Carbon::now()->addYear(1)->format('Y-m-d'),
+        'start_date' => \Carbon\Carbon::now()->addYear()->format('Y-m-d'),
         'end_date' => $faker->date(),
-        'start_registration' => \Carbon\Carbon::now()->addYear(1)->format('Y-m-d'),
-        'end_registration' => \Carbon\Carbon::now()->addYear(1)->format('Y-m-d'),
-        'end_volunteer_registration' => \Carbon\Carbon::now()->addYear(1)->format('Y-m-d'),
+        'start_registration' => \Carbon\Carbon::now()->addYear()->format('Y-m-d'),
+        'end_registration' => \Carbon\Carbon::now()->addYear()->format('Y-m-d'),
+        'end_volunteer_registration' => \Carbon\Carbon::now()->addYear()->format('Y-m-d'),
     ];
 });
 

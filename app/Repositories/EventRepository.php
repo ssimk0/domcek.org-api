@@ -7,6 +7,7 @@ namespace App\Repositories;
 use App\Constants\TableConstants;
 use App\Models\Event;
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -197,9 +198,9 @@ class EventRepository extends Repository
         foreach ($prices as $price) {
             $data = [
                 'event_id' => $eventId,
-                'need_pay' => array_get($price, 'need_pay', false),
-                'deposit' => array_get($price, 'deposit', false),
-                'description' => array_get($price, 'description', false),
+                'need_pay' => Arr::get($price, 'need_pay', false),
+                'deposit' => Arr::get($price, 'deposit', false),
+                'description' => Arr::get($price, 'description', false),
             ];
 
             DB::table(TableConstants::EVENT_PRICES)->insert($data);

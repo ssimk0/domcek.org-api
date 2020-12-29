@@ -5,6 +5,7 @@ namespace App\Repositories;
 
 use App\Constants\TableConstants;
 use App\Models\Volunteer;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class VolunteersRepository extends Repository
@@ -17,10 +18,10 @@ class VolunteersRepository extends Repository
             ->get([TableConstants::VOLUNTEERS_TYPES . '.*', TableConstants::EVENT_VOLUNTEERS_TYPES . '.event_id']);
     }
 
-    public function edit(array $data, $volunteerId)
+    public function edit(array $data, $id)
     {
         DB::table(TableConstants::VOLUNTEERS)
-            ->where('id', $volunteerId)
+            ->where('id', $id)
             ->update($data);
     }
 
@@ -36,10 +37,10 @@ class VolunteersRepository extends Repository
                 ->where('event_id', $eventId)
                 ->update($data);
         } else {
-            $this->create(array_merge([
+            $this->create(Arr::collapse([[
                 'event_id' => $eventId,
                 'user_id' => $userId
-            ], $data));
+            ], $data]));
         }
     }
 

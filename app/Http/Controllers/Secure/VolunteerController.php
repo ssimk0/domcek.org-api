@@ -18,14 +18,14 @@ class VolunteerController extends Controller
         $this->service = $service;
     }
 
-    public function edit(Request $request, $volunteerId)
+    public function edit(Request $request, $id)
     {
         $data = $this->validate($request, [
             'volunteerTypeId' => 'integer',
             'isLeader' => 'boolean'
         ]);
 
-        $result = $this->service->editVolunteer($data, $volunteerId);
+        $result = $this->service->editVolunteer($data, $id);
 
         if ($result) {
             return $this->successResponse();
@@ -41,9 +41,9 @@ class VolunteerController extends Controller
         return $this->jsonResponse($list);
     }
 
-    public function detail($volunteerId)
+    public function detail($id)
     {
-        $detail = $this->service->volunteerDetail($volunteerId);
+        $detail = $this->service->volunteerDetail($id);
 
         if ($detail) {
             return $this->jsonResponse($detail);

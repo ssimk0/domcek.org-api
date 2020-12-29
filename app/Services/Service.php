@@ -5,6 +5,7 @@ namespace App\Services;
 
 
 use App\Logging\Logger;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 abstract class Service
@@ -19,7 +20,7 @@ abstract class Service
     protected function parseExistingData($data, $mapping) {
         $result = [];
         foreach ($mapping as $mapKey => $dataKey) {
-            $item = array_get($data, $dataKey, false);
+            $item = Arr::get($data, $dataKey, false);
             if ($item) {
                 $result[$mapKey] = $item;
             }

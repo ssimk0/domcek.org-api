@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Secure;
 use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
 use App\Services\ParticipantService;
+use Illuminate\Support\Arr;
 use PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -222,7 +223,7 @@ class ParticipantController extends Controller
 
         $result = $this->service->getNameplateDetail($eventId);
 
-        $pdf = PDF::loadView('participants.nameplates', array_merge($data, $result))->setPaper('a4')->setOrientation('landscape');
+        $pdf = PDF::loadView('participants.nameplates', Arr::collapse([$data, $result]))->setPaper('a4')->setOrientation('landscape');
         return $pdf->download("menovky-$eventId.pdf");
     }
 }

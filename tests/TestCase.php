@@ -1,6 +1,6 @@
 <?php
 
-use App\User;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 abstract class TestCase extends Laravel\Lumen\Testing\TestCase

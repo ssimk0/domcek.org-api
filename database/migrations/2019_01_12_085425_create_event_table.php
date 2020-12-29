@@ -101,15 +101,10 @@ class CreateEventTable extends Migration
 
         Schema::create('groups', function (Blueprint $table) {
             $table->text('group_name');
-            $table->unsignedInteger('group_animator')->nullable();
             $table->unsignedInteger('event_id')->index();
             $table->unsignedInteger('participant_id')->index();
 
             $table->primary(['event_id', 'participant_id']);
-            $table->foreign('participant_id')->references('id')->on('participants')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('group_animator')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
-
             $table->timestamps();
         });
     }

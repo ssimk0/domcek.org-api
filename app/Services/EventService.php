@@ -3,10 +3,10 @@
 namespace App\Services;
 
 use App\Repositories\EventRepository;
-use App\Repositories\GroupRepository;
 use App\Repositories\ParticipantRepository;
 use App\Repositories\VolunteersRepository;
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 
 class EventService extends Service
 {
@@ -25,18 +25,18 @@ class EventService extends Service
     {
         $createData = [
             'name' => $data['name'],
-            'theme' => array_get($data, 'theme', null),
-            'type' => array_get($data, 'type', null),
-            'start_date' => array_get($data, 'startDate', false),
-            'end_date' => array_get($data, 'endDate', false),
-            'start_registration' => array_get($data, 'startRegistration', false),
-            'end_registration' => array_get($data, 'endRegistration', false),
-            'end_volunteer_registration' => array_get($data, 'endVolunteerRegistration', false),
+            'theme' => Arr::get($data, 'theme', null),
+            'type' => Arr::get($data, 'type', null),
+            'start_date' => Arr::get($data, 'startDate', false),
+            'end_date' => Arr::get($data, 'endDate', false),
+            'start_registration' => Arr::get($data, 'startRegistration', false),
+            'end_registration' => Arr::get($data, 'endRegistration', false),
+            'end_volunteer_registration' => Arr::get($data, 'endVolunteerRegistration', false),
         ];
 
-        $timesIn = array_get($data, 'transportTimesIn', []);
-        $timesOut = array_get($data, 'transportTimesOut', []);
-        $volunteerTypes = array_get($data, 'volunteerTypes', []);
+        $timesIn = Arr::get($data, 'transportTimesIn', []);
+        $timesOut = Arr::get($data, 'transportTimesOut', []);
+        $volunteerTypes = Arr::get($data, 'volunteerTypes', []);
 
         try {
             $event = $this->event->create(array_filter($createData));
@@ -45,7 +45,7 @@ class EventService extends Service
                 return false;
             }
 
-            $this->event->createPrices(array_get($data, 'prices', []), $event->id);
+            $this->event->createPrices(Arr::get($data, 'prices', []), $event->id);
 
             if (!empty($volunteerTypes)) {
                 $event->volunteerTypes()->attach($volunteerTypes);
@@ -61,7 +61,7 @@ class EventService extends Service
 
             $this->event->generateRegistrationToken(
                 $event->id,
-                array_get($data, 'endDate', false)
+                Arr::get($data, 'endDate', false)
             );
 
             return true;
@@ -105,19 +105,19 @@ class EventService extends Service
     {
         $editData = [
             'name' => $data['name'],
-            'theme' => array_get($data, 'theme', false),
-            'start_date' => array_get($data, 'startDate', false),
-            'end_date' => array_get($data, 'endDate', false),
-            'start_registration' => array_get($data, 'startRegistration', false),
-            'end_registration' => array_get($data, 'endRegistration', false),
-            'end_volunteer_registration' => array_get($data, 'endVolunteerRegistration', false),
+            'theme' => Arr::get($data, 'theme', false),
+            'start_date' => Arr::get($data, 'startDate', false),
+            'end_date' => Arr::get($data, 'endDate', false),
+            'start_registration' => Arr::get($data, 'startRegistration', false),
+            'end_registration' => Arr::get($data, 'endRegistration', false),
+            'end_volunteer_registration' => Arr::get($data, 'endVolunteerRegistration', false),
         ];
-        $timesIn = array_get($data, 'transportTimesIn', []);
-        $timesOut = array_get($data, 'transportTimesOut', []);
+        $timesIn = Arr::get($data, 'transportTimesIn', []);
+        $timesOut = Arr::get($data, 'transportTimesOut', []);
 
         try {
             $this->event->edit(array_filter($editData), $eventId);
-            $volunteerTypes = array_get($data, 'volunteerTypes', []);
+            $volunteerTypes = Arr::get($data, 'volunteerTypes', []);
             if (count($volunteerTypes) > 0) {
                 $event = $this->event->instance($eventId);
                 $event->volunteerTypes()->sync($volunteerTypes);
@@ -162,19 +162,19 @@ class EventService extends Service
     {
         $stats = $this->event->detailedStats($eventId);
         // SETUP DEFAULTS
-        if (!array_get($stats, 'ages.0', false)) {
+        if (!Arr::get($stats, 'ages.0', false)) {
             $stats['ages'] = $this->getStatDefault();
         }
 
-        if (!array_get($stats, 'cities.0', false)) {
+        if (!Arr::get($stats, 'cities.0', false)) {
             $stats['cities'] = $this->getStatDefault();
         }
 
-        if (!array_get($stats, 'names-female.0', false)) {
+        if (!Arr::get($stats, 'names-female.0', false)) {
             $stats['names-female'] = $this->getStatDefault();
         }
 
-        if (!array_get($stats, 'names-male.0', false)) {
+        if (!Arr::get($stats, 'names-male.0', false)) {
             $stats['names-male'] = $this->getStatDefault();
         }
 
@@ -208,18 +208,18 @@ class EventService extends Service
         $stats['participants-female'],
         $stats['participants-male'],
         $stats['count-all'],
-        array_get($stats, 'ages.0')->count, array_get($stats, 'ages.0')->year ? Carbon::now()->year - array_get($stats, 'ages.0')->year : '',
-        array_get($stats, 'ages.1')->count, array_get($stats, 'ages.1')->year ? Carbon::now()->year - array_get($stats, 'ages.1')->year : '',
-        array_get($stats, 'ages.2')->count, array_get($stats, 'ages.2')->year ? Carbon::now()->year - array_get($stats, 'ages.2')->year : '',
-        array_get($stats, 'cities.0')->count,  array_get($stats, 'cities.0')->city,
-        array_get($stats, 'cities.1')->count,  array_get($stats, 'cities.1')->city,
-        array_get($stats, 'cities.2')->count,  array_get($stats, 'cities.2')->city,
-        array_get($stats, 'names-female.0')->count,  array_get($stats, 'names-female.0')->first_name,
-        array_get($stats, 'names-female.1')->count,  array_get($stats, 'names-female.1')->first_name,
-        array_get($stats, 'names-female.2')->count,  array_get($stats, 'names-female.2')->first_name,
-        array_get($stats, 'names-male.0')->count,  array_get($stats, 'names-male.0')->first_name,
-        array_get($stats, 'names-male.1')->count,  array_get($stats, 'names-male.1')->first_name,
-        array_get($stats, 'names-male.2')->count,  array_get($stats, 'names-male.2')->first_name
+        Arr::get($stats, 'ages.0')->count, Arr::get($stats, 'ages.0')->year ? Carbon::now()->year - Arr::get($stats, 'ages.0')->year : '',
+        Arr::get($stats, 'ages.1')->count, Arr::get($stats, 'ages.1')->year ? Carbon::now()->year - Arr::get($stats, 'ages.1')->year : '',
+        Arr::get($stats, 'ages.2')->count, Arr::get($stats, 'ages.2')->year ? Carbon::now()->year - Arr::get($stats, 'ages.2')->year : '',
+        Arr::get($stats, 'cities.0')->count,  Arr::get($stats, 'cities.0')->city,
+        Arr::get($stats, 'cities.1')->count,  Arr::get($stats, 'cities.1')->city,
+        Arr::get($stats, 'cities.2')->count,  Arr::get($stats, 'cities.2')->city,
+        Arr::get($stats, 'names-female.0')->count,  Arr::get($stats, 'names-female.0')->first_name,
+        Arr::get($stats, 'names-female.1')->count,  Arr::get($stats, 'names-female.1')->first_name,
+        Arr::get($stats, 'names-female.2')->count,  Arr::get($stats, 'names-female.2')->first_name,
+        Arr::get($stats, 'names-male.0')->count,  Arr::get($stats, 'names-male.0')->first_name,
+        Arr::get($stats, 'names-male.1')->count,  Arr::get($stats, 'names-male.1')->first_name,
+        Arr::get($stats, 'names-male.2')->count,  Arr::get($stats, 'names-male.2')->first_name
         );
     }
 
