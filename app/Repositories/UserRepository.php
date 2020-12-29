@@ -94,6 +94,7 @@ class UserRepository extends Repository
                 'profiles.birth_date',
                 'profiles.phone',
                 'profiles.city',
+                'profiles.admin_note',
                 'users.id',
                 'users.email',
                 'users.is_admin',
