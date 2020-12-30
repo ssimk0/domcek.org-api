@@ -20,7 +20,7 @@ class SendEmails extends Command {
         $users = User::with('profile')->get();
         foreach ($users as $user) {
             $when = $when->addSeconds(30);
-            $mail = new InvitationMail($user->profile->first_name);
+            $mail = new InvitationMail();
             Mail::to($user->email)
                 ->later($when, $mail);
         }
