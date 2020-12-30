@@ -24,7 +24,7 @@ class MediaController extends Controller
 
         $files = $this->storeFile($request);
         $largeFilePath = self::LARGE."/".$files["filename"];
-        $smallFilePath = self::LARGE."/".$files["filename"];
+        $smallFilePath = self::SMALL."/".$files["filename"];
 
         Storage::cloud()->put($largeFilePath, $files["file"]->__toString(), 'public');
         if (Arr::has($files, "thumb")) {
@@ -35,7 +35,7 @@ class MediaController extends Controller
             "success" => true,
             "location" => Storage::cloud()->url($largeFilePath),
             "url" => Storage::cloud()->url($largeFilePath),
-            "url_small" => Storage::cloud()->url($smallFilePath)
+            "url_small" => Arr::has($files, "thumb") ? Storage::cloud()->url($smallFilePath) : null
         ]);
     }
 
