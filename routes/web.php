@@ -30,7 +30,7 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
     $router->group(
         ['prefix' => '/', 'middleware' => 'cors'],
         function () use ($router) {
-            $router->post('media/upload', 'Unsecure\MediaController@upload');
+            $router->post('media/upload', 'Secure\UploadController@store');
             $router->get('pages', 'Unsecure\PageController@menuPages');
             $router->get('pages/{slug}', 'Unsecure\PageController@page');
             $router->get('news', 'Unsecure\NewsController@list');
@@ -56,7 +56,6 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
         ['prefix' => 'secure', 'middleware' => ['cors', 'auth:api']],
         function () use ($router) {
 
-            $router->post('upload', 'Secure\UploadController@store');
 
             // EDITOR
             $router->group(['prefix' => '/', 'middleware' => 'perm:editor'], function () use ($router) {
