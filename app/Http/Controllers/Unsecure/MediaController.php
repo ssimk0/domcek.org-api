@@ -39,6 +39,11 @@ class MediaController extends Controller
         ]);
     }
 
+    public function delete()
+    {
+        return response()->json();
+    }
+
     protected function storeFile($request)
     {
         // Get file from request

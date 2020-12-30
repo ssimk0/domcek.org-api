@@ -30,6 +30,7 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
         ['prefix' => '/', 'middleware' => 'cors'],
         function () use ($router) {
             $router->post('media/upload', 'Unsecure\MediaController@upload');
+            $router->delete('media/upload', 'Unsecure\MediaController@delete');
             $router->get('pages', 'Unsecure\PageController@menuPages');
             $router->get('pages/{slug}', 'Unsecure\PageController@page');
             $router->get('news', 'Unsecure\NewsController@list');
