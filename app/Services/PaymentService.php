@@ -24,10 +24,9 @@ class PaymentService extends Service
 
     public function processPayments($payments, $eventId)
     {
-
+        $when = now();
         foreach ($payments as $payment) {
             $matched = false;
-            $when = now();
             if ($payment['paymentNumber']) {
                 $dbPayment = $this->repository->findByPaymentNumber($payment['paymentNumber'], $eventId);
 
