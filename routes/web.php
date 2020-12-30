@@ -56,7 +56,9 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
         ['prefix' => 'secure', 'middleware' => ['cors', 'auth:api']],
         function () use ($router) {
 
-        // EDITOR
+            $router->post('upload', 'Secure\UploadController@store');
+
+            // EDITOR
             $router->group(['prefix' => '/', 'middleware' => 'perm:editor'], function () use ($router) {
                 $router->get('news', 'Secure\NewsController@listUnpublished');
                 $router->post('news', 'Secure\NewsController@create');

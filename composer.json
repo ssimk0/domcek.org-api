@@ -13,6 +13,7 @@
         "doctrine/dbal": "^2.9",
         "endroid/qr-code": "^3.5.8",
         "illuminate/mail": "7.*",
+        "intervention/image": "^2.5",
         "laravel/lumen-framework": "7.*",
         "laravelista/lumen-vendor-publish": "7.*",
         "league/flysystem-aws-s3-v3": "^1.0.29",
