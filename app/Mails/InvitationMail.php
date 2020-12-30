@@ -12,13 +12,6 @@ class InvitationMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $user;
-
-    public function __construct($userFirstName)
-    {
-        $this->user = $userFirstName;
-    }
-
     /**
      * Build the message.
      *
@@ -27,9 +20,6 @@ class InvitationMail extends Mailable
     public function build()
     {
         return $this->markdown('emails.invitation')
-            ->subject('Pozvanka')
-            ->with([
-                'user' => $this->user
-            ]);
+            ->subject('Pozvanka');
     }
 }
