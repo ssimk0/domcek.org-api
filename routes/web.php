@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -31,6 +30,7 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
         ['prefix' => '/', 'middleware' => 'cors'],
         function () use ($router) {
             $router->post('media/upload', 'Unsecure\MediaController@upload');
+            $router->delete('media/upload', 'Unsecure\MediaController@delete');
             $router->get('pages', 'Unsecure\PageController@menuPages');
             $router->get('pages/{slug}', 'Unsecure\PageController@page');
             $router->get('news', 'Unsecure\NewsController@list');
@@ -56,7 +56,8 @@ $router->group(['prefix' => env('API_PREFIX', '/'), 'middleware' => 'cors'], fun
         ['prefix' => 'secure', 'middleware' => ['cors', 'auth:api']],
         function () use ($router) {
 
-        // EDITOR
+
+            // EDITOR
             $router->group(['prefix' => '/', 'middleware' => 'perm:editor'], function () use ($router) {
                 $router->get('news', 'Secure\NewsController@listUnpublished');
                 $router->post('news', 'Secure\NewsController@create');

@@ -115,12 +115,14 @@ $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 $app->register(App\Providers\CatchAllOptionsRequestsProvider::class);
 $app->register(AlbertCht\InvisibleReCaptcha\InvisibleReCaptchaServiceProvider::class);
 $app->register(\Illuminate\Queue\QueueServiceProvider::class);
+$app->register(Intervention\Image\ImageServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
 //class_alias('Barryvdh\Snappy\Facades\SnappyPdf', 'PDF');
 $app->register(Barryvdh\Snappy\LumenServiceProvider::class);
 $app->alias('mailer', Illuminate\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
 $app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
+$app->alias('Image', Intervention\Image\Facades\Image::class);
 
 if(!class_exists('PDF')) {
     class_alias(Barryvdh\Snappy\Facades\SnappyPdf::class, 'PDF');
