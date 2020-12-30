@@ -3,8 +3,8 @@
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Image;
-use Storage;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 
 class UploadController extends Controller
 {
