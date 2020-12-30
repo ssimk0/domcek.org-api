@@ -26,16 +26,16 @@ class MediaController extends Controller
         $largeFilePath = self::LARGE."/".$files["filename"];
         $smallFilePath = self::LARGE."/".$files["filename"];
 
-        Storage::put($largeFilePath, $files["file"]->__toString(), 'public');
+        Storage::cloud()->put($largeFilePath, $files["file"]->__toString(), 'public');
         if (Arr::has($files, "thumb")) {
-            Storage::put($smallFilePath, $files["thumb"]->__toString(), 'public');
+            Storage::cloud()->put($smallFilePath, $files["thumb"]->__toString(), 'public');
         }
 
         return response()->json([
             "success" => true,
-            "location" => $largeFilePath,
-            "url" => $largeFilePath,
-            "url_small" => $smallFilePath
+            "location" => Storage::cloud()->url($largeFilePath),
+            "url" => Storage::cloud()->url($largeFilePath),
+            "url_small" => Storage::cloud()->url($smallFilePath)
         ]);
     }
 
