@@ -19,14 +19,14 @@ Route::middleware([])->group(function () {
     Route::group(
         ['prefix' => 'auth'],
         function () {
-            Route::post('login/', ['AuthController', 'authenticate']);
-            Route::post('forgot-password/', ['AuthController', 'forgotPassword']);
-            Route::post('reset-password/', ['AuthController', 'resetPassword']);
-            Route::get('logout/', ['AuthController', 'logout']);
-            Route::get('refresh-token/', ['AuthController', 'refresh']);
-            Route::post('register-user', ['AuthController', 'registerUser']);
-            Route::put('verify-email', ['AuthController', 'verifyEmail']);
-            Route::post('verify-email', ['AuthController', 'sendVerificationEmail']);
+            Route::post('login/', ['App\Http\Controllers\Auth\AuthController', 'authenticate']);
+            Route::post('forgot-password/', ['App\Http\Controllers\Auth\AuthController', 'forgotPassword']);
+            Route::post('reset-password/', ['App\Http\Controllers\Auth\AuthController', 'resetPassword']);
+            Route::get('logout/', ['App\Http\Controllers\Auth\AuthController', 'logout']);
+            Route::get('refresh-token/', ['App\Http\Controllers\Auth\AuthController', 'refresh']);
+            Route::post('register-user', ['App\Http\Controllers\Auth\AuthController', 'registerUser']);
+            Route::put('verify-email', ['App\Http\Controllers\Auth\AuthController', 'verifyEmail']);
+            Route::post('verify-email', ['App\Http\Controllers\Auth\AuthController', 'sendVerificationEmail']);
         }
     );
     // PAGE UNSECURE

@@ -7,3 +7,4 @@ database.sqlite
 _reports/
 .DS_Store
 .phpunit.result.cache
+storage/framework
