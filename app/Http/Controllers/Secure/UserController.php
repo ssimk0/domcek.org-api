@@ -52,7 +52,7 @@ class UserController extends Controller
             'city' => 'required|string',
             'phone' => 'required|string',
             'lastName' => 'required|string',
-            'nick' => 'string',
+            'nick' => 'nullable|string',
             'avatar' => 'url',
         ]);
 
@@ -68,8 +68,8 @@ class UserController extends Controller
     public function list(Request $request)
     {
         $data = $request->validate([
-            'size' => 'integer',
-            'filter' => 'string',
+            'size' => 'nullable|integer',
+            'filter' => 'nullable|string',
         ]);
 
         $list = $this->service->list(
@@ -83,14 +83,14 @@ class UserController extends Controller
     public function editUserAdmin(Request $request, $userId)
     {
         $data = $request->validate([
-            'firstName' => 'string',
-            'lastName' => 'string',
-            'city' => 'string',
+            'firstName' => 'nullable|string',
+            'lastName' => 'nullable|string',
+            'city' => 'nullable|string',
             'isAdmin' => 'boolean|required',
             'isEditor' => 'boolean|required',
-            'phone' => 'string',
+            'phone' => 'nullable|string',
             'email' => 'string|required',
-            'note' => 'string',
+            'note' => 'nullable|string',
         ]);
 
         $result = $this->service->editUser($data, $userId);

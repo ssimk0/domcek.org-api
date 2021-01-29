@@ -38,7 +38,7 @@ return [
         ],
 
         'array' => [
-            'driver' => 'array',
+            'driver' => 'nullable|array',
             'serialize' => false,
         ],
 

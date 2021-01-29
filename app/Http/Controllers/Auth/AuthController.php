@@ -139,13 +139,13 @@ class AuthController extends Controller
             'password' => 'required|string|confirmed|min:6',
             'firstName' => 'required|string',
             'lastName' => 'required|string',
-            'nick' => 'string',
+            'nick' => 'nullable|string',
             'birthDate' => 'required|date_format:Y-m-d',
             'city' => 'required|string',
             'phone' => 'required|string',
             'email' => 'required|email|confirmed',
             'terms_and_condition' => 'required|accepted',
-            'newsletter' => 'boolean',
+            'newsletter' => 'nullable|boolean',
             'sex' => ['required', Rule::in(['f', 'm'])],
         ]);
 

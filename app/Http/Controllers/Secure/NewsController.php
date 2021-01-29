@@ -61,7 +61,7 @@ class NewsController extends Controller
     {
         $data = $request->validate([
             'order' => 'in:best,featured',
-            'size' => 'integer',
+            'size' => 'nullable|integer',
         ]);
 
         return $this->service->unpublished(

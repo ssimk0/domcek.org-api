@@ -21,9 +21,9 @@ class NewsController extends Controller
     {
         $data = $request->validate([
             'order' => 'in:best,featured',
-            'size' => 'integer',
-            'offset' => 'integer',
-            'category' => 'string',
+            'size' => 'nullable|integer',
+            'offset' => 'nullable|integer',
+            'category' => 'nullable|string',
         ]);
 
         $news = $this->service->newsList(
