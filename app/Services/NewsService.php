@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Services;
-
 
 use App\Repositories\NewsRepository;
 
@@ -15,18 +13,18 @@ class NewsService extends Service
         $this->repository = $repository;
     }
 
-    function newsList($order, $size, $offset, $category)
+    public function newsList($order, $size, $offset, $category)
     {
         if ($order === 'best') {
             return $this->repository->findAllMostViewedPublishedNews($size, $offset, $category);
-        } else if ($order === 'featured') {
+        } elseif ($order === 'featured') {
             return $this->repository->findAllLatestFeaturedPublishedNews($size, $offset, $category);
         }
 
         return $this->repository->findAllLatestPublishedNews($size, $offset, $category);
     }
 
-    function newsBySlug($slug)
+    public function newsBySlug($slug)
     {
         $news = $this->repository->findNewsDetail($slug);
         if ($news) {
@@ -41,37 +39,38 @@ class NewsService extends Service
         return $news;
     }
 
-    function create(array $data)
+    public function create(array $data)
     {
         try {
             $news = $this->repository->create($data);
+
             return $news;
         } catch (\Exception $e) {
             // this error can be ignored
-            $this->logWarning("Problem with creating news");
+            $this->logWarning('Problem with creating news');
         }
 
         return false;
     }
 
-    function edit(array $data, $slug)
+    public function edit(array $data, $slug)
     {
         try {
             return $this->repository->edit($data, $slug);
         } catch (\Exception $e) {
             // this error can be ignored
-            $this->logError("Problem with creating news with error: " . $e);
+            $this->logError('Problem with creating news with error: '.$e);
         }
 
         return false;
     }
 
-    function unpublished($size)
+    public function unpublished($size)
     {
         return $this->repository->unpublished($size);
     }
 
-    function unpublishedDetail($slug)
+    public function unpublishedDetail($slug)
     {
         return $this->repository->findNewsBySlug($slug);
     }

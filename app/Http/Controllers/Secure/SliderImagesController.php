@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\Secure;
-
 
 use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
@@ -18,18 +16,20 @@ class SliderImagesController extends Controller
         $this->service = $service;
     }
 
-    function list() {
+    public function list()
+    {
         return $this->jsonResponse(
             $this->service->sliderImages()
         );
     }
 
-    function create(Request $request) {
+    public function create(Request $request)
+    {
         $data = $this->validate($request, [
             'image' => ['required', 'regex:(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'],
             'title' => 'required|string',
             'text' => 'required|string',
-            'order' => 'required|integer'
+            'order' => 'required|integer',
         ]);
 
         $result = $this->service->create($data);
@@ -40,13 +40,14 @@ class SliderImagesController extends Controller
         return ErrorMessagesConstant::badAttempt();
     }
 
-    function edit($id, Request $request) {
+    public function edit($id, Request $request)
+    {
         $data = $this->validate($request, [
             'image' => ['required', 'regex:(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'],
             'title' => 'required|string',
             'text' => 'required|string',
             'order' => 'required|integer',
-            'active' => 'required|boolean'
+            'active' => 'required|boolean',
         ]);
 
         $result = $this->service->edit($id, $data);
@@ -58,7 +59,8 @@ class SliderImagesController extends Controller
         return ErrorMessagesConstant::badAttempt();
     }
 
-    function delete($id) {
+    public function delete($id)
+    {
         $result = $this->service->delete($id);
 
         if ($result) {

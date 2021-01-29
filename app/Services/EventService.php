@@ -47,7 +47,7 @@ class EventService extends Service
 
             $this->event->createPrices(Arr::get($data, 'prices', []), $event->id);
 
-            if (!empty($volunteerTypes)) {
+            if (! empty($volunteerTypes)) {
                 $event->volunteerTypes()->attach($volunteerTypes);
             }
 
@@ -66,7 +66,7 @@ class EventService extends Service
 
             return true;
         } catch (\Exception $e) {
-            $this->logError('Problem with creating event with error: ' . $e);
+            $this->logError('Problem with creating event with error: '.$e);
         }
 
         return false;
@@ -81,8 +81,6 @@ class EventService extends Service
             $event->prices = $this->event->eventPrices([$event->id]);
         }
 
-
-
         return $events;
     }
 
@@ -91,11 +89,11 @@ class EventService extends Service
         $events = $this->event->availableEvents();
 
         foreach ($events as $event) {
-           $event->prices = $this->event->eventPrices([$event->id]);
-           $event->volunteerTypes = $this->eventVolunteer->eventVolunteerTypes([$event->id]);
-           $event->participantCount = $this->participant->getCountForEvent([$event->id]);
-           $event->busInTimes = $this->event->getEventTransportTimes($event->id, 'in');
-           $event->busOutTimes = $this->event->getEventTransportTimes($event->id, 'out');
+            $event->prices = $this->event->eventPrices([$event->id]);
+            $event->volunteerTypes = $this->eventVolunteer->eventVolunteerTypes([$event->id]);
+            $event->participantCount = $this->participant->getCountForEvent([$event->id]);
+            $event->busInTimes = $this->event->getEventTransportTimes($event->id, 'in');
+            $event->busOutTimes = $this->event->getEventTransportTimes($event->id, 'out');
         }
 
         return $events;
@@ -135,7 +133,7 @@ class EventService extends Service
 
             return true;
         } catch (\Exception $e) {
-            $this->logError('Problem with creating event with error: ' . $e);
+            $this->logError('Problem with creating event with error: '.$e);
         }
 
         return false;
@@ -147,7 +145,9 @@ class EventService extends Service
         $price = $this->event->eventPrices([$eventId]);
         $registrationToken = $this->event->registrationToken($eventId);
         $stats = $this->event->stats($eventId);
-        if (empty($event)) return $event;
+        if (empty($event)) {
+            return $event;
+        }
         $event->prices = $price;
         $event->busInTimes = $this->event->getEventTransportTimes([$event->id], 'in');
         $event->busOutTimes = $this->event->getEventTransportTimes([$event->id], 'out');
@@ -155,6 +155,7 @@ class EventService extends Service
         $event->participantCount = $this->participant->getCountForEvent([$event->id]);
         $event->stats = $stats;
         $event->registrationToken = empty($registrationToken) ? null : $registrationToken->token;
+
         return $event;
     }
 
@@ -162,22 +163,21 @@ class EventService extends Service
     {
         $stats = $this->event->detailedStats($eventId);
         // SETUP DEFAULTS
-        if (!Arr::get($stats, 'ages.0', false)) {
+        if (! Arr::get($stats, 'ages.0', false)) {
             $stats['ages'] = $this->getStatDefault();
         }
 
-        if (!Arr::get($stats, 'cities.0', false)) {
+        if (! Arr::get($stats, 'cities.0', false)) {
             $stats['cities'] = $this->getStatDefault();
         }
 
-        if (!Arr::get($stats, 'names-female.0', false)) {
+        if (! Arr::get($stats, 'names-female.0', false)) {
             $stats['names-female'] = $this->getStatDefault();
         }
 
-        if (!Arr::get($stats, 'names-male.0', false)) {
+        if (! Arr::get($stats, 'names-male.0', false)) {
             $stats['names-male'] = $this->getStatDefault();
         }
-
 
         return sprintf("
         Počet Dobrovolníkov: %d\n
@@ -211,15 +211,15 @@ class EventService extends Service
         Arr::get($stats, 'ages.0')->count, Arr::get($stats, 'ages.0')->year ? Carbon::now()->year - Arr::get($stats, 'ages.0')->year : '',
         Arr::get($stats, 'ages.1')->count, Arr::get($stats, 'ages.1')->year ? Carbon::now()->year - Arr::get($stats, 'ages.1')->year : '',
         Arr::get($stats, 'ages.2')->count, Arr::get($stats, 'ages.2')->year ? Carbon::now()->year - Arr::get($stats, 'ages.2')->year : '',
-        Arr::get($stats, 'cities.0')->count,  Arr::get($stats, 'cities.0')->city,
-        Arr::get($stats, 'cities.1')->count,  Arr::get($stats, 'cities.1')->city,
-        Arr::get($stats, 'cities.2')->count,  Arr::get($stats, 'cities.2')->city,
-        Arr::get($stats, 'names-female.0')->count,  Arr::get($stats, 'names-female.0')->first_name,
-        Arr::get($stats, 'names-female.1')->count,  Arr::get($stats, 'names-female.1')->first_name,
-        Arr::get($stats, 'names-female.2')->count,  Arr::get($stats, 'names-female.2')->first_name,
-        Arr::get($stats, 'names-male.0')->count,  Arr::get($stats, 'names-male.0')->first_name,
-        Arr::get($stats, 'names-male.1')->count,  Arr::get($stats, 'names-male.1')->first_name,
-        Arr::get($stats, 'names-male.2')->count,  Arr::get($stats, 'names-male.2')->first_name
+        Arr::get($stats, 'cities.0')->count, Arr::get($stats, 'cities.0')->city,
+        Arr::get($stats, 'cities.1')->count, Arr::get($stats, 'cities.1')->city,
+        Arr::get($stats, 'cities.2')->count, Arr::get($stats, 'cities.2')->city,
+        Arr::get($stats, 'names-female.0')->count, Arr::get($stats, 'names-female.0')->first_name,
+        Arr::get($stats, 'names-female.1')->count, Arr::get($stats, 'names-female.1')->first_name,
+        Arr::get($stats, 'names-female.2')->count, Arr::get($stats, 'names-female.2')->first_name,
+        Arr::get($stats, 'names-male.0')->count, Arr::get($stats, 'names-male.0')->first_name,
+        Arr::get($stats, 'names-male.1')->count, Arr::get($stats, 'names-male.1')->first_name,
+        Arr::get($stats, 'names-male.2')->count, Arr::get($stats, 'names-male.2')->first_name
         );
     }
 
@@ -228,13 +228,14 @@ class EventService extends Service
         try {
             return $this->event->delete($eventId);
         } catch (\Exception $e) {
-            $this->logError('Problem with deleting event with error: ' . $e);
+            $this->logError('Problem with deleting event with error: '.$e);
         }
 
         return false;
     }
 
-    private function getStatDefault() {
+    private function getStatDefault()
+    {
         return [
             new class {
                 public $count = 0;
@@ -253,8 +254,7 @@ class EventService extends Service
                 public $first_name = '';
                 public $city = '';
                 public $year = '';
-            }
+            },
         ];
     }
-
 }

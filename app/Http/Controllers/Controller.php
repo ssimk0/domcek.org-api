@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Constants\ErrorMessagesConstant;
 use App\Logging\Logger;
-use Laravel\Lumen\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
+use Laravel\Lumen\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
@@ -15,7 +15,7 @@ class Controller extends BaseController
     {
         return response()->json([
             'message' => $errorMessage,
-            'success' => false
+            'success' => false,
         ], $status);
     }
 
@@ -27,7 +27,7 @@ class Controller extends BaseController
     public function successResponse($status = 200)
     {
         return $this->jsonResponse([
-            'success' => true
+            'success' => true,
         ], $status);
     }
 

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Services;
-
 
 use App\Constants\ErrorMessagesConstant;
 use App\Exceptions\MultipleOldAccounts;
@@ -35,8 +33,7 @@ class UserService extends Service
         PaymentRepository $paymentRepository,
         VolunteersRepository $volunteersRepository,
         OldWebIntegrationRepository $oldWebIntegrationRepository
-    )
-    {
+    ) {
         $this->repository = $repository;
         $this->participantRepository = $participantRepository;
         $this->volunteersRepository = $volunteersRepository;
@@ -44,13 +41,12 @@ class UserService extends Service
         $this->oldWebIntegrationRepository = $oldWebIntegrationRepository;
     }
 
-    function forgotPassword($email)
+    public function forgotPassword($email)
     {
         $token = Str::random(32);
         try {
             $user = $this->repository->findUserByEmail($email);
             if ($user) {
-
                 $result = $this->repository->saveResetPasswordToken($token,
                     $email);
 
@@ -58,16 +54,16 @@ class UserService extends Service
                     Mail::to($email)->send(new ForgotPasswordMail($token));
                 } else {
                     $this->logError('Nepodarilo sa ulozit token do databazy pre email '
-                        . $email);
+                        .$email);
                 }
             }
         } catch (\Exception $e) {
-            $this->logWarning('Problem pri reset passworde pre ' . $email
-                . 's error ' . $e);
+            $this->logWarning('Problem pri reset passworde pre '.$email
+                .'s error '.$e);
         }
     }
 
-    function resetPassword($token, $password)
+    public function resetPassword($token, $password)
     {
         try {
             $tokenResult = $this->repository->findResetPasswordToken($token);
@@ -82,13 +78,13 @@ class UserService extends Service
             }
         } catch (\Exception $e) {
             $this->logWarning('Problem pri updatovani použivateľovho hesla pre token'
-                . $token . 's errorom ' . $e);
+                .$token.'s errorom '.$e);
         }
 
         return false;
     }
 
-    function userDetail($user)
+    public function userDetail($user)
     {
         return [
             'email' => $user->email,
@@ -100,12 +96,12 @@ class UserService extends Service
         ];
     }
 
-    function findUser($userId)
+    public function findUser($userId)
     {
         return $this->repository->findUser($userId);
     }
 
-    function checkPermission($perm, $user)
+    public function checkPermission($perm, $user)
     {
         $admin = $user->is_admin == 1;
 
@@ -116,14 +112,14 @@ class UserService extends Service
         }
     }
 
-    function updateUserProfile($data)
+    public function updateUserProfile($data)
     {
         try {
             $mappingProfile = [
                 'phone' => 'phone',
                 'last_name' => 'lastName',
                 'city' => 'city',
-                'nick' => 'nick'
+                'nick' => 'nick',
             ];
 
             $mappingUser = [
@@ -138,13 +134,13 @@ class UserService extends Service
             return true;
         } catch (\Exception $e) {
             $this->logWarning('Problem pri updatovani použivateľovho hesla s errorom'
-                . $e);
+                .$e);
         }
 
         return false;
     }
 
-    function updateUserPassword($password, $userId = null)
+    public function updateUserPassword($password, $userId = null)
     {
         $userId = $userId ?: $this->userId();
         try {
@@ -155,13 +151,13 @@ class UserService extends Service
             return true;
         } catch (\Exception $e) {
             $this->logWarning('Problem pri updatovani použivateľovho hesla s errorom'
-                . $e);
+                .$e);
         }
 
         return false;
     }
 
-    function createUser($data)
+    public function createUser($data)
     {
         try {
             $userData = [
@@ -187,7 +183,7 @@ class UserService extends Service
                 'birth_date' => $data['birthDate'],
                 'sex' => $data['sex'],
                 'nick' => Arr::get($data, 'nick', null),
-                'date_approved_term_and_condition' => Carbon::now()
+                'date_approved_term_and_condition' => Carbon::now(),
             ];
             $this->repository->createUserProfile($profileData);
             if (Arr::get($data, 'newsletter', false)) {
@@ -195,10 +191,11 @@ class UserService extends Service
             }
             $this->migrateDataFromOldDatabase($user->email, $user->id);
             $this->verificationEmail($user->email);
+
             return true;
         } catch (\Exception $e) {
             $this->logWarning('Problem pri vytvarani použivateľa s errorom '
-                . $e);
+                .$e);
         }
 
         return false;
@@ -220,7 +217,7 @@ class UserService extends Service
             $oldUserId = $oldUsers->first();
 
             $oldEvents = $this->oldWebIntegrationRepository->findOldEventRegistration($oldUserId);
-            if (!empty($oldEvents) && count($oldEvents) > 1) {
+            if (! empty($oldEvents) && count($oldEvents) > 1) {
                 foreach ($oldEvents as $event) {
                     // create record about event registration
                     $this->participantRepository->create([
@@ -229,12 +226,12 @@ class UserService extends Service
                         'transport_out' => '',
                         'user_id' => $userId,
                         'event_id' => $event->action_id,
-                        'was_on_event' => $event->was_on_act === 'true'
+                        'was_on_event' => $event->was_on_act === 'true',
                     ]);
 
                     // create record about event volunteer registration
-                    if (!empty($event->role) || !empty($event->real_role)) {
-                        $role = !empty($event->real_role) ? $event->real_role : $event->role;
+                    if (! empty($event->role) || ! empty($event->real_role)) {
+                        $role = ! empty($event->real_role) ? $event->real_role : $event->role;
 
                         $role = $this->volunteersRepository->typeByName($role);
                         $typeId = empty($role) ? 41 : $role->id;
@@ -272,13 +269,13 @@ class UserService extends Service
                 'last_name' => 'lastName',
                 'first_name' => 'firstName',
                 'city' => 'city',
-                'admin_note' => 'note'
+                'admin_note' => 'note',
             ];
 
             $userData = [
               'email' => $data['email'],
               'is_admin' => $data['isAdmin'],
-              'is_writer' => $data['isEditor']
+              'is_writer' => $data['isEditor'],
             ];
 
             $this->repository->updateUser($userData, $userId);
@@ -288,7 +285,7 @@ class UserService extends Service
             return true;
         } catch (\Exception $e) {
             $this->logWarning('Problem pri updatovani použivateľovho hesla s errorom'
-                . $e);
+                .$e);
         }
 
         return false;
@@ -300,6 +297,7 @@ class UserService extends Service
         $password = Str::random(12);
         if ($user) {
             Mail::to($user->email)->send(new ResetPasswordMail($password));
+
             return $this->updateUserPassword($password, $userId);
         }
 
@@ -311,13 +309,12 @@ class UserService extends Service
         $userId,
         $eventId,
         $wasOnEvent
-    )
-    {
+    ) {
         $this->volunteersRepository->create([
             'volunteer_type_id' => $typeId,
             'event_id' => $eventId,
             'user_id' => $userId,
-            'was_on_event' => $wasOnEvent
+            'was_on_event' => $wasOnEvent,
         ]);
     }
 
@@ -328,6 +325,7 @@ class UserService extends Service
         if ($user) {
             $token = Str::random(32);
             Mail::to($user->email)->send(new VerifyMail($token, $email));
+
             return $this->repository->addVerificationEmailToken($email, $token);
         }
 
@@ -339,7 +337,7 @@ class UserService extends Service
         $user = $this->repository->findUserByEmail($email);
         $verificationToken = $this->repository->existVerificationEmailToken($email, $token);
 
-        if ($user && !$verificationToken->used && Carbon::now()->lessThanOrEqualTo($verificationToken->valid_until)) {
+        if ($user && ! $verificationToken->used && Carbon::now()->lessThanOrEqualTo($verificationToken->valid_until)) {
             return $this->repository->verifyUser($user->id);
         }
 

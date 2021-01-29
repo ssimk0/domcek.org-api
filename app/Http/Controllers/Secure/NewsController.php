@@ -26,7 +26,7 @@ class NewsController extends Controller
             'image' => ['regex:(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'],
             'status' => 'required|in:draft,archived,published',
             'category' => 'required|in:news,message',
-            'is_featured' => 'required|boolean'
+            'is_featured' => 'required|boolean',
         ]);
 
         $result = $this->service->create($data);
@@ -45,13 +45,13 @@ class NewsController extends Controller
             'short' => 'required|string|max:300',
             'image' => ['regex:(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'],
             'status' => 'required|in:draft,archived,published',
-            'is_featured' => 'required|boolean'
+            'is_featured' => 'required|boolean',
         ]);
 
         $result = $this->service->edit($data, $slug);
 
         if ($result) {
-            return $this-> successResponse();
+            return $this->successResponse();
         }
 
         return ErrorMessagesConstant::badAttempt();
@@ -61,7 +61,7 @@ class NewsController extends Controller
     {
         $data = $this->validate($request, [
             'order' => 'in:best,featured',
-            'size' => 'integer'
+            'size' => 'integer',
         ]);
 
         return $this->service->unpublished(
@@ -72,6 +72,7 @@ class NewsController extends Controller
     public function unpublished($slug)
     {
         $news = $this->service->unpublishedDetail($slug);
+
         return $this->jsonResponse($news);
     }
 }

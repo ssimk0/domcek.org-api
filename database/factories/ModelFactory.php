@@ -32,7 +32,6 @@ $factory->define(\App\Models\Profile::class, function (Faker\Generator $faker) {
     ];
 });
 
-
 $factory->define(\App\Models\Page::class, function (Faker\Generator $faker) {
     return [
         'title' => $faker->sentence,
@@ -42,7 +41,6 @@ $factory->define(\App\Models\Page::class, function (Faker\Generator $faker) {
         'active' => 1,
     ];
 });
-
 
 $factory->define(App\Models\NewsItem::class, function (Faker\Generator $faker) {
     return [
@@ -70,7 +68,6 @@ $factory->define(App\Models\TransportType::class, function (Faker\Generator $fak
     ];
 });
 
-
 $factory->define(App\Models\Event::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->sentence,
@@ -84,19 +81,18 @@ $factory->define(App\Models\Event::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(App\Models\EventPrice::class, function (Faker\Generator $faker) {
-   return [
+    return [
        'event_id' => 1,
        'need_pay' => $faker->randomDigit,
        'deposit' => $faker->randomDigit,
-       'description' => $faker->sentence
+       'description' => $faker->sentence,
    ];
 });
-
 
 $factory->define(App\Models\VolunteerType::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->sentence,
-        'active' => true
+        'active' => true,
     ];
 });
 
@@ -108,7 +104,7 @@ $factory->define(App\Models\Participant::class, function (Faker\Generator $faker
         'transport_out' => 'test',
         'user_id' => function () {
             return factory(App\Models\Profile::class)->create()->user_id;
-        }
+        },
     ];
 });
 
@@ -123,7 +119,7 @@ $factory->define(App\Models\Volunteer::class, function (Faker\Generator $faker) 
         'volunteer_type_id' => function () {
             return factory(App\Models\VolunteerType::class)->create()->id;
         },
-        'is_leader' => 0
+        'is_leader' => 0,
     ];
 });
 
@@ -136,10 +132,9 @@ $factory->define(App\Models\Payment::class, function (Faker\Generator $faker) {
         'bus' => $faker->randomNumber(1),
         'deposit' => $faker->randomNumber(1),
         'on_registration' => $faker->randomNumber(1),
-        'need_pay' => $faker->randomNumber(2)
+        'need_pay' => $faker->randomNumber(2),
     ];
 });
-
 
 $factory->define(App\Models\Group::class, function (Faker\Generator $faker) {
     return [
@@ -155,4 +150,3 @@ $factory->define(App\Models\Group::class, function (Faker\Generator $faker) {
         },
     ];
 });
-

@@ -1,4 +1,5 @@
 <?php
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -14,7 +15,7 @@ return [
     'ses' => [
         //'key'    => env('SES_KEY'),
         'key'    => env('SES_KEY'),
-        'secret' => env("SES_SECRET"),
+        'secret' => env('SES_SECRET'),
         'region' => env('SES_REGION', 'eu-west-1'),
     ],
 ];

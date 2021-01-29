@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Services;
-
 
 use App\Repositories\SliderImageRepository;
 
@@ -15,46 +13,47 @@ class SliderImageService extends Service
         $this->repository = $repository;
     }
 
-    function sliderImages()
+    public function sliderImages()
     {
         return $this->repository->findAllSliderImages();
     }
 
-    function activeSliderImages() {
+    public function activeSliderImages()
+    {
         return $this->repository->findAllActiveSliderImages();
     }
 
-    function create(array $data)
+    public function create(array $data)
     {
         try {
             return $this->repository->create($data);
         } catch (\Exception $e) {
             // this error can be ignored
-            $this->logError("Problem with creating slider image with error: " . $e);
+            $this->logError('Problem with creating slider image with error: '.$e);
         }
 
         return false;
     }
 
-    function edit($id, array $data)
+    public function edit($id, array $data)
     {
         try {
             return $this->repository->edit($data, $id);
         } catch (\Exception $e) {
             // this error can be ignored
-            $this->logError("Problem with editing slider image with error: " . $e);
+            $this->logError('Problem with editing slider image with error: '.$e);
         }
 
         return false;
     }
 
-    function delete($id)
+    public function delete($id)
     {
         try {
             return $this->repository->delete($id);
         } catch (\Exception $e) {
             // this error can be ignored
-            $this->logError("Problem with deleting slider image with error: " . $e);
+            $this->logError('Problem with deleting slider image with error: '.$e);
         }
 
         return false;

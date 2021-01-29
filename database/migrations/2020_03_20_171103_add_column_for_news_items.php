@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddColumnForNewsItems extends Migration
 {
@@ -16,7 +16,6 @@ class AddColumnForNewsItems extends Migration
         Schema::table('news_items', function (Blueprint $table) {
             $table->string('category', 200)->default('news');
         });
-
     }
 
     /**

@@ -1,15 +1,13 @@
 <?php
 
-
 namespace App\Repositories;
-
 
 use App\Models\Page;
 use Illuminate\Support\Facades\DB;
 
 class PageRepository extends Repository
 {
-    function findPagesWithoutParent()
+    public function findPagesWithoutParent()
     {
         return DB::table('pages')
             ->where('parent_id', null)
@@ -19,7 +17,7 @@ class PageRepository extends Repository
             ->all();
     }
 
-    function findChildrenForPage($pageId)
+    public function findChildrenForPage($pageId)
     {
         return DB::table('pages')
             ->where('parent_id', $pageId)
@@ -29,7 +27,7 @@ class PageRepository extends Repository
             ->all();
     }
 
-    function findAllActivePages()
+    public function findAllActivePages()
     {
         return DB::table('pages')
             ->where('active', true)
@@ -38,23 +36,25 @@ class PageRepository extends Repository
             ->all();
     }
 
-    function findPageBySlug($slug)
+    public function findPageBySlug($slug)
     {
         return DB::table('pages')
             ->where('slug', $slug)
             ->first();
     }
 
-    function edit(array $data, $slug)
+    public function edit(array $data, $slug)
     {
         Page::where('slug', $slug)->update($data);
+
         return $this->findPageBySlug($slug);
     }
 
-    function create(array $data)
+    public function create(array $data)
     {
         $page = new Page($data);
         $page->save();
+
         return $page;
     }
 }

@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: sebastiansimko
  * Date: 16.2.2019
- * Time: 15:24
+ * Time: 15:24.
  */
 
 namespace App\Mails;
-
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -34,7 +33,7 @@ class ResetPasswordMail extends Mailable
         return $this->markdown('emails.reset-password')
             ->subject('Tvoje heslo bolo restovane')
             ->with([
-                'password' =>  $this->password
+                'password' =>  $this->password,
             ]);
     }
 }

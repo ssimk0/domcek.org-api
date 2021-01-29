@@ -1,12 +1,12 @@
 <?php
 
-
 use Illuminate\Support\Facades\Log;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 
 class NewsTest extends TestCase
 {
     use DatabaseMigrations;
+
     /**
      * A basic test example.
      *
@@ -28,7 +28,7 @@ class NewsTest extends TestCase
     {
         $s = factory(App\Models\NewsItem::class, 1)->create()[0];
 
-        $this->get('/api/news/' . $s->slug);
+        $this->get('/api/news/'.$s->slug);
         $response = json_decode($this->response->getContent());
 
         $this->assertResponseOk();
@@ -41,7 +41,7 @@ class NewsTest extends TestCase
 
         $s = factory(App\Models\NewsItem::class, 1)->create()[0];
 
-        $this->put('/api/secure/news/' . $s->slug, [
+        $this->put('/api/secure/news/'.$s->slug, [
             'body' => $s->body,
             'title' => 'Test',
             'image' => $s->image,
@@ -49,7 +49,7 @@ class NewsTest extends TestCase
             'status' => $s->status,
             'is_featured' => $s->is_featured,
         ], [
-            'Authorization' => 'Bearer ' . $token
+            'Authorization' => 'Bearer '.$token,
         ]);
 
         $this->assertResponseOk();

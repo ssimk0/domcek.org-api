@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Models;
-
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,5 +13,4 @@ class Event extends Model
     {
         return $this->belongsToMany('App\Models\VolunteerType', 'event_volunteer_types', 'event_id', 'volunteer_type_id');
     }
-
 }

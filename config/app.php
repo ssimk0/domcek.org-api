@@ -39,5 +39,5 @@ return [
     | the language folders that are provided through your application.
     |
     */
-    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'sk')
+    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'sk'),
 ];

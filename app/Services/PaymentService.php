@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Services;
-
 
 use App\Mails\ConfirmPaymentMail;
 use App\Repositories\PaymentRepository;
@@ -20,7 +18,6 @@ class PaymentService extends Service
         $this->repository = $repository;
         $this->userRepository = $userRepository;
     }
-
 
     public function processPayments($payments, $eventId)
     {
@@ -41,13 +38,13 @@ class PaymentService extends Service
 
                         $this->repository->edit($dbPayment->user_id, $eventId, intval($payment['amount']));
                     } catch (\Exception $e) {
-                        $this->logError('Problem pri updatovani platby: ' . json_encode($payment) . ' error: ' . $e->getMessage() . 'trace: ' . $e->getTraceAsString());
+                        $this->logError('Problem pri updatovani platby: '.json_encode($payment).' error: '.$e->getMessage().'trace: '.$e->getTraceAsString());
                     }
                     $matched = true;
                 }
             }
 
-            if (!$matched && ($payment['paymentNumber'] || $payment['note'])) {
+            if (! $matched && ($payment['paymentNumber'] || $payment['note'])) {
                 try {
                     $payment['date'] = Carbon::parse($payment['date']);
                 } catch (\Exception $e) {

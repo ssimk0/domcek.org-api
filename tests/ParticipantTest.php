@@ -14,21 +14,20 @@ class ParticipantTest extends TestCase
 {
     use DatabaseMigrations;
 
-    function testAuthEvent()
+    public function testAuthEvent()
     {
         $this->get('/api/secure/admin/events/1/participants', [], [
-            'Authorization' => 'Bearer ' . $this->login()
+            'Authorization' => 'Bearer '.$this->login(),
         ]);
 
         $this->assertResponseStatus(403);
     }
 
-    function testListParticipant()
+    public function testListParticipant()
     {
-
         factory(App\Models\Participant::class, 15)->create();
         $this->get('/api/secure/admin/events/1/participants', [
-            'Authorization' => 'Bearer ' . $this->login(true)
+            'Authorization' => 'Bearer '.$this->login(true),
         ]);
 
         $this->assertResponseOk();
@@ -38,12 +37,11 @@ class ParticipantTest extends TestCase
         $this->assertEquals(15, $content->total);
     }
 
-    function testAdminDetailParticipant()
+    public function testAdminDetailParticipant()
     {
-
         $participant = factory(App\Models\Participant::class, 1)->create()[0];
-        $this->get('/api/secure/admin/events/1/participants/' . $participant->id, [
-            'Authorization' => 'Bearer ' . $this->login(true)
+        $this->get('/api/secure/admin/events/1/participants/'.$participant->id, [
+            'Authorization' => 'Bearer '.$this->login(true),
         ]);
 
         $this->assertResponseOk();
@@ -54,8 +52,7 @@ class ParticipantTest extends TestCase
         $this->assertEquals($participant->note, $content->note);
     }
 
-
-    function testRegisterParticipant()
+    public function testRegisterParticipant()
     {
         $faker = Faker\Factory::create();
         $event = factory(App\Models\Event::class)->create();
@@ -63,7 +60,7 @@ class ParticipantTest extends TestCase
         $price = new App\Models\EventPrice([
             'event_id' => $event->id,
             'need_pay' => $faker->randomDigit,
-            'deposit' => $faker->randomDigit
+            'deposit' => $faker->randomDigit,
         ]);
 
         $price->save();
@@ -77,7 +74,7 @@ class ParticipantTest extends TestCase
             'GDPRRegistration' => true,
             'audioVisualKnowledgeAgreement' => true,
         ], [
-            'Authorization' => 'Bearer ' . $token
+            'Authorization' => 'Bearer '.$token,
         ]);
         $this->assertResponseStatus(201);
 
@@ -91,9 +88,8 @@ class ParticipantTest extends TestCase
         $this->assertEquals('1', $payment->event_id);
     }
 
-    function testLateRegisterParticipant()
+    public function testLateRegisterParticipant()
     {
-
         $event = new Event([
             'name' => 'test',
             'start_date' => Carbon::now()->addDays(1)->format('Y-m-d'),
@@ -107,13 +103,13 @@ class ParticipantTest extends TestCase
         $price = new App\Models\EventPrice([
             'event_id' => $event->id,
             'need_pay' => 5,
-            'deposit' => 0
+            'deposit' => 0,
         ]);
         $price->save();
         $profile = factory(App\Models\Profile::class)->create();
         $token = $this->login();
 
-        $this->post('/api/secure/user/events/' . $event->id, [
+        $this->post('/api/secure/user/events/'.$event->id, [
             'note' => 'test',
             'transportIn' => 'test',
             'transportOut' => 'test',
@@ -121,9 +117,8 @@ class ParticipantTest extends TestCase
             'GDPRRegistration' => 'true',
             'audioVisualKnowledgeAgreement' => 'true',
         ], [
-            'Authorization' => 'Bearer ' . $token
+            'Authorization' => 'Bearer '.$token,
         ]);
-
 
         $this->assertResponseStatus(201);
 
@@ -136,9 +131,8 @@ class ParticipantTest extends TestCase
         $this->assertEquals('1', $payment->event_id);
     }
 
-    function testInStartDateRegisterParticipant()
+    public function testInStartDateRegisterParticipant()
     {
-
         $event = new Event([
             'name' => 'test',
             'start_date' => Carbon::now()->format('Y-m-d'),
@@ -152,13 +146,13 @@ class ParticipantTest extends TestCase
         $price = new App\Models\EventPrice([
             'event_id' => $event->id,
             'need_pay' => 5,
-            'deposit' => 0
+            'deposit' => 0,
         ]);
         $price->save();
         $profile = factory(App\Models\Profile::class)->create();
         $token = $this->login();
 
-        $this->post('/api/secure/user/events/' . $event->id, [
+        $this->post('/api/secure/user/events/'.$event->id, [
             'note' => 'test',
             'transportIn' => 'test',
             'transportOut' => 'test',
@@ -166,23 +160,23 @@ class ParticipantTest extends TestCase
             'GDPRRegistration' => true,
             'audioVisualKnowledgeAgreement' => true,
         ], [
-            'Authorization' => 'Bearer ' . $token
+            'Authorization' => 'Bearer '.$token,
         ]);
         $this->assertResponseStatus(400);
     }
 
-    function testUserEditParticipant()
+    public function testUserEditParticipant()
     {
         $participant = factory(App\Models\Participant::class)->create();
         $user = User::find($participant->user_id);
         $token = Auth::login($user);
 
-        $this->put('/api/secure/user/events/' . $participant->event_id, [
+        $this->put('/api/secure/user/events/'.$participant->event_id, [
             'note' => 'test',
             'transportIn' => 'CAR',
             'transportOut' => 'CAR',
         ], [
-            'Authorization' => 'Bearer ' . $token
+            'Authorization' => 'Bearer '.$token,
         ]);
 
         $this->assertResponseOk();
@@ -194,15 +188,15 @@ class ParticipantTest extends TestCase
         $this->assertEquals('test', $participant->note);
     }
 
-    function testUserUnsubscribe()
+    public function testUserUnsubscribe()
     {
         $participant = factory(App\Models\Participant::class)->create();
         $user = User::find($participant->user_id);
         $token = Auth::login($user);
 
-        $this->put('/api/secure/user/events/' . $participant->event_id . '/unsubscribe', [
+        $this->put('/api/secure/user/events/'.$participant->event_id.'/unsubscribe', [
         ], [
-            'Authorization' => 'Bearer ' . $token
+            'Authorization' => 'Bearer '.$token,
         ]);
 
         $this->assertResponseOk();
@@ -212,7 +206,7 @@ class ParticipantTest extends TestCase
         $this->assertEquals('0', $participant->subscribed);
     }
 
-    function testUserSubscribe()
+    public function testUserSubscribe()
     {
         $participant = factory(Participant::class)->create();
         $participant->update(['subscribed' => false]);
@@ -221,9 +215,9 @@ class ParticipantTest extends TestCase
 
         $this->assertEquals(false, $participant->subscribed);
 
-        $this->put('/api/secure/user/events/' . $participant->event_id . '/subscribe', [
+        $this->put('/api/secure/user/events/'.$participant->event_id.'/subscribe', [
         ], [
-            'Authorization' => 'Bearer ' . $token
+            'Authorization' => 'Bearer '.$token,
         ]);
 
         $this->assertResponseOk();
@@ -233,9 +227,8 @@ class ParticipantTest extends TestCase
         $this->assertEquals(true, $participant->subscribed);
     }
 
-    function testEditParticipant()
+    public function testEditParticipant()
     {
-
         $event = factory(App\Models\Event::class)->create();
         $token = $this->login(true);
         $participant = factory(App\Models\Participant::class)->create([
@@ -245,14 +238,13 @@ class ParticipantTest extends TestCase
         $volunteerType = factory(App\Models\VolunteerType::class)->create();
         $regUser = factory(User::class)->create();
 
-
-        $this->put('/api/secure/admin/events/' . $event->id . '/participants/' . $participant->id, [
+        $this->put('/api/secure/admin/events/'.$event->id.'/participants/'.$participant->id, [
             'registrationUserId' => $regUser->id,
             'userId' => 1,
             'volunteerTypeId' => $volunteerType->id,
-            'isLeader' => true
+            'isLeader' => true,
         ], [
-            'Authorization' => 'Bearer ' . $token
+            'Authorization' => 'Bearer '.$token,
         ]);
 
         $this->assertResponseOk();
@@ -261,5 +253,4 @@ class ParticipantTest extends TestCase
 
         $this->assertEquals(true, $volunteer->is_leader);
     }
-
 }

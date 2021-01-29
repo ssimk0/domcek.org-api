@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateEventTable extends Migration
 {
@@ -43,7 +43,6 @@ class CreateEventTable extends Migration
             $table->unsignedInteger('event_id')->index();
             $table->unsignedInteger('user_id')->index();
 
-
             $table->unique(['event_id', 'user_id']);
             $table->foreign('volunteer_type_id')->references('id')->on('volunteer_types')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade')->onUpdate('cascade');
@@ -63,7 +62,6 @@ class CreateEventTable extends Migration
 
             $table->timestamps();
         });
-
 
         Schema::create('participants', function (Blueprint $table) {
             $table->increments('id');

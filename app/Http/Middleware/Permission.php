@@ -16,7 +16,6 @@ class Permission
 
     public function handle($request, Closure $next, $perm)
     {
-
         if ($request->user()) {
             if ($this->service->checkPermission($perm, $request->user())) {
                 return $next($request);

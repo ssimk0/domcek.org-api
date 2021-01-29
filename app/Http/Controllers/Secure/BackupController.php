@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\Secure;
-
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -15,15 +13,17 @@ class BackupController extends Controller
     {
         $data = $this->validate($request, [
             'participants' => 'array',
-            'wrong-payments' => 'array'
+            'wrong-payments' => 'array',
         ]);
 
         try {
-            $fileName = 'backup/'.Str::random(10) . '.json';
+            $fileName = 'backup/'.Str::random(10).'.json';
             Storage::disk('local')->put($fileName, json_encode($data));
-            return response()->json([ 'success' => true ], 201);
+
+            return response()->json(['success' => true], 201);
         } catch (\Exception $e) {
-            $this->logWarning("Problem with upload image end withn error " . $e);
+            $this->logWarning('Problem with upload image end withn error '.$e);
+
             return response()->json([], 404);
         }
     }

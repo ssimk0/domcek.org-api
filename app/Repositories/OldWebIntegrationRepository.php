@@ -3,24 +3,23 @@
  * Created by PhpStorm.
  * User: sebastiansimko
  * Date: 5.3.2019
- * Time: 16:29
+ * Time: 16:29.
  */
 
 namespace App\Repositories;
-
 
 use Illuminate\Support\Facades\DB;
 
 class OldWebIntegrationRepository extends Repository
 {
-    function findOldUser($email)
+    public function findOldUser($email)
     {
         return DB::table('users_old')
             ->where('email', $email)
             ->pluck('user_id');
     }
 
-    function findOldEventRegistration($userId)
+    public function findOldEventRegistration($userId)
     {
         return DB::table('pilgrims')
             ->where('user_id', $userId)

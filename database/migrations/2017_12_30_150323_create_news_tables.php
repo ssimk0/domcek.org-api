@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateNewsTables extends Migration
 {
@@ -56,5 +56,4 @@ class CreateNewsTables extends Migration
     {
         Schema::drop('news_items');
     }
-
 }

@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: sebastiansimko
  * Date: 6.3.2019
- * Time: 19:20
+ * Time: 19:20.
  */
 
 namespace App\Mails;
-
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -33,7 +32,7 @@ class ExceptionMail extends Mailable
     {
         return $this->markdown('emails.exception')->with([
             'exceptionMessage' =>  $this->exception->getMessage(),
-            'exceptionStackTrace' => $this->exception->getTraceAsString()
+            'exceptionStackTrace' => $this->exception->getTraceAsString(),
         ]);
     }
 }

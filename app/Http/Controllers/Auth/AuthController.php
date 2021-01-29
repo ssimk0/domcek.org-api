@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\Auth;
-
 
 use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
@@ -20,24 +18,23 @@ class AuthController extends Controller
         $this->service = $service;
     }
 
-    function authenticate(Request $request)
+    public function authenticate(Request $request)
     {
         $errMessage = ErrorMessagesConstant::WRONG_CREDENTIALS;
         try {
-            if(env('APP_DEBUG')) {
+            if (env('APP_DEBUG')) {
                 $data = $this->validate($request, [
                     'username' => 'required',
-                    'password' => 'required'
+                    'password' => 'required',
                 ]);
             } else {
                 $data = $this->validateWithCaptcha($request, [
                     'username' => 'required',
-                    'password' => 'required'
+                    'password' => 'required',
                 ]);
             }
-
         } catch (\Exception $e) {
-            $this->logDebug("Validation exception for login user: " . $e->getMessage());
+            $this->logDebug('Validation exception for login user: '.$e->getMessage());
 
             return $this->error(401, $errMessage);
         }
@@ -48,8 +45,8 @@ class AuthController extends Controller
         ]);
 
         if ($token) {
-            if (!$this->service->isVerifiedUser($data['username'])) {
-                return $this->error(403,ErrorMessagesConstant::NOT_VERIFIED_EMAIL);
+            if (! $this->service->isVerifiedUser($data['username'])) {
+                return $this->error(403, ErrorMessagesConstant::NOT_VERIFIED_EMAIL);
             }
 
             return $this->respondWithToken($token);
@@ -58,7 +55,7 @@ class AuthController extends Controller
         return $this->error(401, $errMessage);
     }
 
-    function refresh()
+    public function refresh()
     {
         try {
             return $this->respondWithToken(Auth::refresh());
@@ -67,19 +64,20 @@ class AuthController extends Controller
         }
     }
 
-    function logout()
+    public function logout()
     {
         try {
             Auth::logout();
         } catch (\Exception $e) {
         }
+
         return $this->successResponse();
     }
 
-    function forgotPassword(Request $request)
+    public function forgotPassword(Request $request)
     {
         $data = $this->validateWithCaptcha($request, [
-            'email' => 'required|email'
+            'email' => 'required|email',
         ]);
 
         $this->service->forgotPassword($data['email']);
@@ -87,11 +85,11 @@ class AuthController extends Controller
         return $this->successResponse();
     }
 
-    function resetPassword(Request $request)
+    public function resetPassword(Request $request)
     {
         $data = $this->validateWithCaptcha($request, [
             'token' => 'required|string',
-            'password' => 'required|string|confirmed|min:6'
+            'password' => 'required|string|confirmed|min:6',
         ]);
 
         $result = $this->service->resetPassword($data['token'], $data['password']);
@@ -103,13 +101,13 @@ class AuthController extends Controller
         return ErrorMessagesConstant::badAttempt();
     }
 
-    function sendVerificationEmail(Request $request)
+    public function sendVerificationEmail(Request $request)
     {
         $data = $this->validateWithCaptcha($request, [
-            'email' => 'required|string'
+            'email' => 'required|string',
         ]);
 
-        $result =  $this->service->verificationEmail($data['email']);
+        $result = $this->service->verificationEmail($data['email']);
 
         if ($result) {
             return $this->successResponse();
@@ -118,11 +116,11 @@ class AuthController extends Controller
         return ErrorMessagesConstant::badAttempt();
     }
 
-    function verifyEmail(Request $request)
+    public function verifyEmail(Request $request)
     {
         $data = $this->validateWithCaptcha($request, [
             'token' => 'required|string',
-            'email' => 'required|string'
+            'email' => 'required|string',
         ]);
 
         $result = $this->service->verifyEmail($data['token'], $data['email']);
@@ -134,7 +132,7 @@ class AuthController extends Controller
         return ErrorMessagesConstant::badAttempt();
     }
 
-    function registerUser(Request $request)
+    public function registerUser(Request $request)
     {
         $data = $this->validateWithCaptcha($request, [
             'avatar' => 'url',
