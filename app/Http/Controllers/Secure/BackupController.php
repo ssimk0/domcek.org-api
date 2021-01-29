@@ -11,7 +11,7 @@ class BackupController extends Controller
 {
     public function upload(Request $request)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'participants' => 'array',
             'wrong-payments' => 'array',
         ]);

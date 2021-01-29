@@ -16,7 +16,7 @@ class MediaController extends Controller
 
     public function upload(Request $request)
     {
-        $this->validate($request, [
+        $request->validate([
             'file' => 'required|file',
         ]);
 

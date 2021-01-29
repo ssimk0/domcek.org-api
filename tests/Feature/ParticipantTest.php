@@ -1,52 +1,48 @@
 <?php
 
+namespace Tests\Feature;
 use App\Models\Event;
 use App\Models\EventPrice;
 use App\Models\Participant;
 use App\Models\Payment;
 use App\Models\Profile;
 use App\Models\User;
+use App\Models\Volunteer;
+use App\Models\VolunteerType;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Laravel\Lumen\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class ParticipantTest extends TestCase
 {
-    use DatabaseMigrations;
 
     public function testAuthEvent()
     {
-        $this->get('/api/secure/admin/events/1/participants', [], [
+        $this->get('/api/secure/admin/events/1/participants', [
             'Authorization' => 'Bearer '.$this->login(),
-        ]);
-
-        $this->assertResponseStatus(403);
+        ])->assertStatus(403);
     }
 
     public function testListParticipant()
     {
-        factory(App\Models\Participant::class, 15)->create();
-        $this->get('/api/secure/admin/events/1/participants', [
+        Participant::factory( 15)->create();
+        $response = $this->get('/api/secure/admin/events/1/participants', [
             'Authorization' => 'Bearer '.$this->login(true),
-        ]);
+        ])->assertStatus(200);
 
-        $this->assertResponseOk();
-
-        $content = json_decode($this->response->getContent());
+        $content = json_decode($response->getContent());
 
         $this->assertEquals(15, $content->total);
     }
 
     public function testAdminDetailParticipant()
     {
-        $participant = factory(App\Models\Participant::class, 1)->create()[0];
-        $this->get('/api/secure/admin/events/1/participants/'.$participant->id, [
+        $participant = Participant::factory(1)->create()[0];
+        $response = $this->get('/api/secure/admin/events/1/participants/'.$participant->id, [
             'Authorization' => 'Bearer '.$this->login(true),
-        ]);
+        ])->assertStatus(200);
 
-        $this->assertResponseOk();
-
-        $content = json_decode($this->response->getContent());
+        $content = json_decode($response->getContent());
 
         $this->assertEquals($participant->id, $content->id);
         $this->assertEquals($participant->note, $content->note);
@@ -54,13 +50,12 @@ class ParticipantTest extends TestCase
 
     public function testRegisterParticipant()
     {
-        $faker = Faker\Factory::create();
-        $event = factory(App\Models\Event::class)->create();
-        $profile = factory(App\Models\Profile::class)->create();
-        $price = new App\Models\EventPrice([
+        $event = Event::factory()->create();
+        $profile = Profile::factory()->create();
+        $price = new EventPrice([
             'event_id' => $event->id,
-            'need_pay' => $faker->randomDigit,
-            'deposit' => $faker->randomDigit,
+            'need_pay' => $this->faker->randomDigit,
+            'deposit' => $this->faker->randomDigit,
         ]);
 
         $price->save();
@@ -75,8 +70,7 @@ class ParticipantTest extends TestCase
             'audioVisualKnowledgeAgreement' => true,
         ], [
             'Authorization' => 'Bearer '.$token,
-        ]);
-        $this->assertResponseStatus(201);
+        ])->assertStatus(201);
 
         $payment = Payment::where('user_id', $profile->user_id)
             ->where('event_id', $event->id)
@@ -100,13 +94,13 @@ class ParticipantTest extends TestCase
         ]);
         $event->save();
 
-        $price = new App\Models\EventPrice([
+        $price = new EventPrice([
             'event_id' => $event->id,
             'need_pay' => 5,
             'deposit' => 0,
         ]);
         $price->save();
-        $profile = factory(App\Models\Profile::class)->create();
+        $profile = Profile::factory()->create();
         $token = $this->login();
 
         $this->post('/api/secure/user/events/'.$event->id, [
@@ -118,9 +112,7 @@ class ParticipantTest extends TestCase
             'audioVisualKnowledgeAgreement' => 'true',
         ], [
             'Authorization' => 'Bearer '.$token,
-        ]);
-
-        $this->assertResponseStatus(201);
+        ])->assertStatus(201);
 
         $payment = Payment::where('user_id', $profile->user_id)
             ->where('event_id', $event->id)
@@ -143,13 +135,13 @@ class ParticipantTest extends TestCase
         ]);
         $event->save();
 
-        $price = new App\Models\EventPrice([
+        $price = new EventPrice([
             'event_id' => $event->id,
             'need_pay' => 5,
             'deposit' => 0,
         ]);
         $price->save();
-        $profile = factory(App\Models\Profile::class)->create();
+        $profile = Profile::factory()->create();
         $token = $this->login();
 
         $this->post('/api/secure/user/events/'.$event->id, [
@@ -161,13 +153,12 @@ class ParticipantTest extends TestCase
             'audioVisualKnowledgeAgreement' => true,
         ], [
             'Authorization' => 'Bearer '.$token,
-        ]);
-        $this->assertResponseStatus(400);
+        ])->assertStatus(400);
     }
 
     public function testUserEditParticipant()
     {
-        $participant = factory(App\Models\Participant::class)->create();
+        $participant = Participant::factory()->create();
         $user = User::find($participant->user_id);
         $token = Auth::login($user);
 
@@ -177,9 +168,7 @@ class ParticipantTest extends TestCase
             'transportOut' => 'CAR',
         ], [
             'Authorization' => 'Bearer '.$token,
-        ]);
-
-        $this->assertResponseOk();
+        ])->assertStatus(200);
 
         $participant = \App\Models\Participant::where('user_id', $participant->user_id)->first();
 
@@ -190,16 +179,14 @@ class ParticipantTest extends TestCase
 
     public function testUserUnsubscribe()
     {
-        $participant = factory(App\Models\Participant::class)->create();
+        $participant = Participant::factory()->create();
         $user = User::find($participant->user_id);
         $token = Auth::login($user);
 
         $this->put('/api/secure/user/events/'.$participant->event_id.'/unsubscribe', [
         ], [
             'Authorization' => 'Bearer '.$token,
-        ]);
-
-        $this->assertResponseOk();
+        ])->assertStatus(200);
 
         $participant = Participant::where('user_id', $participant->user_id)->first();
 
@@ -208,7 +195,7 @@ class ParticipantTest extends TestCase
 
     public function testUserSubscribe()
     {
-        $participant = factory(Participant::class)->create();
+        $participant = Participant::factory()->create();
         $participant->update(['subscribed' => false]);
         $user = User::find($participant->user_id);
         $token = Auth::login($user);
@@ -218,25 +205,23 @@ class ParticipantTest extends TestCase
         $this->put('/api/secure/user/events/'.$participant->event_id.'/subscribe', [
         ], [
             'Authorization' => 'Bearer '.$token,
-        ]);
+        ])->assertStatus(200);
 
-        $this->assertResponseOk();
-
-        $participant = \App\Models\Participant::where('user_id', $participant->user_id)->first();
+        $participant = Participant::where('user_id', $participant->user_id)->first();
 
         $this->assertEquals(true, $participant->subscribed);
     }
 
     public function testEditParticipant()
     {
-        $event = factory(App\Models\Event::class)->create();
+        $event = Event::factory()->create();
         $token = $this->login(true);
-        $participant = factory(App\Models\Participant::class)->create([
+        $participant = Participant::factory()->create([
             'user_id' => 1,
             'event_id' => $event->id,
         ]);
-        $volunteerType = factory(App\Models\VolunteerType::class)->create();
-        $regUser = factory(User::class)->create();
+        $volunteerType = VolunteerType::factory()->create();
+        $regUser = User::factory()->create();
 
         $this->put('/api/secure/admin/events/'.$event->id.'/participants/'.$participant->id, [
             'registrationUserId' => $regUser->id,
@@ -245,11 +230,9 @@ class ParticipantTest extends TestCase
             'isLeader' => true,
         ], [
             'Authorization' => 'Bearer '.$token,
-        ]);
+        ])->assertStatus(200);
 
-        $this->assertResponseOk();
-
-        $volunteer = \App\Models\Volunteer::where('user_id', 1)->first();
+        $volunteer = Volunteer::where('user_id', 1)->first();
 
         $this->assertEquals(true, $volunteer->is_leader);
     }

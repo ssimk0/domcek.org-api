@@ -1,29 +1,29 @@
 <?php
+namespace Tests\Feature;
 
 use App\Models\Event;
+use App\Models\Participant;
+use App\Models\VolunteerType;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Laravel\Lumen\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class EventTest extends TestCase
 {
-    use DatabaseMigrations;
+
 
     public function testAuthEvent()
     {
         $this->post('/api/secure/admin/events', [], [
             'Authorization' => 'Bearer '.$this->login(),
-        ]);
-
-        $this->assertResponseStatus(403);
+        ])->assertStatus(403);
     }
 
     public function testCreateEvent()
     {
-        $types = factory(App\Models\VolunteerType::class, 5)->create();
+        $types = VolunteerType::factory(5)->create();
 
-        $this->post('/api/secure/admin/events', [
+        $response = $this->post('/api/secure/admin/events', [
             'name' => '81. Púť radosti',
             'prices' => [[
             'needPay' => 10,
@@ -48,7 +48,7 @@ class EventTest extends TestCase
             ->where('type', 'in')
             ->get();
 
-        $this->assertResponseStatus(201);
+        $response->assertStatus(201);
         $this->assertCount(2, $times);
 
         $this->assertEquals('10:00', $times[0]->time);
@@ -57,19 +57,18 @@ class EventTest extends TestCase
 
     public function testEventList()
     {
-        $types = factory(App\Models\VolunteerType::class, 5)->create();
-        $events = factory(App\Models\Event::class, 11)->create();
+        $types = VolunteerType::factory(5)->create();
+        $events = Event::factory(11)->create();
 
         foreach ($events as $event) {
             $event->volunteerTypes()->attach($types);
         }
 
-        $this->get('/api/secure/admin/events', [
+        $response = $this->get('/api/secure/admin/events', [
             'Authorization' => 'Bearer '.$this->login(true),
-        ]);
+        ])->assertStatus(200);
 
-        $this->assertResponseOk();
-        $content = json_decode($this->response->getContent());
+        $content = json_decode($response->getContent());
 
         $this->assertCount(10, $content->data);
         $this->assertCount(5, $content->data[0]->volunteerTypes);
@@ -79,19 +78,18 @@ class EventTest extends TestCase
     {
 //        $this->markTestSkipped('must be fixed problem with YEAR in sqlite.');
 
-        $types = factory(App\Models\VolunteerType::class, 5)->create();
-        $events = factory(App\Models\Event::class, 11)->create();
+        $types = VolunteerType::factory(5)->create();
+        $events = Event::factory(11)->create();
 
         foreach ($events as $event) {
             $event->volunteerTypes()->attach($types);
         }
 
-        $this->get('/api/secure/admin/events/'.$events[0]->id, [
+        $response = $this->get('/api/secure/admin/events/'.$events[0]->id, [
             'Authorization' => 'Bearer '.$this->login(true),
-        ]);
+        ])->assertStatus(200);
 
-        $this->assertResponseOk();
-        $content = json_decode($this->response->getContent());
+        $content = json_decode($response->getContent());
 
         $this->assertEquals($events[0]->id, $content->id);
     }
@@ -102,15 +100,13 @@ class EventTest extends TestCase
 
         $this->get('/api/secure/admin/events/notFound', [
             'Authorization' => 'Bearer '.$this->login(true),
-        ]);
-
-        $this->assertResponseStatus(404);
+        ])->assertStatus(404);
     }
 
     public function testEventDelete()
     {
-        $types = factory(App\Models\VolunteerType::class, 5)->create();
-        $events = factory(App\Models\Event::class, 1)->create();
+        $types = VolunteerType::factory(5)->create();
+        $events = Event::factory(1)->create();
 
         foreach ($events as $event) {
             $event->volunteerTypes()->attach($types);
@@ -118,24 +114,20 @@ class EventTest extends TestCase
 
         $this->delete('/api/secure/admin/events/'.$events[0]->id, [
             'Authorization' => 'Bearer '.$this->login(true),
-        ]);
-
-        $this->assertResponseOk();
+        ])->assertStatus(200);
     }
 
     public function testEventDeleteNotFound()
     {
         $this->delete('/api/secure/admin/events/notFound', [
             'Authorization' => 'Bearer '.$this->login(true),
-        ]);
-
-        $this->assertResponseStatus(404);
+        ])->assertStatus(404);
     }
 
     public function testEditEvent()
     {
-        $types = factory(App\Models\VolunteerType::class, 5)->create();
-        $events = factory(App\Models\Event::class, 1)->create();
+        $types = VolunteerType::factory(5)->create();
+        $events = Event::factory(1)->create();
 
         foreach ($events as $event) {
             $event->volunteerTypes()->attach($types);
@@ -152,9 +144,8 @@ class EventTest extends TestCase
             'volunteerTypes' => [$types[0]->id],
         ], [
             'Authorization' => 'Bearer '.$this->login(true),
-        ]);
+        ])->assertStatus(200);
 
-        $this->assertResponseStatus(200);
         $event = Event::find($events[0]->id);
         $volunteerTypes = $event->volunteerTypes()->get();
 
@@ -165,35 +156,33 @@ class EventTest extends TestCase
 
     public function testAvailableEvents()
     {
-        $faker = \Faker\Factory::create();
+        $types = VolunteerType::factory(5)->create();
 
-        $types = factory(App\Models\VolunteerType::class, 5)->create();
-
-        $eventAvailable = new App\Models\Event([
-            'name' => $faker->sentence(),
-            'theme' => $faker->sentence(),
+        $eventAvailable = new Event([
+            'name' => $this->faker->sentence(),
+            'theme' => $this->faker->sentence(),
             'start_date' => Carbon::now()->addYear()->format('Y-m-d'),
-            'end_date' => $faker->date(),
+            'end_date' => $this->faker->date(),
             'start_registration' => Carbon::now()->format('Y-m-d'),
             'end_registration' => Carbon::now()->addDays(5)->format('Y-m-d'),
-            'end_volunteer_registration' => $faker->date(),
+            'end_volunteer_registration' => $this->faker->date(),
         ]);
 
-        $eventNotAvailable = new App\Models\Event([
-            'name' => $faker->sentence,
-            'theme' => $faker->sentence,
+        $eventNotAvailable = new Event([
+            'name' => $this->faker->sentence,
+            'theme' => $this->faker->sentence,
             'start_date' => \Carbon\Carbon::now()->addYear()->format('Y-m-d'),
-            'end_date' => $faker->date(),
+            'end_date' => $this->faker->date(),
             'start_registration' => \Carbon\Carbon::now()->addDay()->format('Y-m-d'),
             'end_registration' => \Carbon\Carbon::now()->addDays(5)->format('Y-m-d'),
-            'end_volunteer_registration' => $faker->date(),
+            'end_volunteer_registration' => $this->faker->date(),
         ]);
 
         $eventNotAvailable->save();
         $eventAvailable->save();
 
-        $participant = new App\Models\Participant([
-            'note' => $faker->sentence,
+        $participant = new Participant([
+            'note' => $this->faker->sentence,
             'event_id' => $eventAvailable->id,
             'user_id' => 1,
         ]);
@@ -204,13 +193,11 @@ class EventTest extends TestCase
             $event->volunteerTypes()->attach($types);
         }
 
-        $this->get('/api/events', [
+        $response = $this->get('/api/events', [
             'Authorization' => 'Bearer '.$this->login(true),
-        ]);
+        ])->assertStatus(200);
 
-        $this->assertResponseStatus(200);
-
-        $content = json_decode($this->response->getContent());
+        $content = json_decode($response->getContent());
 
         $this->assertCount(1, $content);
         $this->assertEquals(1, $content[0]->participantCount);

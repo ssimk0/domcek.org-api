@@ -28,7 +28,7 @@ class UserController extends Controller
 
     public function changePassword(Request $request)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'oldPassword' => 'required',
             'password' => 'required|string|confirmed|min:6',
         ]);
@@ -48,7 +48,7 @@ class UserController extends Controller
 
     public function updateProfile(Request $request)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'city' => 'required|string',
             'phone' => 'required|string',
             'lastName' => 'required|string',
@@ -67,7 +67,7 @@ class UserController extends Controller
 
     public function list(Request $request)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'size' => 'integer',
             'filter' => 'string',
         ]);
@@ -82,7 +82,7 @@ class UserController extends Controller
 
     public function editUserAdmin(Request $request, $userId)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'firstName' => 'string',
             'lastName' => 'string',
             'city' => 'string',

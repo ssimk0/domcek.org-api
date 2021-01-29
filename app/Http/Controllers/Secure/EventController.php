@@ -20,7 +20,7 @@ class EventController extends Controller
 
     public function create(Request $request)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'name' => 'required|string',
             'theme' => 'string',
             'type' => 'required|string',
@@ -47,7 +47,7 @@ class EventController extends Controller
 
     public function edit(Request $request, $id)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'name' => 'required|string',
             'theme' => 'string',
             'startDate' => 'required|date_format:Y-m-d',
@@ -72,7 +72,7 @@ class EventController extends Controller
 
     public function list(Request $request)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'size' => 'integer',
             'filter' => 'string',
         ]);

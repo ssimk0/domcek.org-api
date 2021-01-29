@@ -25,7 +25,7 @@ class SliderImagesController extends Controller
 
     public function create(Request $request)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'image' => ['required', 'regex:(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'],
             'title' => 'required|string',
             'text' => 'required|string',
@@ -42,7 +42,7 @@ class SliderImagesController extends Controller
 
     public function edit($id, Request $request)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'image' => ['required', 'regex:(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'],
             'title' => 'required|string',
             'text' => 'required|string',

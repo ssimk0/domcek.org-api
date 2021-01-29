@@ -1,21 +1,17 @@
 <?php
+namespace Tests;
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
-abstract class TestCase extends Laravel\Lumen\Testing\TestCase
+abstract class TestCase extends BaseTestCase
 {
     protected $user;
 
-    /**
-     * Creates the application.
-     *
-     * @return \Laravel\Lumen\Application
-     */
-    public function createApplication()
-    {
-        return require __DIR__.'/../bootstrap/app.php';
-    }
+    use CreatesApplication, DatabaseMigrations, WithFaker;
 
     public function login($admin = false, $editor = false, $reg = false)
     {

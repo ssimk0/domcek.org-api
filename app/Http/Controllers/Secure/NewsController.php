@@ -19,7 +19,7 @@ class NewsController extends Controller
 
     public function create(Request $request)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'title' => 'required|string',
             'body' => 'required|string',
             'short' => 'required|string|max:300',
@@ -39,7 +39,7 @@ class NewsController extends Controller
 
     public function edit($slug, Request $request)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'title' => 'required|string',
             'body' => 'required|string',
             'short' => 'required|string|max:300',
@@ -59,7 +59,7 @@ class NewsController extends Controller
 
     public function listUnpublished(Request $request)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'order' => 'in:best,featured',
             'size' => 'integer',
         ]);

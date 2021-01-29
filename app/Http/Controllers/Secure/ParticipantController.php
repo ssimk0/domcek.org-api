@@ -23,7 +23,7 @@ class ParticipantController extends Controller
     // Register user to event
     public function register(Request $request, $eventId)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'volunteerTypeId' => 'integer',
             'note' => 'string',
             'transportIn' => 'required|string',
@@ -45,7 +45,7 @@ class ParticipantController extends Controller
 
     public function userEdit(Request $request, $eventId)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'note' => 'string',
             'transportIn' => 'required|string',
             'transportOut' => 'required|string',
@@ -144,7 +144,7 @@ class ParticipantController extends Controller
 
     public function sync(Request $request)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'participants' => 'array',
             'wrong-payments' => 'array',
         ]);
@@ -160,7 +160,7 @@ class ParticipantController extends Controller
 
     public function edit(Request $request, $participantId, $eventId)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'volunteerTypeId' => 'integer',
             'paid' => 'integer',
             'adminNote' => 'string',
@@ -180,7 +180,7 @@ class ParticipantController extends Controller
 
     public function list(Request $request, $eventId)
     {
-        $filters = $this->validate($request, [
+        $filters = $request->validate([
             'filter' => 'string',
             'volunteer' => 'string',
             'sortBy' => 'string',
@@ -213,7 +213,7 @@ class ParticipantController extends Controller
 
     public function generateNameplates(Request $request, $eventId)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'image' => ['required', 'regex:(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'],
             'image_back' => ['required', 'regex:(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'],
             'image_volunteer' => ['required', 'regex:(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'],

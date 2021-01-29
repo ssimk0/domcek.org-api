@@ -1,37 +1,37 @@
 <?php
 
+namespace Tests\Feature;
+use App\Models\Event;
+use App\Models\Volunteer;
+use App\Models\VolunteerType;
 use Illuminate\Support\Facades\DB;
-use Laravel\Lumen\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class VolunteerTest extends TestCase
 {
-    use DatabaseMigrations;
 
     public function testTypes()
     {
-        factory(App\Models\VolunteerType::class, 11)->create();
+        VolunteerType::factory(11)->create();
 
-        $this->get('/api/secure/volunteers-types', [
+        $response = $this->get('/api/secure/volunteers-types', [
             'Authorization' => 'Bearer '.$this->login(true),
-        ]);
-
-        $this->assertResponseOk();
-        $content = json_decode($this->response->getContent());
+        ])->assertStatus(200);
+        $content = json_decode($response->getContent());
 
         $this->assertCount(11, $content);
     }
 
     public function testEventVolunteerList()
     {
-        factory(App\Models\Event::class, 2)->create();
-        $volunteers = factory(App\Models\Volunteer::class, 11)->create();
+        Event::factory(2)->create();
+        $volunteers = Volunteer::factory(11)->create();
 
-        $this->get('/api/secure/admin/events/'.$volunteers[0]->event_id.'/volunteers', [
+        $response = $this->get('/api/secure/admin/events/'.$volunteers[0]->event_id.'/volunteers', [
             'Authorization' => 'Bearer '.$this->login(true),
-        ]);
+        ])->assertStatus(200);
 
-        $this->assertResponseOk();
-        $content = json_decode($this->response->getContent());
+        $content = json_decode($response->getContent());
 
         $this->assertCount(10, $content->data);
         $this->assertEquals(11, $content->total);
@@ -39,37 +39,31 @@ class VolunteerTest extends TestCase
 
     public function testVolunteerDetailList()
     {
-        factory(App\Models\Event::class, 2)->create();
-        $volunteers = factory(App\Models\Volunteer::class, 1)->create();
+        Event::factory(2)->create();
+        $volunteers = Volunteer::factory(1)->create();
 
         $this->get('/api/secure/admin/volunteers/'.$volunteers[0]->id, [
             'Authorization' => 'Bearer '.$this->login(true),
-        ]);
-
-        $this->assertResponseOk();
+        ])->assertStatus(200);
     }
 
     public function testNotFoundVolunteerDetailList()
     {
         $this->get('/api/secure/admin/volunteers/1', [
             'Authorization' => 'Bearer '.$this->login(true),
-        ]);
-
-        $this->assertResponseStatus(404);
+        ])->assertStatus(404);
     }
 
     public function testUpdateVolunteerDetail()
     {
-        factory(App\Models\Event::class, 2)->create();
-        $volunteers = factory(App\Models\Volunteer::class, 1)->create();
+        Event::factory(2)->create();
+        $volunteers = Volunteer::factory(1)->create();
 
         $this->put('/api/secure/admin/volunteers/'.$volunteers[0]->id, [
             'isLeader' => true,
         ], [
             'Authorization' => 'Bearer '.$this->login(true),
-        ]);
-
-        $this->assertResponseOk();
+        ])->assertStatus(200);
 
         $volunteer = DB::table(\App\Constants\TableConstants::VOLUNTEERS)->where('id', $volunteers[0]->id)->first();
 

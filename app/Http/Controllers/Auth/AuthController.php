@@ -23,7 +23,7 @@ class AuthController extends Controller
         $errMessage = ErrorMessagesConstant::WRONG_CREDENTIALS;
         try {
             if (env('APP_DEBUG')) {
-                $data = $this->validate($request, [
+                $data = $request->validate([
                     'username' => 'required',
                     'password' => 'required',
                 ]);

@@ -19,7 +19,7 @@ class NewsController extends Controller
 
     public function list(Request $request)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'order' => 'in:best,featured',
             'size' => 'integer',
             'offset' => 'integer',

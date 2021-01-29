@@ -18,7 +18,7 @@ class PageController extends Controller
 
     public function create(Request $request)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'title' => 'required|string',
             'body' => 'required|string',
             'order' => 'required|integer',
@@ -36,7 +36,7 @@ class PageController extends Controller
 
     public function edit($slug, Request $request)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'title' => 'required|string',
             'body' => 'required|string',
             'order' => 'required|integer',

@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class NewsItem extends Model
 {
     use Sluggable;
-
+    use HasFactory;
     protected $table = 'news_items';
 
     protected $fillable = [

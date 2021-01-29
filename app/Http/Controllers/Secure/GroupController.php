@@ -23,7 +23,7 @@ class GroupController extends Controller
 
     public function generateGroups(Request $request, $eventId)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'groupsCount' => 'required|integer',
         ]);
 
@@ -38,7 +38,7 @@ class GroupController extends Controller
 
     public function AssignAnimator(Request $request, $eventId)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'groupName' => 'required|integer',
             'userId' => 'required|integer',
         ]);
