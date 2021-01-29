@@ -1,7 +1,11 @@
 {
     "name": "laravel/lumen",
     "description": "The Laravel Lumen Framework.",
-    "keywords": ["framework", "laravel", "lumen"],
+    "keywords": [
+        "framework",
+        "laravel",
+        "lumen"
+    ],
     "license": "MIT",
     "type": "project",
     "require": {
@@ -14,11 +18,11 @@
         "endroid/qr-code": "^3.5.8",
         "illuminate/mail": "7.*",
         "intervention/image": "^2.5",
-        "laravel/lumen-framework": "7.*",
         "laravelista/lumen-vendor-publish": "7.*",
         "league/flysystem-aws-s3-v3": "^1.0.29",
         "sentry/sentry-laravel": "^2.3.0",
-        "tymon/jwt-auth": "^1.0.0-rc.3"
+        "tymon/jwt-auth": "^1.0.0-rc.3",
+        "laravel/framework": "7.*"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.5",
@@ -47,7 +51,7 @@
         "test": [
             "phpunit tests/*.php"
         ]
-   },
+    },
     "config": {
         "preferred-install": "dist",
         "sort-packages": true,
