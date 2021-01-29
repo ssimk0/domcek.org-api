@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\Unsecure;
-
 
 use App\Http\Controllers\Controller;
 use App\Services\SliderImageService;
@@ -16,7 +14,8 @@ class SliderImagesController extends Controller
         $this->service = $service;
     }
 
-    function list() {
+    public function list()
+    {
         return $this->jsonResponse(
             $this->service->activeSliderImages()
         );

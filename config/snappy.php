@@ -1,4 +1,5 @@
 <?php
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -43,7 +44,7 @@ return [
             'margin-right' => 0,
             'margin-top' => 0,
             'zoom' => 1,
-            'disable-smart-shrinking' => true
+            'disable-smart-shrinking' => true,
         ],
         'env'     => [],
     ],

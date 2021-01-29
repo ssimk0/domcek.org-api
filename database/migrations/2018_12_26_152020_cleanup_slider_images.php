@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CleanupSliderImages extends Migration
 {
@@ -29,8 +29,6 @@ class CleanupSliderImages extends Migration
         Schema::table('slider_images', function (Blueprint $table) {
             $table->dropColumn('image_file_size');
         });
-
-
     }
 
     /**
@@ -40,6 +38,5 @@ class CleanupSliderImages extends Migration
      */
     public function down()
     {
-
     }
 }

@@ -67,7 +67,7 @@ return [
             'bucket' => env('AWS_BUCKET'),
             'visibility' => 'public',
             'endpoint' => env('AWS_ENDPOINT'),
-            'bucket_name' => env('AWS_BUCKET')
+            'bucket_name' => env('AWS_BUCKET'),
         ],
 
     ],

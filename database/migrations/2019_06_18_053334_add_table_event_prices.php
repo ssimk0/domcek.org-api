@@ -1,9 +1,9 @@
 <?php
 
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
 
 class AddTableEventPrices extends Migration
 {
@@ -14,7 +14,7 @@ class AddTableEventPrices extends Migration
      */
     public function up()
     {
-        Schema::create('event_prices',  function (Blueprint $table) {
+        Schema::create('event_prices', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('event_id')->index();
             $table->integer('need_pay')->default(true);
@@ -31,23 +31,22 @@ class AddTableEventPrices extends Migration
             DB::table('event_prices')->insert([
                 'event_id' => $price->id,
                 'deposit' => $price->deposit,
-                'need_pay'=> $price->need_pay
+                'need_pay'=> $price->need_pay,
             ]);
         }
 
-        Schema::table('events', function (Blueprint $table){
-           $table->dropColumn('deposit');
+        Schema::table('events', function (Blueprint $table) {
+            $table->dropColumn('deposit');
         });
 
-        Schema::table('events', function (Blueprint $table){
+        Schema::table('events', function (Blueprint $table) {
             $table->dropColumn('need_pay');
         });
 
-        Schema::table('payments', function (Blueprint $table){
+        Schema::table('payments', function (Blueprint $table) {
             $table->unsignedInteger('event_price_id')->nullable();
             $table->foreign('event_price_id')->references('id')->on('event_prices')->onDelete('cascade')->onUpdate('cascade');
         });
-
     }
 
     /**

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Mails;
-
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -29,7 +27,7 @@ class ForgotPasswordMail extends Mailable
         return $this->markdown('emails.forgot-password')
             ->subject('Zabudnute Heslo')
             ->with([
-                'url' => env('APP_URL') . '/reset-password?token=' . $this->token
+                'url' => env('APP_URL').'/reset-password?token='.$this->token,
             ]);
     }
 }

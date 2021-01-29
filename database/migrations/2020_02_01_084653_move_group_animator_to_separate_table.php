@@ -1,9 +1,9 @@
 <?php
 
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
 
 class MoveGroupAnimatorToSeparateTable extends Migration
 {
@@ -14,7 +14,6 @@ class MoveGroupAnimatorToSeparateTable extends Migration
      */
     public function up()
     {
-
         Schema::create('events_group', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('group_name');
@@ -24,7 +23,6 @@ class MoveGroupAnimatorToSeparateTable extends Migration
             $table->foreign('event_id')->references('id')->on('events');
             $table->timestamps();
         });
-
     }
 
     /**
@@ -34,7 +32,6 @@ class MoveGroupAnimatorToSeparateTable extends Migration
      */
     public function down()
     {
-
         Schema::dropIfExists('events_group');
     }
 }

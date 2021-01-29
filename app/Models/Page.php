@@ -3,18 +3,18 @@
 namespace App\Models;
 
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Page extends Model
 {
-
+    use HasFactory;
     use Sluggable;
-
 
     protected $fillable = ['title', 'slug', 'body', 'active', 'parent_id', 'order'];
 
     /**
-     * The page url
+     * The page url.
      *
      * @return mixed null|string
      */
@@ -29,8 +29,8 @@ class Page extends Model
             'slug' => [
                 'source' => 'title',
                 'onUpdate' => true,
-                'separator' => '-'
-            ]
+                'separator' => '-',
+            ],
         ];
     }
 }

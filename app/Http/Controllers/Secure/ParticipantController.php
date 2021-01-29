@@ -1,15 +1,14 @@
 <?php
 
-
 namespace App\Http\Controllers\Secure;
 
 use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
 use App\Services\ParticipantService;
-use Illuminate\Support\Arr;
-use PDF;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use PDF;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ParticipantController extends Controller
@@ -24,7 +23,7 @@ class ParticipantController extends Controller
     // Register user to event
     public function register(Request $request, $eventId)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'volunteerTypeId' => 'integer',
             'note' => 'string',
             'transportIn' => 'required|string',
@@ -32,7 +31,7 @@ class ParticipantController extends Controller
             'audioVisualKnowledgeAgreement' => 'required|accepted',
             'GDPRRegistration' => 'required|accepted',
             'priceId' => 'required|integer',
-            'wantBeAnimatorOnPZ' => 'boolean'
+            'wantBeAnimatorOnPZ' => 'boolean',
         ]);
 
         $result = $this->service->create($data, $eventId);
@@ -46,10 +45,10 @@ class ParticipantController extends Controller
 
     public function userEdit(Request $request, $eventId)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'note' => 'string',
             'transportIn' => 'required|string',
-            'transportOut' => 'required|string'
+            'transportOut' => 'required|string',
         ]);
 
         $result = $this->service->userEdit($data, $eventId);
@@ -65,11 +64,11 @@ class ParticipantController extends Controller
     public function subscribe(Request $request, $eventId)
     {
         $result = $this->service->subscribe($eventId);
- 
+
         if ($result) {
             return $this->successResponse();
         }
- 
+
         return ErrorMessagesConstant::badAttempt();
     }
 
@@ -112,11 +111,12 @@ class ParticipantController extends Controller
     public function eventQRCode(Request $request, $eventId)
     {
         $userId = $request->user()->id;
-        $path = storage_path()."/app/qrcodes/".Str::random(40).".png";
+        $path = storage_path().'/app/qrcodes/'.Str::random(40).'.png';
         $this->service->generateQrCode($eventId, $userId, $path);
-        $headers = ['Content-Type' => "image/png"];
+        $headers = ['Content-Type' => 'image/png'];
         $response = new BinaryFileResponse($path, 200, $headers);
         ob_end_clean();
+
         return $response;
     }
 
@@ -144,9 +144,9 @@ class ParticipantController extends Controller
 
     public function sync(Request $request)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'participants' => 'array',
-            'wrong-payments' => 'array'
+            'wrong-payments' => 'array',
         ]);
 
         $result = $this->service->sync($data, $request->event_id);
@@ -160,7 +160,7 @@ class ParticipantController extends Controller
 
     public function edit(Request $request, $participantId, $eventId)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'volunteerTypeId' => 'integer',
             'paid' => 'integer',
             'adminNote' => 'string',
@@ -180,7 +180,7 @@ class ParticipantController extends Controller
 
     public function list(Request $request, $eventId)
     {
-        $filters = $this->validate($request, [
+        $filters = $request->validate([
             'filter' => 'string',
             'volunteer' => 'string',
             'sortBy' => 'string',
@@ -211,19 +211,19 @@ class ParticipantController extends Controller
         return $this->jsonResponse($list);
     }
 
-
     public function generateNameplates(Request $request, $eventId)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'image' => ['required', 'regex:(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'],
             'image_back' => ['required', 'regex:(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'],
             'image_volunteer' => ['required', 'regex:(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'],
-            'image_volunteer_back' => ['required', 'regex:(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})']
+            'image_volunteer_back' => ['required', 'regex:(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'],
         ]);
 
         $result = $this->service->getNameplateDetail($eventId);
 
         $pdf = PDF::loadView('participants.nameplates', Arr::collapse([$data, $result]))->setPaper('a4')->setOrientation('landscape');
+
         return $pdf->download("menovky-$eventId.pdf");
     }
 }

@@ -14,10 +14,9 @@ class Permission
         $this->service = $service;
     }
 
-    public function handle($request, Closure $next, $perm)
+    public function handle($request, Closure $next, $perm='admin')
     {
-
-        if ($request->user()) {
+        if ($request->user() && $perm) {
             if ($this->service->checkPermission($perm, $request->user())) {
                 return $next($request);
             } else {

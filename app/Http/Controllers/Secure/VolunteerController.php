@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\Secure;
-
 
 use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
@@ -20,9 +18,9 @@ class VolunteerController extends Controller
 
     public function edit(Request $request, $id)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'volunteerTypeId' => 'integer',
-            'isLeader' => 'boolean'
+            'isLeader' => 'boolean',
         ]);
 
         $result = $this->service->editVolunteer($data, $id);
@@ -30,9 +28,9 @@ class VolunteerController extends Controller
         if ($result) {
             return $this->successResponse();
         }
+
         return ErrorMessagesConstant::badAttempt();
     }
-
 
     public function list($eventId)
     {

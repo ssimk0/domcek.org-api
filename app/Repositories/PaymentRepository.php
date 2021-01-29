@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Repositories;
-
 
 use App\Constants\TableConstants;
 use App\Models\Payment;
@@ -10,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class PaymentRepository extends Payment
 {
-    function create($data)
+    public function create($data)
     {
         $payment = new Payment($data);
         $payment->save();
@@ -23,15 +21,13 @@ class PaymentRepository extends Payment
         return DB::table(TableConstants::PAYMENTS)->where('payment_number', $paymentNumber)->count() > 0;
     }
 
-
-    function generatePaymentNumber()
+    public function generatePaymentNumber()
     {
         $digits = 10;
         $i = 0;
-        $number = "";
+        $number = '';
 
         while ($i < $digits) {
-
             $number .= mt_rand(0, 9);
             $i++;
         }
@@ -43,7 +39,8 @@ class PaymentRepository extends Payment
         return $number;
     }
 
-    public function findByPaymentNumber($paymentNumber, $eventId) {
+    public function findByPaymentNumber($paymentNumber, $eventId)
+    {
         return DB::table(TableConstants::PAYMENTS)
             ->where('payment_number', $paymentNumber)
             ->where('event_id', $eventId)
@@ -56,7 +53,7 @@ class PaymentRepository extends Payment
             ->where('user_id', $userId)
             ->where('event_id', $eventId)
             ->update([
-                'paid' => $paid
+                'paid' => $paid,
             ]);
     }
 
@@ -64,10 +61,10 @@ class PaymentRepository extends Payment
     {
         $exist = DB::table(TableConstants::WRONG_PAYMENTS)
             ->where('event_id', $eventId)
-            ->where('iban',  $payment['iban'])
+            ->where('iban', $payment['iban'])
             ->where('payment_number', $payment['paymentNumber'])
             ->exists();
-        if (!$exist) {
+        if (! $exist) {
             DB::table(TableConstants::WRONG_PAYMENTS)
                 ->insert([
                     'event_id' => $eventId,
@@ -95,7 +92,8 @@ class PaymentRepository extends Payment
             ->get();
     }
 
-    public function deleteWrongPaymentById($id) {
+    public function deleteWrongPaymentById($id)
+    {
         return DB::table(TableConstants::WRONG_PAYMENTS)
         ->where('id', $id)
         ->delete();

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Mails;
-
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -32,7 +30,7 @@ class ConfirmPaymentMail extends Mailable
             ->subject('Potvrdenie Platby')
             ->with([
                 'amount' => $this->amount,
-                'user' => $this->user
+                'user' => $this->user,
             ]);
     }
 }

@@ -1,41 +1,39 @@
 <?php
 
-
 namespace App\Http\Controllers\Unsecure;
 
-
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
-use Illuminate\Http\Request;
 
 class MediaController extends Controller
 {
-    const SMALL = "resized/small";
-    const LARGE = "reduced";
+    const SMALL = 'resized/small';
+    const LARGE = 'reduced';
 
     public function upload(Request $request)
     {
-        $this->validate($request, [
-            'file' => 'required|file'
+        $request->validate([
+            'file' => 'required|file',
         ]);
 
         $files = $this->storeFile($request);
-        $largeFilePath = self::LARGE."/".$files["filename"];
-        $smallFilePath = self::SMALL."/".$files["filename"];
+        $largeFilePath = self::LARGE.'/'.$files['filename'];
+        $smallFilePath = self::SMALL.'/'.$files['filename'];
 
-        Storage::cloud()->put($largeFilePath, $files["file"]->__toString(), 'public');
-        if (Arr::has($files, "thumb")) {
-            Storage::cloud()->put($smallFilePath, $files["thumb"]->__toString(), 'public');
+        Storage::cloud()->put($largeFilePath, $files['file']->__toString(), 'public');
+        if (Arr::has($files, 'thumb')) {
+            Storage::cloud()->put($smallFilePath, $files['thumb']->__toString(), 'public');
         }
 
         return response()->json([
-            "success" => true,
-            "location" => Storage::cloud()->url($largeFilePath),
-            "url" => Storage::cloud()->url($largeFilePath),
-            "url_small" => Arr::has($files, "thumb") ? Storage::cloud()->url($smallFilePath) : null
+            'success' => true,
+            'location' => Storage::cloud()->url($largeFilePath),
+            'url' => Storage::cloud()->url($largeFilePath),
+            'url_small' => Arr::has($files, 'thumb') ? Storage::cloud()->url($smallFilePath) : null,
         ]);
     }
 
@@ -56,15 +54,15 @@ class MediaController extends Controller
         // Get the original image extension
         $extension = $file->getClientOriginalExtension();
 
-        if (in_array($extension, ["jpg", "jpeg", "png", "svg", "gif"])) {
+        if (in_array($extension, ['jpg', 'jpeg', 'png', 'svg', 'gif'])) {
             $is_image = true;
         }
 
         // Create unique file name
-        $fileNameToStore = $filename . '_' . time() . '.' . $extension;
+        $fileNameToStore = $filename.'_'.time().'.'.$extension;
 
         $files = [
-            "file" => $file
+            'file' => $file,
         ];
 
         if ($is_image) {
@@ -72,7 +70,7 @@ class MediaController extends Controller
         }
 
         // Refer image to method resizeImage
-        return array_merge($files, ["filename" => $fileNameToStore]);
+        return array_merge($files, ['filename' => $fileNameToStore]);
     }
 
     protected function resizeImage($file)
@@ -88,6 +86,6 @@ class MediaController extends Controller
             $constraint->aspectRatio();
         })->orientate()->encode('jpg', 75);
 
-        return ["file" => $large, "thumb" => $thumb];
+        return ['file' => $large, 'thumb' => $thumb];
     }
 }

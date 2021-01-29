@@ -8,15 +8,12 @@ use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
- * Class Cors
+ * Class Cors.
  *
  * Responsible for setting correct header for cors origin and any other needed purposes
- *
- * @package App\Http\Middleware
  */
 class Cors
 {
-
     const ALLOW_METHODS = 'allowMethods';
     const ALLOW_CRED = 'allowCredentials';
     const MAX_AGE = 'maxAge';
@@ -27,24 +24,24 @@ class Cors
 
     public function __construct()
     {
-        $this->settings = array(
+        $this->settings = [
             static::ALLOW_METHODS => 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
-            static::ALLOW_CRED => True,
+            static::ALLOW_CRED => true,
             static::MAX_AGE => 600,
             static::EXPOSE_HEADERS => null,
             static::ALLOW_HEADER => null,
-        );
+        ];
     }
 
     /**
-     * Check if origin is allowed in env property when is allowed set correct header
+     * Check if origin is allowed in env property when is allowed set correct header.
      *
      * @param $req
      * @param $rsp
      */
     protected function setOrigin($rsp)
     {
-        if (!($rsp instanceof BinaryFileResponse)) {
+        if (! ($rsp instanceof BinaryFileResponse)) {
             $rsp->header('Access-Control-Allow-Origin', '*');
         }
     }
@@ -67,7 +64,7 @@ class Cors
 
     protected function setAllowCredentials($rsp)
     {
-        if (isset($this->settings[static::ALLOW_CRED]) && $this->settings[static::ALLOW_CRED] === True && !($rsp instanceof BinaryFileResponse)) {
+        if (isset($this->settings[static::ALLOW_CRED]) && $this->settings[static::ALLOW_CRED] === true && ! ($rsp instanceof BinaryFileResponse)) {
             $rsp->header('Access-Control-Allow-Credentials', 'true');
         }
     }
@@ -86,7 +83,7 @@ class Cors
         if (isset($this->settings[static::ALLOW_HEADER])) {
             $allowHeaders = $this->settings[static::ALLOW_HEADER];
         } else {  // Otherwise, use request headers
-            $allowHeaders = $req->header("Access-Control-Request-Headers");
+            $allowHeaders = $req->header('Access-Control-Request-Headers');
         }
         if (isset($allowHeaders)) {
             $rsp->header('Access-Control-Allow-Headers', $allowHeaders);
@@ -120,11 +117,12 @@ class Cors
     public function handle($request, Closure $next)
     {
         if ($request->isMethod('OPTIONS')) {
-            $response = new Response("", 200);
+            $response = new Response('', 200);
         } else {
             $response = $next($request);
         }
         $this->setCorsHeaders($request, $response);
+
         return $response;
     }
 }

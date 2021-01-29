@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Services;
-
 
 use App\Logging\Logger;
 use Illuminate\Support\Arr;
@@ -12,12 +10,13 @@ abstract class Service
 {
     use Logger;
 
-    function userId()
+    public function userId()
     {
         return Auth::user()->id;
     }
 
-    protected function parseExistingData($data, $mapping) {
+    protected function parseExistingData($data, $mapping)
+    {
         $result = [];
         foreach ($mapping as $mapKey => $dataKey) {
             $item = Arr::get($data, $dataKey, false);

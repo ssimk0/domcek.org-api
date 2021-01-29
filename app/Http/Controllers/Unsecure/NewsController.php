@@ -1,6 +1,6 @@
 <?php
-namespace App\Http\Controllers\Unsecure;
 
+namespace App\Http\Controllers\Unsecure;
 
 use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
@@ -17,12 +17,13 @@ class NewsController extends Controller
         $this->service = $service;
     }
 
-    function list(Request $request) {
-        $data = $this->validate($request, [
+    public function list(Request $request)
+    {
+        $data = $request->validate([
             'order' => 'in:best,featured',
             'size' => 'integer',
             'offset' => 'integer',
-            'category' => 'string'
+            'category' => 'string',
         ]);
 
         $news = $this->service->newsList(
@@ -35,7 +36,8 @@ class NewsController extends Controller
         return $this->jsonResponse($news);
     }
 
-    function news($slug) {
+    public function news($slug)
+    {
         $newsDetail = $this->service->newsBySlug($slug);
 
         if ($newsDetail) {

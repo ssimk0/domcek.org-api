@@ -1,21 +1,19 @@
 <?php
 
-
 namespace App\Repositories;
-
 
 use App\Constants\TableConstants;
 use App\Models\NewsletterSubs;
 use App\Models\Profile;
-use App\Models\VerificationToken;
 use App\Models\User;
+use App\Models\VerificationToken;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class UserRepository extends Repository
 {
-    function saveResetPasswordToken($token, $email)
+    public function saveResetPasswordToken($token, $email)
     {
         return DB::table('password_resets')->insert([
             'token' => $token,
@@ -23,34 +21,34 @@ class UserRepository extends Repository
         ]);
     }
 
-    function findResetPasswordToken($token)
+    public function findResetPasswordToken($token)
     {
         return DB::table('password_resets')->where('token', $token)->first();
     }
 
-    function updateUser($data, $id)
+    public function updateUser($data, $id)
     {
         return User::where('id', $id)->update($data);
     }
 
-    function updateUserProfile($data, $userId)
+    public function updateUserProfile($data, $userId)
     {
         Profile::where('user_id', $userId)->update($data);
 
         return Profile::where('user_id', $userId)->first();
     }
 
-    function findUserByEmail($email)
+    public function findUserByEmail($email)
     {
         return User::where('email', $email)->first();
     }
 
-    function getUserProfile($id)
+    public function getUserProfile($id)
     {
         return Profile::where('user_id', $id)->first();
     }
 
-    function createUser(array $data)
+    public function createUser(array $data)
     {
         $user = new User();
         $user->email = $data['email'];
@@ -61,7 +59,7 @@ class UserRepository extends Repository
         return $user;
     }
 
-    function createUserProfile(array $profileData)
+    public function createUserProfile(array $profileData)
     {
         $profile = new Profile($profileData);
 
@@ -70,7 +68,6 @@ class UserRepository extends Repository
 
     public function list($size, $filter)
     {
-
         $query = DB::table(TableConstants::USERS)
             ->join(TableConstants::PROFILES,
                 TableConstants::PROFILES.'.user_id',
@@ -102,7 +99,6 @@ class UserRepository extends Repository
                 DB::raw('(select count(*) from volunteers where users.id = volunteers.user_id and volunteers.was_on_event = 1 ) as volunteer_count'),
                 DB::raw('(select count(*) from participants where users.id = participants.user_id and participants.was_on_event = 1 ) as participant_count'),
             ])->paginate($size);
-
     }
 
     public function findUser($userId)
@@ -115,10 +111,9 @@ class UserRepository extends Repository
     {
         return DB::table(TableConstants::USERS)
             ->join(TableConstants::PROFILES, TableConstants::PROFILES.'.user_id', TableConstants::USERS.'.id')
-            ->where(TableConstants::USERS.'.id',$userId)
+            ->where(TableConstants::USERS.'.id', $userId)
             ->first();
     }
-
 
     public function registerToNewsLetter($email)
     {
@@ -127,14 +122,14 @@ class UserRepository extends Repository
         if (empty($foundedEmail)) {
             $newSub = new NewsletterSubs([
                 'email' => $email,
-                'active' => true
+                'active' => true,
             ]);
 
             $newSub->save();
         } else {
             $foundedEmail
                 ->update([
-                    'active' => true
+                    'active' => true,
                 ]);
         }
     }
@@ -144,7 +139,7 @@ class UserRepository extends Repository
         $token = new VerificationToken([
             'email' => $email,
             'token' => $token,
-            'valid_until' => Carbon::now()->addHours(2)
+            'valid_until' => Carbon::now()->addHours(2),
         ]);
 
         return $token->save();
@@ -161,7 +156,7 @@ class UserRepository extends Repository
     public function verifyUser($userId)
     {
         return User::where('id', $userId)->update([
-            'is_verified' => true
+            'is_verified' => true,
         ]);
     }
 }
