@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Controllers\Secure;
 
 use App\Constants\ErrorMessagesConstant;
@@ -24,8 +23,8 @@ class GroupController extends Controller
 
     public function generateGroups(Request $request, $eventId)
     {
-        $data = $this->validate($request, [
-            'groupsCount' => 'required|integer'
+        $data = $request->validate([
+            'groupsCount' => 'required|integer',
         ]);
 
         $result = $this->jsonResponse($this->service->generateGroups($eventId, $data));
@@ -39,9 +38,9 @@ class GroupController extends Controller
 
     public function AssignAnimator(Request $request, $eventId)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'groupName' => 'required|integer',
-            'userId' => 'required|integer'
+            'userId' => 'required|integer',
         ]);
 
         $result = $this->service->assignAnimator($eventId, $data['groupName'], $data['userId']);

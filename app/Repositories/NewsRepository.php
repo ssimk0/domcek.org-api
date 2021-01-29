@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Repositories;
-
 
 use App\Constants\NewsConstant;
 use App\Models\NewsItem;
@@ -10,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class NewsRepository extends Repository
 {
-    function findAllLatestPublishedNews($size, $offset, $category)
+    public function findAllLatestPublishedNews($size, $offset, $category)
     {
         return DB::table('news_items')
             ->where('status', NewsConstant::PUBLISHED)
@@ -20,7 +18,7 @@ class NewsRepository extends Repository
             ->paginate($size);
     }
 
-    function findAllMostViewedPublishedNews($size, $offset, $category)
+    public function findAllMostViewedPublishedNews($size, $offset, $category)
     {
         return DB::table('news_items')
             ->where('status', NewsConstant::PUBLISHED)
@@ -30,9 +28,9 @@ class NewsRepository extends Repository
             ->paginate($size);
     }
 
-    function findAllLatestFeaturedPublishedNews($size, $offset, $category)
+    public function findAllLatestFeaturedPublishedNews($size, $offset, $category)
     {
-        if ($offset == 0 ) {
+        if ($offset == 0) {
             return DB::table('news_items')
                 ->where('status', NewsConstant::PUBLISHED)
                 ->where('category', $category)
@@ -41,7 +39,7 @@ class NewsRepository extends Repository
                 ->offset(2)
                 ->paginate($size);
         } else {
-             $skiped = DB::table('news_items')
+            $skiped = DB::table('news_items')
                 ->where('status', NewsConstant::PUBLISHED)
                 ->where('category', $category)
                 ->where('is_featured', true)
@@ -50,7 +48,7 @@ class NewsRepository extends Repository
                 ->get(['id']);
             $ids = [];
             foreach ($skiped as $item) {
-                $ids []= $item->id;
+                $ids[] = $item->id;
             }
 
             return DB::table('news_items')
@@ -63,7 +61,7 @@ class NewsRepository extends Repository
         }
     }
 
-    function findNewsDetail($slug)
+    public function findNewsDetail($slug)
     {
         return DB::table('news_items')
             ->whereIn('status', [NewsConstant::PUBLISHED, NewsConstant::DRAFT])
@@ -71,20 +69,20 @@ class NewsRepository extends Repository
             ->first();
     }
 
-    function findNewsBySlug($slug)
+    public function findNewsBySlug($slug)
     {
         return DB::table('news_items')
             ->where('slug', $slug)
             ->first();
     }
 
-    function updateViewed($slug, $viewed)
+    public function updateViewed($slug, $viewed)
     {
         DB::table('news_items')
             ->where('status', NewsConstant::PUBLISHED)
             ->where('slug', $slug)
             ->update([
-                'viewed' => $viewed
+                'viewed' => $viewed,
             ]);
     }
 
@@ -92,19 +90,21 @@ class NewsRepository extends Repository
     {
         $newsItem = new NewsItem($data);
         $newsItem->save();
+
         return $newsItem;
     }
 
-    function edit(array $data, $slug)
+    public function edit(array $data, $slug)
     {
         NewsItem::where('slug', $slug)->update($data);
+
         return $this->findNewsBySlug($slug);
     }
 
-    function unpublished($size)
+    public function unpublished($size)
     {
         return DB::table('news_items')
-            ->where('status', "!=", NewsConstant::PUBLISHED)
+            ->where('status', '!=', NewsConstant::PUBLISHED)
             ->where('is_featured', true)
             ->orderBy('created_at', 'desc')
             ->paginate($size);

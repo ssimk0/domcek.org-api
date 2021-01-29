@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class RemoveNewsImageNecessaryProps extends Migration
 {
@@ -31,7 +31,6 @@ class RemoveNewsImageNecessaryProps extends Migration
 
         Schema::drop('news_category_items');
         Schema::drop('news_categories');
-
     }
 
     /**
@@ -41,6 +40,5 @@ class RemoveNewsImageNecessaryProps extends Migration
      */
     public function down()
     {
-
     }
 }

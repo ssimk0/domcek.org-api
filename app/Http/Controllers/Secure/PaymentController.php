@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\Secure;
-
 
 use App\Http\Controllers\Controller;
 use App\Services\PaymentService;
@@ -29,13 +27,13 @@ class PaymentController extends Controller
             $log->fgets();
             $log->fgets();
             $log->fgets();
-            while (!$log->eof()) {
+            while (! $log->eof()) {
                 $line = $log->fgets();
-                # do same stuff with the $line
+                // do same stuff with the $line
                 $parsed = explode('|', $line);
 
                 if (count($parsed) > 1 && trim($parsed[4]) === 'Kredit') {
-                    $parsedPayments [] = [
+                    $parsedPayments[] = [
                         'paymentNumber' => trim($parsed[9]),
                         'iban' => trim($parsed[8]),
                         'amount' => trim($parsed[2]),
@@ -50,11 +48,10 @@ class PaymentController extends Controller
         }
 
         $this->service->processPayments($parsedPayments, $eventId);
+
         return response()->json([
             'processed'=> count($parsedPayments),
-            'error' => $error
+            'error' => $error,
         ]);
-
     }
-
 }

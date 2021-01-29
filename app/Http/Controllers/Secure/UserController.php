@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Controllers\Secure;
 
 use App\Constants\ErrorMessagesConstant;
@@ -23,17 +22,18 @@ class UserController extends Controller
     {
         $user = $request->user();
         $detail = $this->service->userDetail($user);
+
         return $this->jsonResponse($detail, 200, 0);
     }
 
     public function changePassword(Request $request)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'oldPassword' => 'required',
-            'password' => 'required|string|confirmed|min:6'
+            'password' => 'required|string|confirmed|min:6',
         ]);
 
-        if (!Hash::check($data['oldPassword'], $request->user()->password)) {
+        if (! Hash::check($data['oldPassword'], $request->user()->password)) {
             return ErrorMessagesConstant::error(400, ErrorMessagesConstant::WRONG_CREDENTIALS);
         }
 
@@ -48,12 +48,12 @@ class UserController extends Controller
 
     public function updateProfile(Request $request)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'city' => 'required|string',
             'phone' => 'required|string',
             'lastName' => 'required|string',
             'nick' => 'string',
-            'avatar' => 'url'
+            'avatar' => 'url',
         ]);
 
         $result = $this->service->updateUserProfile($data);
@@ -67,9 +67,9 @@ class UserController extends Controller
 
     public function list(Request $request)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'size' => 'integer',
-            'filter' => 'string'
+            'filter' => 'string',
         ]);
 
         $list = $this->service->list(
@@ -82,7 +82,7 @@ class UserController extends Controller
 
     public function editUserAdmin(Request $request, $userId)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'firstName' => 'string',
             'lastName' => 'string',
             'city' => 'string',
@@ -90,7 +90,7 @@ class UserController extends Controller
             'isEditor' => 'boolean|required',
             'phone' => 'string',
             'email' => 'string|required',
-            'note' => 'string'
+            'note' => 'string',
         ]);
 
         $result = $this->service->editUser($data, $userId);

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Services;
-
 
 use App\Repositories\VolunteersRepository;
 use Illuminate\Support\Arr;
@@ -16,24 +14,23 @@ class VolunteerService extends Service
         $this->repository = $repository;
     }
 
-
     public function editVolunteer(array $data, $volunteerId)
     {
         $data = [
             'volunteer_type_id' => Arr::get($data, 'volunteerTypeId', false),
-            'is_leader' => Arr::get($data, 'isLeader', false)
+            'is_leader' => Arr::get($data, 'isLeader', false),
         ];
 
         try {
             $this->repository->edit(array_filter($data), $volunteerId);
+
             return true;
         } catch (\Exception $e) {
-           $this->logError("Problem while editing volunteer ". $e->getMessage());
+            $this->logError('Problem while editing volunteer '.$e->getMessage());
         }
 
         return false;
     }
-
 
     public function volunteerList($eventId)
     {
@@ -45,7 +42,7 @@ class VolunteerService extends Service
         try {
             return $this->repository->detail($volunteerId);
         } catch (\Exception $e) {
-            $this->logError("Problem while getting volunteer detail " . $e->getMessage());
+            $this->logError('Problem while getting volunteer detail '.$e->getMessage());
         }
 
         return null;
@@ -55,5 +52,4 @@ class VolunteerService extends Service
     {
         return $this->repository->types();
     }
-
 }

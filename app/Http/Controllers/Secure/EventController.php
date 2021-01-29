@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\Secure;
-
 
 use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
@@ -22,7 +20,7 @@ class EventController extends Controller
 
     public function create(Request $request)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'name' => 'required|string',
             'theme' => 'string',
             'type' => 'required|string',
@@ -45,12 +43,11 @@ class EventController extends Controller
         }
 
         return ErrorMessagesConstant::badAttempt();
-
     }
 
     public function edit(Request $request, $id)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'name' => 'required|string',
             'theme' => 'string',
             'startDate' => 'required|date_format:Y-m-d',
@@ -71,14 +68,13 @@ class EventController extends Controller
         }
 
         return ErrorMessagesConstant::badAttempt();
-
     }
 
     public function list(Request $request)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'size' => 'integer',
-            'filter' => 'string'
+            'filter' => 'string',
         ]);
 
         return $this->jsonResponse($this->service->eventList(
@@ -96,7 +92,6 @@ class EventController extends Controller
     {
         $event = $this->service->eventDetail($id);
 
-
         if ($event) {
             return $this->jsonResponse($event);
         }
@@ -108,18 +103,16 @@ class EventController extends Controller
     {
         $content = $this->service->detailedStatsFile($id);
 
-
         $headers = ['Content-type'=>'text/plain',
             'Content-Disposition'=>sprintf('attachment; filename="%s"', 'stats.txt'),
         ];
+
         return Response::make($content, 200, $headers);
     }
-
 
     public function delete($id)
     {
         $result = $this->service->delete($id);
-
 
         if ($result) {
             return $this->successResponse();
@@ -127,5 +120,4 @@ class EventController extends Controller
 
         return ErrorMessagesConstant::notFound();
     }
-
 }

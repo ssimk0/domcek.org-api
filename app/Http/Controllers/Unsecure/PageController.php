@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers\Unsecure;
-
 
 use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
@@ -17,11 +15,13 @@ class PageController extends Controller
         $this->service = $service;
     }
 
-    function menuPages() {
+    public function menuPages()
+    {
         return $this->service->menuPages();
     }
 
-    function page($slug) {
+    public function page($slug)
+    {
         $page = $this->service->pageBySlug($slug);
         if ($page) {
             return $this->jsonResponse($page);

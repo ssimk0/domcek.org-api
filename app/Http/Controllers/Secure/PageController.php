@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Controllers\Secure;
 
 use App\Constants\ErrorMessagesConstant;
@@ -19,12 +18,12 @@ class PageController extends Controller
 
     public function create(Request $request)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'title' => 'required|string',
             'body' => 'required|string',
             'order' => 'required|integer',
             'parent_slug' => 'required|string',
-            'active' => 'required|boolean'
+            'active' => 'required|boolean',
         ]);
 
         $result = $this->service->create($data);
@@ -37,12 +36,12 @@ class PageController extends Controller
 
     public function edit($slug, Request $request)
     {
-        $data = $this->validate($request, [
+        $data = $request->validate([
             'title' => 'required|string',
             'body' => 'required|string',
             'order' => 'required|integer',
             'parent_id' => 'required|integer',
-            'active' => 'required|boolean'
+            'active' => 'required|boolean',
         ]);
 
         $result = $this->service->edit($data, $slug);
@@ -56,7 +55,7 @@ class PageController extends Controller
 
     public function detail($slug)
     {
-        $result =  $this->service->detail($slug);
+        $result = $this->service->detail($slug);
 
         if ($result) {
             return $this->jsonResponse($result, 200);

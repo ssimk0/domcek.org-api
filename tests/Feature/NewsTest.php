@@ -1,12 +1,13 @@
 <?php
 
+namespace Tests\Feature;
 
-use Illuminate\Support\Facades\Log;
-use Laravel\Lumen\Testing\DatabaseMigrations;
+use App\Models\NewsItem;
+use Tests\TestCase;
 
 class NewsTest extends TestCase
 {
-    use DatabaseMigrations;
+
     /**
      * A basic test example.
      *
@@ -14,10 +15,10 @@ class NewsTest extends TestCase
      */
     public function testNews()
     {
-        factory(App\Models\NewsItem::class, 5)->create();
+        NewsItem::factory(5)->create();
 
-        $this->get('/api/news');
-        $response = json_decode($this->response->getContent());
+        $response = $this->get('/api/news');
+        $response = json_decode($response->getContent());
         $this->assertEquals(3, count($response->data));
         $this->assertEquals(3, $response->per_page);
         $this->assertEquals(5, $response->total);
@@ -26,12 +27,11 @@ class NewsTest extends TestCase
 
     public function testNewsDetail()
     {
-        $s = factory(App\Models\NewsItem::class, 1)->create()[0];
+        $s = NewsItem::factory(1)->create()[0];
 
-        $this->get('/api/news/' . $s->slug);
-        $response = json_decode($this->response->getContent());
+        $response = $this->get('/api/news/'.$s->slug)->assertStatus(200);
+        $response = json_decode($response->getContent());
 
-        $this->assertResponseOk();
         $this->assertEquals($s->title, $response->title);
     }
 
@@ -39,9 +39,9 @@ class NewsTest extends TestCase
     {
         $token = $this->login(false, true);
 
-        $s = factory(App\Models\NewsItem::class, 1)->create()[0];
+        $s = NewsItem::factory(1)->create()[0];
 
-        $this->put('/api/secure/news/' . $s->slug, [
+        $this->put('/api/secure/news/'.$s->slug, [
             'body' => $s->body,
             'title' => 'Test',
             'image' => $s->image,
@@ -49,9 +49,7 @@ class NewsTest extends TestCase
             'status' => $s->status,
             'is_featured' => $s->is_featured,
         ], [
-            'Authorization' => 'Bearer ' . $token
-        ]);
-
-        $this->assertResponseOk();
+            'Authorization' => 'Bearer '.$token,
+        ])->assertStatus(200);
     }
 }

@@ -1,10 +1,8 @@
 <?php
 
-
 namespace App\Services;
 
 use App\Repositories\TokenRepository;
-
 
 class TokenService extends Service
 {

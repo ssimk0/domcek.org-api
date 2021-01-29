@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Middleware;
-
 
 use App\Services\TokenService;
 use Carbon\Carbon;
@@ -24,6 +22,7 @@ class TokenAuth
             $tokenData = $this->service->checkToken($type, $token);
             if ($tokenData && Carbon::now()->lessThanOrEqualTo($tokenData->valid_until)) {
                 $request->event_id = $tokenData->event_id;
+
                 return $next($request);
             } else {
                 return response('', 403);

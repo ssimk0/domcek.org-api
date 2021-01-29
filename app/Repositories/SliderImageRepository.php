@@ -1,53 +1,53 @@
 <?php
 
-
 namespace App\Repositories;
-
 
 use App\Models\SliderImage;
 use Illuminate\Support\Facades\DB;
 
 class SliderImageRepository extends Repository
 {
-    function findAllSliderImages()
+    public function findAllSliderImages()
     {
-        return DB::table("slider_images")
+        return DB::table('slider_images')
             ->orderBy('order')
             ->get()
             ->all();
     }
 
-    function findAllActiveSliderImages()
+    public function findAllActiveSliderImages()
     {
-        return DB::table("slider_images")
+        return DB::table('slider_images')
             ->where('active', true)
             ->orderBy('order')
             ->get()
             ->all();
     }
 
-    function findById($id)
+    public function findById($id)
     {
-        return DB::table("slider_images")
+        return DB::table('slider_images')
             ->find($id);
     }
 
-    function create(array $data)
+    public function create(array $data)
     {
         $image = new SliderImage($data);
         $image->save();
+
         return $image;
     }
 
-    function edit(array $data, $id)
+    public function edit(array $data, $id)
     {
         SliderImage::where('id', $id)->update($data);
+
         return $this->findById($id);
     }
 
-    function delete($id)
+    public function delete($id)
     {
-        return DB::table("slider_images")
+        return DB::table('slider_images')
             ->where('id', $id)
             ->delete();
     }

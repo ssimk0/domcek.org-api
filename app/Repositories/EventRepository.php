@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Repositories;
-
 
 use App\Constants\TableConstants;
 use App\Models\Event;
@@ -64,7 +62,7 @@ class EventRepository extends Repository
         DB::table(TableConstants::EVENT_TRANSPORT_TIMES)->insert([
             'event_id' => $eventId,
             'time' => $time,
-            'type' => $type
+            'type' => $type,
         ]);
     }
 
@@ -106,7 +104,7 @@ class EventRepository extends Repository
 
         return [
             'bus-in' => $countInBusPassengers,
-            'bus-out' => $countOutBusPassengers
+            'bus-out' => $countOutBusPassengers,
         ];
     }
 
@@ -116,10 +114,11 @@ class EventRepository extends Repository
         $countParticipantsMale = $this->getCountParticipant('participant', $eventId, 'm');
         $countVolunteer = $this->getCountParticipant('volunteer', $eventId);
 
-        $topNamesF = $this->getTop($eventId, TableConstants::PROFILES.'.first_name', 5, null, "f");
-        $topNamesM = $this->getTop($eventId, TableConstants::PROFILES.'.first_name', 5, null, "m");
+        $topNamesF = $this->getTop($eventId, TableConstants::PROFILES.'.first_name', 5, null, 'f');
+        $topNamesM = $this->getTop($eventId, TableConstants::PROFILES.'.first_name', 5, null, 'm');
         $topCities = $this->getTop($eventId, TableConstants::PROFILES.'.city');
         $topAges = $this->getTop($eventId, DB::raw('YEAR(profiles.birth_date) as year'), 5, DB::raw('YEAR(profiles.birth_date)'));
+
         return [
             'ages' => $topAges->toArray(),
             'cities' => $topCities->toArray(),
@@ -128,27 +127,27 @@ class EventRepository extends Repository
             'volunteers' => $countVolunteer,
             'participants-female' => $countParticipantsFemale,
             'participants-male' => $countParticipantsMale,
-            'count-all' => $countVolunteer + $countParticipantsFemale + $countParticipantsMale
+            'count-all' => $countVolunteer + $countParticipantsFemale + $countParticipantsMale,
         ];
     }
 
-
-    private function getCountParticipant($type, $eventId, $sex=null) {
+    private function getCountParticipant($type, $eventId, $sex = null)
+    {
         $query = DB::table(TableConstants::PARTICIPANTS)
-            ->join(TableConstants::PROFILES, TableConstants::PROFILES.'.user_id', TableConstants::PARTICIPANTS . '.user_id')
+            ->join(TableConstants::PROFILES, TableConstants::PROFILES.'.user_id', TableConstants::PARTICIPANTS.'.user_id')
             ->leftJoin(TableConstants::VOLUNTEERS, function ($join) {
-                $join->on(TableConstants::VOLUNTEERS . '.user_id', TableConstants::PARTICIPANTS . '.user_id');
-                $join->on(TableConstants::VOLUNTEERS . '.event_id', TableConstants::PARTICIPANTS . '.event_id');
+                $join->on(TableConstants::VOLUNTEERS.'.user_id', TableConstants::PARTICIPANTS.'.user_id');
+                $join->on(TableConstants::VOLUNTEERS.'.event_id', TableConstants::PARTICIPANTS.'.event_id');
             })
             ->where(TableConstants::PARTICIPANTS.'.event_id', $eventId)
             ->where(TableConstants::PARTICIPANTS.'.was_on_event', true);
 
         if ($type == 'volunteer') {
-            $query =  $query
-                ->where(TableConstants::VOLUNTEERS . '.id', '!=', null);
-        } else if ($type == 'participant') {
             $query = $query
-                ->where(TableConstants::VOLUNTEERS . '.id', '=', null);
+                ->where(TableConstants::VOLUNTEERS.'.id', '!=', null);
+        } elseif ($type == 'participant') {
+            $query = $query
+                ->where(TableConstants::VOLUNTEERS.'.id', '=', null);
         }
 
         if ($sex != null) {
@@ -159,14 +158,15 @@ class EventRepository extends Repository
         return $query->count();
     }
 
-    private function getTop($eventId, $column, $limit = 5, $groupBy = null, $sex = null) {
+    private function getTop($eventId, $column, $limit = 5, $groupBy = null, $sex = null)
+    {
         $groupBy = $groupBy ? $groupBy : $column;
         $query = DB::table(TableConstants::PROFILES)
-            ->leftJoin(TableConstants::PARTICIPANTS, TableConstants::PARTICIPANTS . '.user_id', TableConstants::PROFILES . '.user_id')
+            ->leftJoin(TableConstants::PARTICIPANTS, TableConstants::PARTICIPANTS.'.user_id', TableConstants::PROFILES.'.user_id')
             ->where(TableConstants::PARTICIPANTS.'.event_id', $eventId)
             ->where(TableConstants::PARTICIPANTS.'.was_on_event', true);
 
-        if (!empty($sex)) {
+        if (! empty($sex)) {
             $query->where(TableConstants::PROFILES.'.sex', $sex);
         }
 
@@ -225,10 +225,10 @@ class EventRepository extends Repository
                     'event_id' => $eventId,
                     'valid_until' => $endDate,
                     'type' => 'registration',
-                    'token' => Str::random(10)
+                    'token' => Str::random(10),
                 ]);
         } catch (\Exception $e) {
-            Log::warning("Error while generating token: " . $e);
+            Log::warning('Error while generating token: '.$e);
         }
     }
 

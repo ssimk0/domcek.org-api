@@ -1,8 +1,9 @@
 <?php
+
 return [
     /**
      * What attributes do we use to build the slug?
-     * This can be a single field, like "name" which will build a slug from:
+     * This can be a single field, like "name" which will build a slug from:.
      *
      *     $model->name;
      *
@@ -25,7 +26,7 @@ return [
     /**
      * If you are setting a maximum length on your slugs, you may not want the
      * truncated string to split a word in half.  The default setting of "true"
-     * will ensure this, e.g. with a maxLength of 12:
+     * will ensure this, e.g. with a maxLength of 12:.
      *
      *   "my source string" -> "my-source"
      *
@@ -58,7 +59,7 @@ return [
     /**
      * Enforce uniqueness of slugs?  Defaults to true.
      * If a generated slug already exists, an incremental numeric
-     * value will be appended to the end until a unique slug is found.  e.g.:
+     * value will be appended to the end until a unique slug is found.  e.g.:.
      *
      *     my-slug
      *     my-slug-1
@@ -73,7 +74,6 @@ return [
      * "similar" slugs.  The closure should return the new unique
      * suffix to append to the slug.
      */
-
     'uniqueSuffix' => null,
     /**
      * Should we include the trashed items when generating a unique slug?
@@ -86,7 +86,7 @@ return [
      * An array of slug names that can never be used for this model,
      * e.g. to prevent collisions with existing routes or controller methods, etc..
      * Defaults to null (i.e. no reserved names).
-     * Can be a static array, e.g.:
+     * Can be a static array, e.g.:.
      *
      *    'reserved' => array('add', 'delete'),
      *
@@ -116,6 +116,5 @@ return [
      * is probably not a good idea from an SEO point of view.
      * Only set this to true if you understand the possible consequences.
      */
-
     'onUpdate' => true,
 ];

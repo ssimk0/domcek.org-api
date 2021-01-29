@@ -1,22 +1,21 @@
 <?php
 
-
 namespace App\Services;
 
 use App\Mails\RegistrationMail;
 use App\Repositories\EventRepository;
+use App\Repositories\GroupRepository;
 use App\Repositories\ParticipantRepository;
 use App\Repositories\PaymentRepository;
 use App\Repositories\VolunteersRepository;
-use App\Repositories\GroupRepository;
 use Carbon\Carbon;
 use Endroid\QrCode\QrCode;
 use Exception;
+use function GuzzleHttp\json_encode;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use function GuzzleHttp\json_encode;
 
 class ParticipantService extends Service
 {
@@ -62,11 +61,11 @@ class ParticipantService extends Service
         $group = Arr::get($data, 'group_name');
 
         try {
-            if (!empty($paid)) {
+            if (! empty($paid)) {
                 $this->paymentRepository->edit($userId, $eventId, $paid);
             }
 
-            if (!empty($volunteerTypeId)) {
+            if (! empty($volunteerTypeId)) {
                 $data = [
                     'volunteer_type_id' => $volunteerTypeId,
                     'is_leader' => $isLeader,
@@ -76,19 +75,19 @@ class ParticipantService extends Service
                 $this->volunteersRepository->deleteIfExist($userId, $eventId);
             }
 
-            if (!empty($group)) {
+            if (! empty($group)) {
                 $this->groupRepository->editGroupByParticipantAndEventId($group, $participantId, $eventId);
             } else {
                 $this->groupRepository->deleteGroupByParticipantAndEventId($participantId, $eventId);
             }
 
             $this->repository->edit($participantId, $this->userId(), [
-                'admin_note' => $adminNote
+                'admin_note' => $adminNote,
             ]);
 
             return true;
         } catch (\Exception $e) {
-            $this->logError("Problem with editing participant with error: " . $e);
+            $this->logError('Problem with editing participant with error: '.$e);
         }
     }
 
@@ -97,7 +96,7 @@ class ParticipantService extends Service
         try {
             return $this->repository->userEvents($this->userId());
         } catch (\Exception $e) {
-            $this->logError("Problem with getting participant detail with error: " . $e);
+            $this->logError('Problem with getting participant detail with error: '.$e);
         }
 
         return [];
@@ -133,9 +132,9 @@ class ParticipantService extends Service
 
             $user = Auth::user();
             $profile = $user->profile()->first();
-            $qrCodePath = "/tmp/".Str::random().".png";
+            $qrCodePath = '/tmp/'.Str::random().'.png';
             $this->generateQrCode($eventId, $user->id, $qrCodePath);
-    
+
             Mail::to($user->email)->send(new RegistrationMail(
                 $eventPrice->deposit,
                 $eventPrice->need_pay,
@@ -143,37 +142,39 @@ class ParticipantService extends Service
                 $profile->birth_date,
                 $paymentNumber,
                 $event->name,
-                "https://domcek.org/login?next=/user/registrations",
+                'https://domcek.org/login?next=/user/registrations',
                 $qrCodePath,
                 $isVolunteer
             ));
 
             return true;
         } catch (\Exception $e) {
-            $this->logError("Problem with creating participant with error: " . $e);
+            $this->logError('Problem with creating participant with error: '.$e);
         }
 
         return false;
     }
 
-    public function unsubscribe($eventId, $userId=null)
+    public function unsubscribe($eventId, $userId = null)
     {
         try {
             $this->repository->unsubscribeToEvent($eventId, $userId ?? $this->userId());
         } catch (\Exception $e) {
-            $this->logError("Problem with unsubscribe to event with error: " . $e);
+            $this->logError('Problem with unsubscribe to event with error: '.$e);
+
             return false;
         }
 
         return true;
     }
 
-    public function subscribe($eventId, $userId=null)
+    public function subscribe($eventId, $userId = null)
     {
         try {
             $this->repository->resubscribeToEvent($eventId, $userId ?? $this->userId());
         } catch (Exception $e) {
-            $this->logError("Problem with subscribe to event with error: " . $e);
+            $this->logError('Problem with subscribe to event with error: '.$e);
+
             return false;
         }
 
@@ -186,10 +187,11 @@ class ParticipantService extends Service
             $this->repository->userEdit([
                 'note' => Arr::get($data, 'note'),
                 'transport_in' => Arr::get($data, 'transportIn'),
-                'transport_out' => Arr::get($data, 'transportOut')
+                'transport_out' => Arr::get($data, 'transportOut'),
             ], $this->userId(), $eventId);
         } catch (Exception $e) {
-            $this->logError("Problem with user edit participant detail with error: " . $e);
+            $this->logError('Problem with user edit participant detail with error: '.$e);
+
             return false;
         }
 
@@ -201,7 +203,7 @@ class ParticipantService extends Service
         try {
             return $this->repository->detail($eventId, $userId);
         } catch (Exception $e) {
-            $this->logError("Problem with getting participant detail with error: " . $e);
+            $this->logError('Problem with getting participant detail with error: '.$e);
         }
 
         return false;
@@ -229,15 +231,15 @@ class ParticipantService extends Service
         $notMatchedPayments = $this->paymentRepository->getNotMatchedPaymentForEvent($eventId);
 
         return [
-            "participants" => $participants,
-            "wrong-payments" => $notMatchedPayments
+            'participants' => $participants,
+            'wrong-payments' => $notMatchedPayments,
         ];
     }
 
     public function sync($data, $eventId)
     {
         $eventPrice = $this->eventRepository->eventPrices([$eventId]);
-        if (!empty($eventPrice)) {
+        if (! empty($eventPrice)) {
             $eventPrice = $eventPrice[0];
         }
         foreach (Arr::get($data, 'participants', []) as $user) {
@@ -251,12 +253,12 @@ class ParticipantService extends Service
                         $this->repository->registerUser($userId, $eventId, $transport, $payedOnRegistration);
                     } else {
                         $exist = $this->repository->participantExist($eventId, $userId);
-                        if (!$exist) {
+                        if (! $exist) {
                             // register on event
                             $this->createParticipant([
                                 'user_id' => $userId,
                                 'transportOut' => $transport,
-                                'admin_note' => 'Prihlasený na púti'
+                                'admin_note' => 'Prihlasený na púti',
                             ], $eventId, true);
                             $this->createPayment($payedOnRegistration, $eventId, empty($eventPrice) ? null : $eventPrice->id, $payedOnRegistration, $userId);
                         } else {
@@ -284,7 +286,7 @@ class ParticipantService extends Service
         return true;
     }
 
-    private function createParticipant($data, $eventId, $wasOnEvent=false)
+    private function createParticipant($data, $eventId, $wasOnEvent = false)
     {
         $this->repository->create([
             'admin_note' => Arr::get($data, 'admin_note', ''),
@@ -294,24 +296,24 @@ class ParticipantService extends Service
             'user_id' => Arr::get($data, 'user_id', false) ? $data['user_id'] : $this->userId(),
             'event_id' => $eventId,
             'was_on_event' => $wasOnEvent,
-            'want_to_be_animator_on_pz' => Arr::get($data, 'wantBeAnimatorOnPZ', null)
+            'want_to_be_animator_on_pz' => Arr::get($data, 'wantBeAnimatorOnPZ', null),
         ]);
     }
 
-    private function createVolunteer($volunteerTypeId, $eventId, $wasOnEvent=false)
+    private function createVolunteer($volunteerTypeId, $eventId, $wasOnEvent = false)
     {
         $this->volunteersRepository->create([
             'volunteer_type_id' => $volunteerTypeId,
             'event_id' => $eventId,
             'user_id' => $this->userId(),
-            'was_on_event' => $wasOnEvent
+            'was_on_event' => $wasOnEvent,
         ]);
     }
 
-    private function createPayment($needPay, $eventId, $priceId, $onReg = 0, $userId=false)
+    private function createPayment($needPay, $eventId, $priceId, $onReg = 0, $userId = false)
     {
         $paymentNumber = $this->paymentRepository->generatePaymentNumber();
-     
+
         $this->paymentRepository->create([
             'user_id' => $userId ? $userId : $this->userId(),
             'payment_number' => $paymentNumber,
@@ -330,18 +332,17 @@ class ParticipantService extends Service
         $volunteers = $this->volunteersRepository->getNameplateDetail($eventId)->toArray();
         $participants = $this->repository->getNameplateDetail($eventId)->toArray();
 
-
         return [
             'volunteers' => $this->getPagedNameplatesData($volunteers),
-            'participants' => $this->getPagedNameplatesData($participants)
+            'participants' => $this->getPagedNameplatesData($participants),
         ];
     }
 
     private function getPagedNameplatesData($participants)
     {
         $pages = [];
-        $allpages = ceil(count($participants)/9);
-        foreach (range(0, $allpages -1) as $page_num) {
+        $allpages = ceil(count($participants) / 9);
+        foreach (range(0, $allpages - 1) as $page_num) {
             $from = $page_num * 9;
             if ($page_num == $allpages) {
                 $pages[$page_num] = array_slice($participants, $from);

@@ -1,27 +1,27 @@
 <?php
+
 namespace App\Repositories;
 
-use Illuminate\Support\Facades\DB;
 use App\Constants\TableConstants;
 use App\Models\EventsGroup;
 use App\Models\Group;
+use Illuminate\Support\Facades\DB;
 
 class GroupRepository extends Repository
 {
     public function editGroupByParticipantAndEventId($group, $participantId, $eventId)
     {
-        
         $eventGroup = DB::table(TableConstants::EVENT_GROUPS)
         ->where('group_name', $group)
         ->where('event_id', $eventId);
 
         if ($eventGroup->exists()) {
-            $eventGroup = $eventGroup->get(["id"])->first();
+            $eventGroup = $eventGroup->get(['id'])->first();
         } else {
             $eventGroup = new EventsGroup([
                 'group_name' => $group,
                 'animator' => null,
-                'event_id' => $eventId
+                'event_id' => $eventId,
             ]);
 
             $eventGroup->save();
@@ -29,11 +29,11 @@ class GroupRepository extends Repository
             $eventGroup = DB::table(TableConstants::EVENT_GROUPS)
             ->where('group_name', $group)
             ->where('event_id', $eventId)
-            ->get(["id"])
+            ->get(['id'])
             ->first();
         }
 
-       return DB::table(TableConstants::PARTICIPANTS)
+        return DB::table(TableConstants::PARTICIPANTS)
             ->where('id', $participantId)
             ->update([
                 'group_id' => empty($eventGroup) ? null : $eventGroup->id,
@@ -52,7 +52,7 @@ class GroupRepository extends Repository
                 DB::raw('(select CONCAT(first_name, " ", last_name) from profiles where profiles.user_id = animator ) as group_animator'),
                 'animator',
                 'events_group.event_id',
-                'events_group.id'
+                'events_group.id',
             ]);
     }
 
@@ -72,7 +72,7 @@ class GroupRepository extends Repository
             ->where('id', $participantId)
             ->where('event_id', $eventId);
         $query->update([
-            'group_id' => null
+            'group_id' => null,
         ]);
     }
 
@@ -82,7 +82,7 @@ class GroupRepository extends Repository
         ->where('group_name', $groupName)
         ->where('event_id', $eventId)
         ->update([
-            "animator" => $userId
+            'animator' => $userId,
         ]);
     }
 }

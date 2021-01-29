@@ -2,7 +2,6 @@
 
 namespace App\Constants;
 
-
 class ErrorMessagesConstant
 {
     const BAD_REQUEST = 'BAD_REQUEST';
@@ -22,27 +21,31 @@ class ErrorMessagesConstant
     const USER_ALREADY_EXIST = 'USER_ALREADY_EXIST';
     const NOT_VERIFIED_EMAIL = 'NOT_VERIFIED_EMAIL';
 
-
-    static public function badRequest() {
+    public static function badRequest()
+    {
         return static::error(400, self::BAD_REQUEST);
     }
 
-    static public function badAttempt() {
+    public static function badAttempt()
+    {
         return static::error(400, self::BAD_ATTEMPT);
     }
 
-    static public function forbidden() {
+    public static function forbidden()
+    {
         return static::error(403, self::HTTP_FORBIDDEN);
     }
 
-    static public function notFound() {
+    public static function notFound()
+    {
         return static::error(404, self::HTTP_NOT_FOUND);
     }
 
-    static function error($status, $errorMessage) {
+    public static function error($status, $errorMessage)
+    {
         return response()->json([
             'message' => $errorMessage,
-            'success' => false
+            'success' => false,
         ], $status);
     }
 }
