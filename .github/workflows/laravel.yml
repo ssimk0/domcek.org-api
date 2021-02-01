@@ -15,7 +15,6 @@ jobs:
         image: mysql:5.7
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          MYSQL_USER: laravel
           MYSQL_DATABASE: domcek
         ports:
         - 3306
