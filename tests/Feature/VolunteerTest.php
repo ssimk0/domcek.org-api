@@ -24,8 +24,8 @@ class VolunteerTest extends TestCase
 
     public function testEventVolunteerList()
     {
-        Event::factory(2)->create();
-        $volunteers = Volunteer::factory(11)->create();
+        $events = Event::factory(2)->create();
+        $volunteers = Volunteer::factory(11)->create(["event_id" => $events[0]->id]);
 
         $response = $this->get('/api/secure/admin/events/'.$volunteers[0]->event_id.'/volunteers', [
             'Authorization' => 'Bearer '.$this->login(true),

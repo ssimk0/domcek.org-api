@@ -58,7 +58,7 @@ class PageController extends Controller
         $result = $this->service->detail($slug);
 
         if ($result) {
-            return $this->jsonResponse($result, 200);
+            return $this->jsonResponse($result);
         }
 
         return ErrorMessagesConstant::notFound();

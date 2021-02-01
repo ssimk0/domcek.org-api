@@ -1,0 +1,346 @@
+CREATE TABLE `migrations` (
+                              `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,                              `migration` varchar(255) NOT NULL
+,                              `batch` integer NOT NULL
+);
+
+CREATE TABLE `actions` (
+                           `action_id` integer NOT NULL PRIMARY KEY AUTOINCREMENT
+,                           `action_type` varchar(10) NOT NULL
+,                           `action_num` integer NOT NULL
+,                           `action_name` varchar(50) NOT NULL
+,                           `action_theme` text NOT NULL
+,                           `action_start` date NOT NULL
+,                           `action_end` date NOT NULL
+,                           `action_reg_end` date NOT NULL
+,                           `action_volunt_reg_end` date NOT NULL
+,                           `days` integer NOT NULL
+,                           `action_bus_in` text NOT NULL
+,                           `action_bus_out` text NOT NULL
+,                           `action_volunteers_types` text NOT NULL
+,                           `deposit` integer NOT NULL
+,                           `action_activ` integer NOT NULL
+);
+CREATE TABLE `archive_categories` (
+                                      `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,                                      `slug` varchar(200) NOT NULL
+,                                      `title` varchar(200) NOT NULL
+,                                      `status` text  NOT NULL
+);
+CREATE TABLE `archive_items` (
+                                 `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,                                 `archive_id` integer  NOT NULL
+,                                 `type` text  NOT NULL
+,                                 `audio` varchar(255) DEFAULT NULL
+,                                 `video` varchar(255) DEFAULT NULL
+,                                 `image` varchar(255) DEFAULT NULL
+,                                 `image_file_name` varchar(255) DEFAULT NULL
+,                                 `image_file_size` integer DEFAULT NULL
+,                                 `image_content_type` varchar(255) DEFAULT NULL
+,                                 `image_updated_at` timestamp NULL DEFAULT NULL
+,                                 `created_at` timestamp NULL DEFAULT NULL
+,                                 `updated_at` timestamp NULL DEFAULT NULL
+);
+CREATE TABLE `archives` (
+                            `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,                            `name` text NOT NULL
+,                            `slug` varchar(200) NOT NULL
+,                            `status` text  NOT NULL
+,                            `category_id` integer  NOT NULL
+,                            `created_at` timestamp NULL DEFAULT NULL
+,                            `updated_at` timestamp NULL DEFAULT NULL
+);
+CREATE TABLE `auth_tokens` (
+                               `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,                               `token` text NOT NULL
+,                               `type` text  NOT NULL
+,                               `valid_until` date NOT NULL
+,                               `event_id` integer  NOT NULL
+);
+CREATE TABLE `event_prices` (
+                                `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,                                `event_id` integer  NOT NULL
+,                                `need_pay` integer NOT NULL DEFAULT '1'
+,                                `deposit` integer NOT NULL DEFAULT '1'
+,                                `description` varchar(255) DEFAULT NULL
+,                                `created_at` timestamp NULL DEFAULT NULL
+,                                `updated_at` timestamp NULL DEFAULT NULL
+);
+CREATE TABLE `event_transport_times` (
+                                         `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,                                         `event_id` integer  NOT NULL
+,                                         `time` text COLLATE BINARY
+,                                         `created_at` timestamp NULL DEFAULT NULL
+,                                         `updated_at` timestamp NULL DEFAULT NULL
+,                                         `type` text  NOT NULL DEFAULT 'in'
+);
+CREATE TABLE `event_volunteer_types` (
+                                         `volunteer_type_id` integer  NOT NULL
+,                                         `event_id` integer  NOT NULL
+,                                         `created_at` timestamp NULL DEFAULT NULL
+,                                         `updated_at` timestamp NULL DEFAULT NULL
+);
+CREATE TABLE `events` (
+                          `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,                          `name` text NOT NULL
+,                          `theme` text COLLATE BINARY
+,                          `start_date` date NOT NULL
+,                          `end_date` date NOT NULL
+,                          `start_registration` date NOT NULL
+,                          `end_registration` date NOT NULL
+,                          `end_volunteer_registration` date NOT NULL
+,                          `created_at` timestamp NULL DEFAULT NULL
+,                          `updated_at` timestamp NULL DEFAULT NULL
+,                          `type` text COLLATE BINARY
+);
+CREATE TABLE `events_group` (
+                                `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,                                `group_name` integer NOT NULL
+,                                `animator` integer  DEFAULT NULL
+,                                `event_id` integer  NOT NULL
+,                                `updated_at` timestamp NULL DEFAULT NULL
+,                                `created_at` timestamp NULL DEFAULT NULL
+);
+CREATE TABLE `failed_jobs` (
+                               `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,                               `connection` text NOT NULL
+,                               `queue` text NOT NULL
+,                               `payload` longtext NOT NULL
+,                               `exception` longtext NOT NULL
+,                               `failed_at` timestamp NOT NULL DEFAULT current_timestamp
+);
+CREATE TABLE `jobs` (
+                        `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,                        `queue` varchar(255) NOT NULL
+,                        `payload` longtext NOT NULL
+,                        `attempts` integer  NOT NULL
+,                        `reserved_at` integer  DEFAULT NULL
+,                        `available_at` integer  NOT NULL
+,                        `created_at` integer  NOT NULL
+);
+
+CREATE TABLE `news_items` (
+                              `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,                              `slug` varchar(200) NOT NULL
+,                              `title` varchar(200) NOT NULL
+,                              `short` varchar(2000) DEFAULT NULL
+,                              `body` longtext NOT NULL
+,                              `image` varchar(255) DEFAULT NULL
+,                              `is_featured` integer NOT NULL DEFAULT '0'
+,                              `status` text  NOT NULL
+,                              `created_at` timestamp NULL DEFAULT NULL
+,                              `updated_at` timestamp NULL DEFAULT NULL
+,                              `viewed` integer NOT NULL DEFAULT '0'
+,                              `category` varchar(200) NOT NULL DEFAULT 'news'
+);
+CREATE TABLE `newsletter_subs` (
+                                   `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,                                   `created_at` datetime DEFAULT NULL
+,                                   `updated_at` datetime DEFAULT NULL
+,                                   `deleted_at` datetime DEFAULT NULL
+,                                   `email` varchar(255) DEFAULT NULL
+,                                   `active` integer DEFAULT NULL
+,                                   `member` integer  DEFAULT NULL
+);
+CREATE TABLE `pages` (
+                         `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,                         `parent_id` integer  DEFAULT NULL
+,                         `title` varchar(200) NOT NULL
+,                         `slug` varchar(200) NOT NULL
+,                         `body` longtext COLLATE BINARY
+,                         `order` integer NOT NULL DEFAULT '99'
+,                         `active` integer NOT NULL
+,                         `created_at` timestamp NULL DEFAULT NULL
+,                         `updated_at` timestamp NULL DEFAULT NULL
+);
+CREATE TABLE `participants` (
+                                `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,                                `note` text NOT NULL
+,                                `event_id` integer  NOT NULL
+,                                `user_id` integer  NOT NULL
+,                                `register_by_user_id` integer  DEFAULT NULL
+,                                `changed_by_user_id` integer  DEFAULT NULL
+,                                `created_at` timestamp NULL DEFAULT NULL
+,                                `updated_at` timestamp NULL DEFAULT NULL
+,                                `transport_in` varchar(255) DEFAULT NULL
+,                                `transport_out` varchar(255) DEFAULT NULL
+,                                `was_on_event` integer NOT NULL DEFAULT '0'
+,                                `subscribed` integer NOT NULL DEFAULT '1'
+,                                `admin_note` varchar(255) NOT NULL DEFAULT ''
+,                                `want_to_be_animator_on_pz` integer DEFAULT NULL
+,                                `group_id` integer  DEFAULT NULL
+);
+CREATE TABLE `password_resets` (
+                                   `email` varchar(255) NOT NULL
+,                                   `token` varchar(255) NOT NULL
+,                                   `created_at` timestamp NULL DEFAULT NULL
+);
+CREATE TABLE `payments` (
+                            `user_id` integer  NOT NULL
+,                            `payment_number` integer NOT NULL
+,                            `paid` integer NOT NULL
+,                            `on_registration` integer DEFAULT NULL
+,                            `need_pay` integer NOT NULL
+,                            `event_id` integer  NOT NULL
+,                            `created_at` timestamp NULL DEFAULT NULL
+,                            `updated_at` timestamp NULL DEFAULT NULL
+,                            `event_price_id` integer  DEFAULT NULL
+);
+CREATE TABLE `pilgrims` (
+                            `user_id` integer NOT NULL
+,                            `action_id` integer NOT NULL
+,                            `bus_in` varchar(40) NOT NULL
+,                            `bus_out` varchar(40) NOT NULL
+,                            `travel_package` varchar(10) NOT NULL
+,                            `role` varchar(50) NOT NULL
+,                            `note` text NOT NULL
+,                            `num_of_childrens` varchar(10) NOT NULL
+,                            `spirit_resc` varchar(10) NOT NULL
+,                            `days` varchar(100) NOT NULL
+,                            `was_on_act` varchar(10) NOT NULL
+,                            `payedDeposit` double NOT NULL
+,                            `payedReg` double NOT NULL
+,                            `payedBus` double NOT NULL
+,                            `payedPackage` double NOT NULL
+,                            `real_role` varchar(50) NOT NULL
+,                            `real_group` varchar(10) NOT NULL
+,                            `leader` varchar(10) NOT NULL
+,                            `change_by_whom_id` integer NOT NULL
+,                            `change_date` text NOT NULL
+,                            `registered_by_whom_id` integer NOT NULL
+,                            `registration_date` text NOT NULL
+);
+CREATE TABLE `prayer_group_members` (
+                                        `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,                                        `created_at` datetime DEFAULT NULL
+,                                        `updated_at` datetime DEFAULT NULL
+,                                        `deleted_at` datetime DEFAULT NULL
+,                                        `first_name` varchar(255) DEFAULT NULL
+,                                        `last_name` varchar(255) DEFAULT NULL
+,                                        `email` varchar(255) DEFAULT NULL
+,                                        `city` varchar(255) DEFAULT NULL
+,                                        `group_id` integer  DEFAULT NULL
+);
+CREATE TABLE `prayer_groups` (
+                                 `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,                                 `created_at` datetime DEFAULT NULL
+,                                 `updated_at` datetime DEFAULT NULL
+,                                 `deleted_at` datetime DEFAULT NULL
+,                                 `name` varchar(255) DEFAULT NULL
+,                                 `type` varchar(255) DEFAULT NULL
+,                                 `city` varchar(255) DEFAULT NULL
+,                                 `active` integer DEFAULT NULL
+);
+CREATE TABLE `products` (
+                            `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,                            `created_at` datetime DEFAULT NULL
+,                            `updated_at` datetime DEFAULT NULL
+,                            `deleted_at` datetime DEFAULT NULL
+,                            `code` varchar(255) DEFAULT NULL
+,                            `price` integer  DEFAULT NULL
+);
+CREATE TABLE `profiles` (
+                            `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,                            `user_id` integer  NOT NULL
+,                            `first_name` varchar(255) NOT NULL
+,                            `last_name` varchar(255) NOT NULL
+,                            `city` varchar(255) NOT NULL
+,                            `birth_date` date NOT NULL
+,                            `phone` varchar(255) NOT NULL
+,                            `created_at` timestamp NULL DEFAULT NULL
+,                            `updated_at` timestamp NULL DEFAULT NULL
+,                            `date_approved_term_and_condition` timestamp NULL DEFAULT NULL
+,                            `admin_note` text COLLATE BINARY
+,                            `sex` text  NOT NULL DEFAULT 'f'
+,                            `nick` varchar(255) DEFAULT NULL
+);
+CREATE TABLE `sessions` (
+                            `id` varchar(255) NOT NULL
+,                            `user_id` integer  DEFAULT NULL
+,                            `ip_address` varchar(45) DEFAULT NULL
+,                            `user_agent` text COLLATE BINARY
+,                            `payload` text NOT NULL
+,                            `last_activity` integer NOT NULL
+);
+CREATE TABLE `slider_images` (
+                                 `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,                                 `image` varchar(255) DEFAULT NULL
+,                                 `title` varchar(255) NOT NULL
+,                                 `text` varchar(255) DEFAULT NULL
+,                                 `order` integer DEFAULT NULL
+,                                 `created_at` timestamp NULL DEFAULT NULL
+,                                 `updated_at` timestamp NULL DEFAULT NULL
+,                                 `active` integer NOT NULL DEFAULT '1'
+);
+CREATE TABLE `users` (
+                         `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,                         `email` varchar(255) NOT NULL
+,                         `avatar` varchar(255) DEFAULT NULL
+,                         `password` varchar(255) NOT NULL
+,                         `created_at` timestamp NULL DEFAULT NULL
+,                         `updated_at` timestamp NULL DEFAULT NULL
+,                         `is_admin` integer NOT NULL DEFAULT '0'
+,                         `is_writer` integer NOT NULL DEFAULT '0'
+,                         `is_verified` integer NOT NULL DEFAULT '0'
+,                         `deleted_at` timestamp NULL DEFAULT NULL
+);
+CREATE TABLE `users_old` (
+                             `user_id` integer NOT NULL PRIMARY KEY AUTOINCREMENT
+,                             `user_flow_id` varchar(100) NOT NULL
+,                             `username` varchar(50) NOT NULL
+,                             `password` varchar(100) NOT NULL
+,                             `password_local` varchar(50) NOT NULL
+,                             `user_rights` varchar(20) NOT NULL
+,                             `created` varchar(10) NOT NULL
+,                             `first_name` varchar(50) NOT NULL
+,                             `last_name` varchar(100) NOT NULL
+,                             `sex` varchar(4) NOT NULL
+,                             `birth_date` date NOT NULL
+,                             `street` varchar(50) NOT NULL
+,                             `number` varchar(20) NOT NULL
+,                             `city` varchar(50) NOT NULL
+,                             `zip` varchar(20) NOT NULL
+,                             `phone` varchar(50) NOT NULL
+,                             `email` varchar(50) NOT NULL
+,                             `num_of_actions` integer NOT NULL
+,                             `creation_date` date NOT NULL
+,                             `last_login` datetime NOT NULL
+,                             `is_zksm` varchar(10) NOT NULL
+);
+CREATE TABLE `verification_token` (
+                                      `token` varchar(32) NOT NULL
+,                                      `email` varchar(255) NOT NULL
+,                                      `valid_until` datetime NOT NULL
+,                                      `used` integer NOT NULL DEFAULT '0'
+,                                      `created_at` timestamp NULL DEFAULT NULL
+,                                      `updated_at` timestamp NULL DEFAULT NULL
+);
+CREATE TABLE `volunteer_types` (
+                                   `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,                                   `name` varchar(120) NOT NULL
+,                                   `created_at` timestamp NULL DEFAULT NULL
+,                                   `updated_at` timestamp NULL DEFAULT NULL
+,                                   `active` integer NOT NULL DEFAULT '0'
+);
+CREATE TABLE `volunteers` (
+                              `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,                              `is_leader` integer NOT NULL DEFAULT '0'
+,                              `volunteer_type_id` integer  NOT NULL DEFAULT '41'
+,                              `event_id` integer  NOT NULL
+,                              `user_id` integer  NOT NULL
+,                              `created_at` timestamp NULL DEFAULT NULL
+,                              `updated_at` timestamp NULL DEFAULT NULL
+,                              `was_on_event` integer NOT NULL DEFAULT '0'
+);
+CREATE TABLE `wrong_payments` (
+                                  `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,                                  `event_id` integer  NOT NULL
+,                                  `payment_number` text COLLATE BINARY
+,                                  `payment_note` text COLLATE BINARY
+,                                  `amount` text NOT NULL
+,                                  `transaction_date` date NOT NULL
+,                                  `iban` text NOT NULL
+,                                  `created_at` timestamp NULL DEFAULT NULL
+,                                  `updated_at` timestamp NULL DEFAULT NULL
+);
+

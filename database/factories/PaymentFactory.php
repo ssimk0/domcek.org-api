@@ -2,20 +2,19 @@
 
 namespace Database\Factories;
 
-use App\Models\Event;
-use App\Models\Participant;
+use App\Models\Payment;
 use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ParticipantFactory extends Factory
+class PaymentFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Participant::class;
+    protected $model = Payment::class;
 
     /**
      * Define the model's default state.
@@ -25,11 +24,12 @@ class ParticipantFactory extends Factory
     public function definition()
     {
         return [
-            'note' => $this->faker->sentence,
-            'event_id' => Event::factory()->createOne(),
-            'transport_in' => 'test',
-            'transport_out' => 'test',
+            'payment_number' => $this->faker->randomNumber(8),
             'user_id' => Profile::factory()->createOne()->user,
+            'bus' => $this->faker->randomNumber(1),
+            'deposit' => $this->faker->randomNumber(1),
+            'on_registration' => $this->faker->randomNumber(1),
+            'need_pay' => $this->faker->randomNumber(2),
         ];
     }
 }

@@ -25,8 +25,10 @@ class ParticipantTest extends TestCase
 
     public function testListParticipant()
     {
-        Participant::factory( 15)->create();
-        $response = $this->get('/api/secure/admin/events/1/participants', [
+        $event = Event::factory()->createOne();
+        Participant::factory( 15)->create(["event_id" => $event->id]);
+
+        $response = $this->get("/api/secure/admin/events/$event->id/participants", [
             'Authorization' => 'Bearer '.$this->login(true),
         ])->assertStatus(200);
 
@@ -37,8 +39,8 @@ class ParticipantTest extends TestCase
 
     public function testAdminDetailParticipant()
     {
-        $participant = Participant::factory(1)->create()[0];
-        $response = $this->get('/api/secure/admin/events/1/participants/'.$participant->id, [
+        $participant = Participant::factory()->createOne();
+        $response = $this->get("/api/secure/admin/events/$participant->event_id/participants/".$participant->id, [
             'Authorization' => 'Bearer '.$this->login(true),
         ])->assertStatus(200);
 
@@ -195,8 +197,7 @@ class ParticipantTest extends TestCase
 
     public function testUserSubscribe()
     {
-        $participant = Participant::factory()->create();
-        $participant->update(['subscribed' => false]);
+        $participant = Participant::factory()->createOne(['subscribed' => false]);
         $user = User::find($participant->user_id);
         $token = Auth::login($user);
 

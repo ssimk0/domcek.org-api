@@ -30,6 +30,7 @@ class SliderImagesController extends Controller
             'title' => 'required|string',
             'text' => 'required|string',
             'order' => 'required|integer',
+            'active' => 'required|boolean'
         ]);
 
         $result = $this->service->create($data);

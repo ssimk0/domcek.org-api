@@ -105,7 +105,6 @@ class NewsRepository extends Repository
     {
         return DB::table('news_items')
             ->where('status', '!=', NewsConstant::PUBLISHED)
-            ->where('is_featured', true)
             ->orderBy('created_at', 'desc')
             ->paginate($size);
     }
