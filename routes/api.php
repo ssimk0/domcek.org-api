@@ -29,7 +29,7 @@ Route::middleware([])->group(function () {
             Route::post('verify-email', ['App\Http\Controllers\Auth\AuthController', 'sendVerificationEmail']);
         }
     );
-    // PAGE UNSECURE
+    // UNSECURE
     Route::group(
         ['prefix' => '/'],
         function () {
@@ -54,7 +54,7 @@ Route::middleware([])->group(function () {
         Route::post('backup', ['App\Http\Controllers\Secure\BackupController', 'upload']);
     });
 
-    // PAGE SECURE
+    // SECURE
     Route::group(
         ['prefix' => 'secure', 'middleware' => ['auth:api']],
         function () {

@@ -44,10 +44,13 @@ jobs:
           key: composer-v1-{{ checksum "composer.lock" }}
           paths:
             - vendor
-      - run: touch database.sqlite
-      # run tests with phpunit or codecept
-      #- run: ./vendor/bin/phpunit
-      # this example uses codecept but you're not limited to it
+      - uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql version: '5.7'
+          mysql database: 'domcek'
+          mysql root password: 'password'
+          mysql user: 'laravel'
+          mysql password: 'password'
       - run: ./vendor/bin/phpunit
       - store_test_results:
           path: tests/_reports

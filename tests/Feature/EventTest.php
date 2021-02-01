@@ -181,7 +181,7 @@ class EventTest extends TestCase
         $eventNotAvailable->save();
         $eventAvailable->save();
 
-        $participant = new Participant([
+        $participant = Participant::factory()->createOne([
             'note' => $this->faker->sentence,
             'event_id' => $eventAvailable->id,
             'user_id' => 1,

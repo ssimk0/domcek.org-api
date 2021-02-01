@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Event;
 use App\Models\Profile;
 use App\Models\Volunteer;
 use App\Models\VolunteerType;
@@ -24,9 +25,7 @@ class VolunteerFactory extends Factory
     public function definition()
     {
         return [
-            'event_id' => function () {
-                return 1;
-            },
+            'event_id' => Event::factory()->createOne(),
             'user_id' => Profile::factory()->createOne(),
             'volunteer_type_id' => VolunteerType::factory()->createOne(),
             'is_leader' => 0,

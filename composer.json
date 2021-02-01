@@ -14,7 +14,6 @@
         "albertcht/invisible-recaptcha": "^1.9.4",
         "barryvdh/laravel-snappy": "^0.4.8",
         "cviebrock/eloquent-sluggable": "8.*",
-        "doctrine/dbal": "^2.9",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "endroid/qr-code": "^3.5.8",
@@ -43,11 +42,20 @@
         }
     },
     "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
-        "test": [
-            "phpunit tests/*.php"
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi"
+        ],
+        "post-update-cmd": [
+            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
+            "@php artisan ide-helper:generate",
+            "@php artisan ide-helper:meta"
         ]
     },
     "config": {

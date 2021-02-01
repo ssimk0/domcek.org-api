@@ -3,19 +3,19 @@
 namespace Database\Factories;
 
 use App\Models\Event;
+use App\Models\Group;
 use App\Models\Participant;
 use App\Models\Profile;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ParticipantFactory extends Factory
+class GroupFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Participant::class;
+    protected $model = Group::class;
 
     /**
      * Define the model's default state.
@@ -25,11 +25,10 @@ class ParticipantFactory extends Factory
     public function definition()
     {
         return [
-            'note' => $this->faker->sentence,
+            'group_name' => $this->faker->randomNumber(8),
+            'user_id' => Profile::factory()->createOne(),
             'event_id' => Event::factory()->createOne(),
-            'transport_in' => 'test',
-            'transport_out' => 'test',
-            'user_id' => Profile::factory()->createOne()->user,
+            'participant_id' => Participant::factory()->createOne(),
         ];
     }
 }
