@@ -17,7 +17,7 @@ jobs:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
           MYSQL_DATABASE: domcek
         ports:
-        - 3306
+        - 3306:3306
         options: >-
           --health-cmd="mysqladmin ping"
           --health-interval=10s
@@ -40,5 +40,5 @@ jobs:
         env:
           DB_CONNECTION: mysql
           DB_DATABASE: domcek
-          DB_PORT: ${{ job.services.mysql.ports[3306] }}
+#          DB_PORT: ${{ job.services.mysql.ports[3306] }}
         run: vendor/bin/phpunit

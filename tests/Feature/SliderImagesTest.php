@@ -32,7 +32,7 @@ class SliderImagesTest extends TestCase
     }
 
 
-    public function testEditNews()
+    public function testEditSliderImage()
     {
         $token = $this->login(false, true);
 
@@ -56,7 +56,7 @@ class SliderImagesTest extends TestCase
         $this->assertEquals($a->title, 'Test');
     }
 
-    public function testDeleteNews()
+    public function testDeleteSliderImage()
     {
         $token = $this->login(false, true);
 
@@ -73,7 +73,7 @@ class SliderImagesTest extends TestCase
         $this->assertEquals($a, null);
     }
 
-    public function testStoreNews()
+    public function testStoreSliderImage()
     {
         $token = $this->login(false, true);
 
