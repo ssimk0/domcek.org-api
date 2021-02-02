@@ -7,7 +7,7 @@ use Tests\TestCase;
 
 class UploadTest extends TestCase {
 
-    public function test_upload()
+    public function testUpload()
     {
         Storage::fake('avatars');
 
@@ -20,5 +20,15 @@ class UploadTest extends TestCase {
         $response->assertStatus(200)
             ->assertJsonStructure(["url", "url_small"]);
 
+    }
+
+    public function testUploadDelete()
+    {
+
+        $response = $this->delete('/api/media/upload', [
+            'file' => "any"
+        ]);
+
+        $response->assertStatus(200);
     }
 }

@@ -12,6 +12,7 @@ class Page extends Model
     use Sluggable;
 
     protected $fillable = ['title', 'slug', 'body', 'active', 'parent_id', 'order'];
+    protected $with = ["children"];
 
     /**
      * The page url.
@@ -21,6 +22,21 @@ class Page extends Model
     public function url()
     {
         return route('pages.show', ['slug' => $this->getAttribute('slug')]);
+    }
+
+    public function children()
+    {
+        return $this->hasMany(Page::class, 'parent_id')->orderBy("order");
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(Page::class);
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
     }
 
     public function sluggable()

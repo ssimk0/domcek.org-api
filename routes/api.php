@@ -10,8 +10,11 @@
 |
 */
 
+use App\Http\Controllers\Secure\PageController as SecurePageController;
+use App\Http\Controllers\Secure\SliderImagesController as SecureSliderImagesController;
 use App\Http\Controllers\Unsecure\NewsController;
 use App\Http\Controllers\Unsecure\PageController;
+use App\Http\Controllers\Unsecure\SliderImagesController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware([])->group(function () {
@@ -36,12 +39,12 @@ Route::middleware([])->group(function () {
             Route::post('media/upload', ['App\Http\Controllers\Unsecure\MediaController', 'upload']);
             Route::delete('media/upload', ['App\Http\Controllers\Unsecure\MediaController', 'delete']);
             Route::get('pages', [PageController::class, 'menuPages']);
-            Route::get('pages/{slug}', ['App\Http\Controllers\Unsecure\PageController', 'page']);
+            Route::get('pages/{page}', [PageController::class, 'page']);
             Route::get('news', [NewsController::class, 'list']);
             Route::get('news/{slug}', [
                 'App\Http\Controllers\Unsecure\NewsController', 'news',
             ])->name('news.detail');
-            Route::get('slider-images', ['App\Http\Controllers\Unsecure\SliderImagesController', 'list']);
+            Route::get('slider-images', [SliderImagesController::class, 'list']);
             Route::get('events', ['App\Http\Controllers\Secure\EventController', 'availableEvents']);
         }
     );
@@ -66,14 +69,14 @@ Route::middleware([])->group(function () {
                 Route::put('news/{slug}', ['App\Http\Controllers\Secure\NewsController', 'edit']);
                 Route::get('news/{slug}', ['App\Http\Controllers\Secure\NewsController', 'unpublished']);
 
-                Route::post('pages', ['App\Http\Controllers\Secure\PageController', 'create']);
-                Route::put('pages/{slug}', ['App\Http\Controllers\Secure\PageController', 'edit']);
-                Route::get('pages/{slug}', ['App\Http\Controllers\Secure\PageController', 'detail']);
+                Route::post('pages', [SecurePageController::class, 'create']);
+                Route::put('pages/{page}', [SecurePageController::class, 'edit']);
+                Route::get('pages/{page}', [SecurePageController::class, 'detail']);
 
-                Route::post('slider-images', ['App\Http\Controllers\Secure\SliderImagesController', 'create']);
-                Route::get('slider-images', ['App\Http\Controllers\Secure\SliderImagesController', 'list']);
-                Route::put('slider-images/{id}', ['App\Http\Controllers\Secure\SliderImagesController', 'edit']);
-                Route::delete('slider-images/{id}', ['App\Http\Controllers\Secure\SliderImagesController', 'delete']);
+                Route::post('slider-images', [SecureSliderImagesController::class, 'create']);
+                Route::get('slider-images', [SecureSliderImagesController::class, 'list']);
+                Route::put('slider-images/{image}', [SecureSliderImagesController::class, 'edit']);
+                Route::delete('slider-images/{image}', [SecureSliderImagesController::class, 'delete']);
             });
 
             // ADMIN

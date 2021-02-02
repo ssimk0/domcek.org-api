@@ -2,19 +2,11 @@
 
 namespace App\Http\Controllers\Secure;
 
-use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
-use App\Services\PageService;
+use App\Models\Page;
 use Illuminate\Http\Request;
 
-class PageController extends Controller
-{
-    private $service;
-
-    public function __construct(PageService $service)
-    {
-        $this->service = $service;
-    }
+class PageController extends Controller {
 
     public function create(Request $request)
     {
@@ -25,16 +17,19 @@ class PageController extends Controller
             'parent_slug' => 'required|string',
             'active' => 'required|boolean',
         ]);
+        $parent = Page::query()->firstWhere('slug', $data['parent_slug']);
+        Page::query()->create([
+            'parent_id' => $parent->id,
+            'title' => $data['title'],
+            'body' => $data['body'],
+            'order' => $data['order'],
+            'active' => $data['active'],
+        ]);
 
-        $result = $this->service->create($data);
-        if ($result) {
-            return $this->successResponse(201);
-        }
-
-        return ErrorMessagesConstant::badAttempt();
+        return $this->successResponse(201);
     }
 
-    public function edit($slug, Request $request)
+    public function edit(Page $page, Request $request)
     {
         $data = $request->validate([
             'title' => 'required|string',
@@ -44,23 +39,14 @@ class PageController extends Controller
             'active' => 'required|boolean',
         ]);
 
-        $result = $this->service->edit($data, $slug);
+        $page->update($data);
 
-        if ($result) {
-            return $this->successResponse();
-        }
-
-        return ErrorMessagesConstant::badAttempt();
+        return $this->successResponse();
     }
 
-    public function detail($slug)
+    public function detail(Page $page)
     {
-        $result = $this->service->detail($slug);
 
-        if ($result) {
-            return $this->jsonResponse($result);
-        }
-
-        return ErrorMessagesConstant::notFound();
+        return $this->jsonResponse($page);
     }
 }

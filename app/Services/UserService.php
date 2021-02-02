@@ -337,7 +337,7 @@ class UserService extends Service
         $user = $this->repository->findUserByEmail($email);
         $verificationToken = $this->repository->existVerificationEmailToken($email, $token);
 
-        if ($user && ! $verificationToken->used && Carbon::now()->lessThanOrEqualTo($verificationToken->valid_until)) {
+        if ($user && $verificationToken && ! $verificationToken->used && Carbon::now()->lessThanOrEqualTo($verificationToken->valid_until)) {
             return $this->repository->verifyUser($user->id);
         }
 

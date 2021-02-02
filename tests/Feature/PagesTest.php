@@ -15,6 +15,12 @@ class PagesTest extends TestCase {
 
         $response = $this->getJson('/api/pages');
         $response->assertJsonCount(5);
+        $data = $response->json();
+        $data = collect($data);
+        $pageWithChildren = $data->first(function($page) use ($pages){
+            return $page["id"] == $pages[0]->id;
+        });
+        $this->assertCount(2, $pageWithChildren["children"]);
     }
 
     public function testPageDetail()
