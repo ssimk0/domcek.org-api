@@ -23,14 +23,15 @@ class PageController extends Controller {
 
     public function page(Page $page)
     {
-        return $this->jsonResponse($this->extractTopParent($page));
+        $result = $this->extractTopParent($page->with(['parent'])->first());
+        return $this->jsonResponse($result);
     }
 
     protected function extractTopParent($page)
     {
         if ($page->parent)
         {
-            return $this->extractTopParent($page->parent);
+            return $this->extractTopParent($page->parent->with(['parent'])->first());
         }
 
         return $page;
