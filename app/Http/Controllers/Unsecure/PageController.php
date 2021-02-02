@@ -23,7 +23,7 @@ class PageController extends Controller {
 
     public function page(Page $page)
     {
-        $result = $this->extractTopParent($page->with(['parent'])->first());
+        $result = $this->extractTopParent($page->with(['parent'])->firstWhere('id', $page->id));
         return $this->jsonResponse($result);
     }
 
@@ -31,7 +31,7 @@ class PageController extends Controller {
     {
         if ($page->parent)
         {
-            return $this->extractTopParent($page->parent->with(['parent'])->first());
+            return $this->extractTopParent($page->parent->with(['parent'])->firstWhere('id', $page->parent->id));
         }
 
         return $page;
