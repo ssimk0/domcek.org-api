@@ -12,7 +12,6 @@ class Page extends Model
     use Sluggable;
 
     protected $fillable = ['title', 'slug', 'body', 'active', 'parent_id', 'order'];
-    protected $with = ["children"];
 
     /**
      * The page url.

@@ -15,16 +15,15 @@ class PageController extends Controller {
             }])
             ->where('active', true)
             ->where('parent_id', null)
-            ->orderBy('created_at', 'desc')
             ->orderBy('order')
             ->get();
 
-        return $pages;
+        return $this->jsonResponse($pages);
     }
 
     public function page(Page $page)
     {
-        return $this->extractTopParent($page);
+        return $this->jsonResponse($this->extractTopParent($page));
     }
 
     protected function extractTopParent($page)
