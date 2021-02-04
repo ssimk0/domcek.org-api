@@ -1,7 +1,7 @@
 <?php
 namespace Tests;
 
-use App\Models\User;
+use App\Models\Profile;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Auth;
@@ -15,12 +15,24 @@ abstract class TestCase extends BaseTestCase
 
     public function login($admin = false, $editor = false, $reg = false)
     {
-        $user = new User();
-        $user->id = 1;
-        $user->is_admin = $admin;
-        $user->is_writer = $editor;
-        $user->email = 'test@test.com';
+        $user = Profile::factory()->createOne();
+        $user->user->is_admin = $admin;
+        $user->user->is_writer = $editor;
+        $user->user->email = 'test@test.com';
+        $user->user->save();
+        // to be able search by name
+        $user->first_name = "Admin";
+        $user->last_name = "Domcek";
+        $user->save();
 
-        return Auth::login($user);
+        return Auth::login($user->user);
+    }
+
+    public function getAuthHeader($token=null)
+    {
+        $token = $token ?? $this->login(true);
+        return [
+            'Authorization' => 'Bearer ' . $token,
+        ];
     }
 }

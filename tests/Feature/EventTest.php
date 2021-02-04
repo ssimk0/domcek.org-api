@@ -76,8 +76,6 @@ class EventTest extends TestCase
 
     public function testEventDetail()
     {
-//        $this->markTestSkipped('must be fixed problem with YEAR in sqlite.');
-
         $types = VolunteerType::factory(5)->create();
         $events = Event::factory(11)->create();
 
@@ -96,8 +94,6 @@ class EventTest extends TestCase
 
     public function testEventDetailNotFound()
     {
-//        $this->markTestSkipped('must be fixed problem with YEAR in sqlite.');
-
         $this->get('/api/secure/admin/events/notFound', [
             'Authorization' => 'Bearer '.$this->login(true),
         ])->assertStatus(404);

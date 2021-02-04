@@ -53,7 +53,6 @@ class ParticipantTest extends TestCase
     public function testRegisterParticipant()
     {
         $event = Event::factory()->create();
-        $profile = Profile::factory()->create();
         $price = new EventPrice([
             'event_id' => $event->id,
             'need_pay' => $this->faker->randomDigit,
@@ -74,7 +73,7 @@ class ParticipantTest extends TestCase
             'Authorization' => 'Bearer '.$token,
         ])->assertStatus(201);
 
-        $payment = Payment::where('user_id', $profile->user_id)
+        $payment = Payment::where('user_id', Auth::user()->id)
             ->where('event_id', $event->id)
             ->first();
 
@@ -102,7 +101,6 @@ class ParticipantTest extends TestCase
             'deposit' => 0,
         ]);
         $price->save();
-        $profile = Profile::factory()->create();
         $token = $this->login();
 
         $this->post('/api/secure/user/events/'.$event->id, [
@@ -116,7 +114,7 @@ class ParticipantTest extends TestCase
             'Authorization' => 'Bearer '.$token,
         ])->assertStatus(201);
 
-        $payment = Payment::where('user_id', $profile->user_id)
+        $payment = Payment::where('user_id', Auth::user()->id)
             ->where('event_id', $event->id)
             ->first();
         // test fee
@@ -143,7 +141,6 @@ class ParticipantTest extends TestCase
             'deposit' => 0,
         ]);
         $price->save();
-        $profile = Profile::factory()->create();
         $token = $this->login();
 
         $this->post('/api/secure/user/events/'.$event->id, [
