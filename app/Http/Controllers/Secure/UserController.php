@@ -4,13 +4,17 @@ namespace App\Http\Controllers\Secure;
 
 use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
+use App\Mails\ResetPasswordMail;
+use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
-class UserController extends Controller
-{
+class UserController extends Controller {
+
     private $service;
 
     public function __construct(UserService $service)
@@ -33,13 +37,15 @@ class UserController extends Controller
             'password' => 'required|string|confirmed|min:6',
         ]);
 
-        if (! Hash::check($data['oldPassword'], $request->user()->password)) {
+        if (!Hash::check($data['oldPassword'], $request->user()->password))
+        {
             return ErrorMessagesConstant::error(400, ErrorMessagesConstant::WRONG_CREDENTIALS);
         }
 
         $result = $this->service->updateUserPassword($data['password']);
 
-        if ($result) {
+        if ($result)
+        {
             $this->successResponse();
         }
 
@@ -58,7 +64,8 @@ class UserController extends Controller
 
         $result = $this->service->updateUserProfile($data);
 
-        if ($result) {
+        if ($result)
+        {
             $this->successResponse();
         }
 
@@ -80,7 +87,7 @@ class UserController extends Controller
         return $this->jsonResponse($list, 200, 0);
     }
 
-    public function editUserAdmin(Request $request, $userId)
+    public function editUserAdmin(Request $request, User $user)
     {
         $data = $request->validate([
             'firstName' => 'nullable|string',
@@ -93,31 +100,32 @@ class UserController extends Controller
             'note' => 'nullable|string',
         ]);
 
-        $result = $this->service->editUser($data, $userId);
+        $result = $this->service->editUser($data, $user);
 
-        if ($result) {
+        if ($result)
+        {
             return $this->successResponse();
         }
 
         return ErrorMessagesConstant::badAttempt();
     }
 
-    public function adminUserDetail($userId)
+    public function adminUserDetail(User $user)
     {
-        $user = $this->service->findUser($userId);
         $detail = $this->service->userDetail($user);
 
         return $this->jsonResponse($detail, 200, 0);
     }
 
-    public function resetPassword($userId)
+    public function resetPassword(User $user)
     {
-        $result = $this->service->generateNewPassword($userId);
+        $password = Str::random(12);
+        $user->update([
+            'password' => Hash::make($password)
+        ]);
 
-        if ($result) {
-            return $this->successResponse();
-        }
+        Mail::to($user->email)->send(new ResetPasswordMail($password));
 
-        return ErrorMessagesConstant::badAttempt();
+        return $this->successResponse();
     }
 }

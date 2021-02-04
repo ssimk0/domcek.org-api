@@ -107,9 +107,9 @@ Route::middleware([])->group(function () {
                 Route::put('events/{eventId}/participants/{userId}/subscribe', ['App\Http\Controllers\Secure\ParticipantController', 'adminSubscribe']);
 
                 Route::get('users', ['App\Http\Controllers\Secure\UserController', 'list']);
-                Route::put('users/{userId}', ['App\Http\Controllers\Secure\UserController', 'editUserAdmin']);
-                Route::get('users/{userId}', ['App\Http\Controllers\Secure\UserController', 'adminUserDetail']);
-                Route::put('users/{userId}/reset-password', ['App\Http\Controllers\Secure\UserController', 'resetPassword']);
+                Route::put('users/{user}', ['App\Http\Controllers\Secure\UserController', 'editUserAdmin']);
+                Route::get('users/{user}', ['App\Http\Controllers\Secure\UserController', 'adminUserDetail']);
+                Route::put('users/{user}/reset-password', ['App\Http\Controllers\Secure\UserController', 'resetPassword']);
             });
 
             // USER

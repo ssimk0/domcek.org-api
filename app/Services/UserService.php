@@ -8,6 +8,7 @@ use App\Mails\ExceptionMail;
 use App\Mails\ForgotPasswordMail;
 use App\Mails\ResetPasswordMail;
 use App\Mails\VerifyMail;
+use App\Models\User;
 use App\Repositories\OldWebIntegrationRepository;
 use App\Repositories\ParticipantRepository;
 use App\Repositories\PaymentRepository;
@@ -261,7 +262,7 @@ class UserService extends Service
         return $this->repository->list($size, $filter);
     }
 
-    public function editUser(array $data, $userId)
+    public function editUser(array $data, $user)
     {
         try {
             $mappingProfile = [
@@ -278,27 +279,14 @@ class UserService extends Service
               'is_writer' => $data['isEditor'],
             ];
 
-            $this->repository->updateUser($userData, $userId);
-            $this->repository->updateUserProfile($this->parseExistingData($data,
-                $mappingProfile), $userId);
+            $user->update($userData);
+            $user->profile->update($this->parseExistingData($data,
+                $mappingProfile));
 
             return true;
         } catch (\Exception $e) {
             $this->logWarning('Problem pri updatovani použivateľovho hesla s errorom'
                 .$e);
-        }
-
-        return false;
-    }
-
-    public function generateNewPassword($userId)
-    {
-        $user = $this->repository->findUser($userId);
-        $password = Str::random(12);
-        if ($user) {
-            Mail::to($user->email)->send(new ResetPasswordMail($password));
-
-            return $this->updateUserPassword($password, $userId);
         }
 
         return false;
