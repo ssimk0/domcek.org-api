@@ -25,7 +25,7 @@ class UserTest extends TestCase {
     {
         $profiles = Profile::factory(5)->create();
         $token = $this->login(true);
-        $response = $this->getJson('/api/secure/admin/users?filter=' . $profiles[0]->user->email, $this->getAuthHeader($token));
+        $response = $this->getJson('/api/secure/admin/users?filter=test@test.com', $this->getAuthHeader($token));
 
         $response->assertStatus(200)
             ->assertJsonPath('total', 1)
@@ -45,9 +45,9 @@ class UserTest extends TestCase {
 
     public function testUserListSearchByPhone()
     {
-        $profiles = Profile::factory(5)->create();
+        Profile::factory(5)->create();
         $token = $this->login(true);
-        $response = $this->getJson('/api/secure/admin/users?filter=' . $profiles[0]->phone, $this->getAuthHeader($token));
+        $response = $this->getJson('/api/secure/admin/users?filter=0900000000', $this->getAuthHeader($token));
 
         $response->assertStatus(200)
             ->assertJsonPath('total', 1)

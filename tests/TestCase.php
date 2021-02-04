@@ -21,6 +21,7 @@ abstract class TestCase extends BaseTestCase
         $user->user->email = 'test@test.com';
         $user->user->save();
         // to be able search by name
+        $user->phone = "0900000000";
         $user->first_name = "Admin";
         $user->last_name = "Domcek";
         $user->save();
