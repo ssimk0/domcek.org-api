@@ -5,11 +5,10 @@ namespace Database\Factories;
 use App\Models\Event;
 use App\Models\Participant;
 use App\Models\Profile;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ParticipantFactory extends Factory
-{
+class ParticipantFactory extends Factory {
+
     /**
      * The name of the factory's corresponding model.
      *
@@ -26,10 +25,14 @@ class ParticipantFactory extends Factory
     {
         return [
             'note' => $this->faker->sentence,
-            'event_id' => Event::factory()->createOne(),
+            'event_id' => function () {
+                return Event::factory()->createOne()->id;
+            },
             'transport_in' => 'test',
             'transport_out' => 'test',
-            'user_id' => Profile::factory()->createOne()->user,
+            'user_id' => function () {
+                return Profile::factory()->createOne()->user->id;
+            }
         ];
     }
 }

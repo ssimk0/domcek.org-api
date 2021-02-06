@@ -24,11 +24,10 @@ class GroupFactory extends Factory
      */
     public function definition()
     {
+        $event = Event::factory()->createOne();
         return [
             'group_name' => $this->faker->randomNumber(8),
-            'user_id' => Profile::factory()->createOne(),
-            'event_id' => Event::factory()->createOne(),
-            'participant_id' => Participant::factory()->createOne(),
+            'event_id' => $event,
         ];
     }
 }

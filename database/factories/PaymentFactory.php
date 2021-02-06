@@ -25,7 +25,9 @@ class PaymentFactory extends Factory
     {
         return [
             'payment_number' => $this->faker->randomNumber(8),
-            'user_id' => Profile::factory()->createOne()->user,
+            'user_id' => function () {
+                return Profile::factory()->createOne()->user->id;
+            },
             'bus' => $this->faker->randomNumber(1),
             'deposit' => $this->faker->randomNumber(1),
             'on_registration' => $this->faker->randomNumber(1),

@@ -1,10 +1,10 @@
 {
-    "name": "laravel/lumen",
-    "description": "The Laravel Lumen Framework.",
+    "name": "domcek.org/api",
+    "description": "The Domcek api",
     "keywords": [
-        "framework",
-        "laravel",
-        "lumen"
+        "anna kolesarova",
+        "api",
+        "domcek"
     ],
     "license": "MIT",
     "type": "project",
@@ -62,6 +62,11 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "optimize-autoloader": true
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true

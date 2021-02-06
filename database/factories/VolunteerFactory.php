@@ -8,8 +8,8 @@ use App\Models\Volunteer;
 use App\Models\VolunteerType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class VolunteerFactory extends Factory
-{
+class VolunteerFactory extends Factory {
+
     /**
      * The name of the factory's corresponding model.
      *
@@ -25,9 +25,15 @@ class VolunteerFactory extends Factory
     public function definition()
     {
         return [
-            'event_id' => Event::factory()->createOne(),
-            'user_id' => Profile::factory()->createOne(),
-            'volunteer_type_id' => VolunteerType::factory()->createOne(),
+            'event_id' => function () {
+                return Event::factory()->createOne()->id;
+            },
+            'user_id' => function () {
+                return Profile::factory()->createOne()->user->id;
+            },
+            'volunteer_type_id' => function () {
+                return VolunteerType::factory()->createOne()->id;
+            },
             'is_leader' => 0,
         ];
     }

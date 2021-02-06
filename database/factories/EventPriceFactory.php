@@ -23,7 +23,9 @@ class EventPriceFactory extends Factory
     public function definition()
     {
         return [
-            'event_id' => Event::factory()->createOne(),
+            'event_id' => function () {
+                return Event::factory()->createOne()->id;
+            },
             'need_pay' => $this->faker->randomDigit,
             'deposit' => $this->faker->randomDigit,
             'description' => $this->faker->sentence,
