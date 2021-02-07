@@ -24,7 +24,7 @@ class UserFactory extends Factory
         return [
             'password' => $this->faker->password,
             'avatar' => $this->faker->imageUrl(),
-            'email' => $this->faker->email,
+            'email' => $this->faker->safeEmail,
             'is_verified' => true
         ];
     }
