@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
+use App\Models\SliderImage;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class UserFactory extends Factory
+class SliderImageFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = User::class;
+    protected $model = SliderImage::class;
 
     /**
      * Define the model's default state.
@@ -22,10 +22,11 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'password' => $this->faker->password,
-            'avatar' => $this->faker->imageUrl(),
-            'email' => $this->faker->safeEmail,
-            'is_verified' => true
+            'title' => $this->faker->sentence,
+            'text' => $this->faker->text,
+            'image' => $this->faker->imageUrl(),
+            'order' => $this->faker->randomDigit,
+            'active' => 1
         ];
     }
 }

@@ -2,31 +2,38 @@
 
 namespace App\Http\Controllers\Unsecure;
 
-use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
-use App\Services\PageService;
+use App\Models\Page;
 
-class PageController extends Controller
-{
-    private $service;
-
-    public function __construct(PageService $service)
-    {
-        $this->service = $service;
-    }
+class PageController extends Controller {
 
     public function menuPages()
     {
-        return $this->service->menuPages();
+        $pages = Page::query()
+            ->with(['children' => function ($query) {
+                $query->where('active', true);
+            }])
+            ->where('active', true)
+            ->where('parent_id', null)
+            ->orderBy('order')
+            ->get();
+
+        return $this->jsonResponse($pages);
     }
 
-    public function page($slug)
+    public function page(Page $page)
     {
-        $page = $this->service->pageBySlug($slug);
-        if ($page) {
-            return $this->jsonResponse($page);
-        } else {
-            return ErrorMessagesConstant::notFound();
+        $result = $this->extractTopParent($page->load('parent'));
+        return $this->jsonResponse($result);
+    }
+
+    protected function extractTopParent($page)
+    {
+        if ($page->parent)
+        {
+            return $this->extractTopParent($page->parent->load('parent'));
         }
+
+        return $page;
     }
 }

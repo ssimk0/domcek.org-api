@@ -5,6 +5,7 @@ use App\Models\Event;
 use App\Models\Participant;
 use App\Models\VolunteerType;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -76,8 +77,6 @@ class EventTest extends TestCase
 
     public function testEventDetail()
     {
-//        $this->markTestSkipped('must be fixed problem with YEAR in sqlite.');
-
         $types = VolunteerType::factory(5)->create();
         $events = Event::factory(11)->create();
 
@@ -96,8 +95,6 @@ class EventTest extends TestCase
 
     public function testEventDetailNotFound()
     {
-//        $this->markTestSkipped('must be fixed problem with YEAR in sqlite.');
-
         $this->get('/api/secure/admin/events/notFound', [
             'Authorization' => 'Bearer '.$this->login(true),
         ])->assertStatus(404);
@@ -157,6 +154,7 @@ class EventTest extends TestCase
     public function testAvailableEvents()
     {
         $types = VolunteerType::factory(5)->create();
+        $token = $this->login();
 
         $eventAvailable = new Event([
             'name' => $this->faker->sentence(),
@@ -171,20 +169,20 @@ class EventTest extends TestCase
         $eventNotAvailable = new Event([
             'name' => $this->faker->sentence,
             'theme' => $this->faker->sentence,
-            'start_date' => \Carbon\Carbon::now()->addYear()->format('Y-m-d'),
+            'start_date' => now()->addYear()->format('Y-m-d'),
             'end_date' => $this->faker->date(),
-            'start_registration' => \Carbon\Carbon::now()->addDay()->format('Y-m-d'),
-            'end_registration' => \Carbon\Carbon::now()->addDays(5)->format('Y-m-d'),
+            'start_registration' => now()->addDays(2)->format('Y-m-d'),
+            'end_registration' => now()->addDays(5)->format('Y-m-d'),
             'end_volunteer_registration' => $this->faker->date(),
         ]);
 
         $eventNotAvailable->save();
         $eventAvailable->save();
 
-        $participant = new Participant([
+        $participant = Participant::factory()->createOne([
             'note' => $this->faker->sentence,
             'event_id' => $eventAvailable->id,
-            'user_id' => 1,
+            'user_id' => Auth::user()->id,
         ]);
 
         $participant->save();
@@ -194,7 +192,7 @@ class EventTest extends TestCase
         }
 
         $response = $this->get('/api/events', [
-            'Authorization' => 'Bearer '.$this->login(true),
+            'Authorization' => 'Bearer '. $token,
         ])->assertStatus(200);
 
         $content = json_decode($response->getContent());

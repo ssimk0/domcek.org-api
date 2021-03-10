@@ -3,18 +3,17 @@
 namespace Database\Factories;
 
 use App\Models\Event;
-use App\Models\Participant;
-use App\Models\Profile;
+use App\Models\EventPrice;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ParticipantFactory extends Factory {
-
+class EventPriceFactory extends Factory
+{
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Participant::class;
+    protected $model = EventPrice::class;
 
     /**
      * Define the model's default state.
@@ -24,15 +23,12 @@ class ParticipantFactory extends Factory {
     public function definition()
     {
         return [
-            'note' => $this->faker->sentence,
             'event_id' => function () {
                 return Event::factory()->createOne()->id;
             },
-            'transport_in' => 'test',
-            'transport_out' => 'test',
-            'user_id' => function () {
-                return Profile::factory()->createOne()->user->id;
-            }
+            'need_pay' => $this->faker->randomDigit,
+            'deposit' => $this->faker->randomDigit,
+            'description' => $this->faker->sentence,
         ];
     }
 }

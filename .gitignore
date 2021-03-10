@@ -3,7 +3,9 @@
 Homestead.json
 Homestead.yaml
 .env
-database.sqlite
+database/database.sqlite
 _reports/
 .DS_Store
 .phpunit.result.cache
+storage/framework/
+

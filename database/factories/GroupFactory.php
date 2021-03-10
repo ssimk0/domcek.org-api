@@ -2,17 +2,20 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
+use App\Models\Event;
+use App\Models\Group;
+use App\Models\Participant;
+use App\Models\Profile;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class UserFactory extends Factory
+class GroupFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = User::class;
+    protected $model = Group::class;
 
     /**
      * Define the model's default state.
@@ -21,11 +24,10 @@ class UserFactory extends Factory
      */
     public function definition()
     {
+        $event = Event::factory()->createOne();
         return [
-            'password' => $this->faker->password,
-            'avatar' => $this->faker->imageUrl(),
-            'email' => $this->faker->safeEmail,
-            'is_verified' => true
+            'group_name' => $this->faker->randomNumber(8),
+            'event_id' => $event,
         ];
     }
 }

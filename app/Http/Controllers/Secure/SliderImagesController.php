@@ -2,24 +2,18 @@
 
 namespace App\Http\Controllers\Secure;
 
-use App\Constants\ErrorMessagesConstant;
 use App\Http\Controllers\Controller;
-use App\Services\SliderImageService;
+use App\Models\SliderImage;
 use Illuminate\Http\Request;
 
-class SliderImagesController extends Controller
-{
-    private $service;
-
-    public function __construct(SliderImageService $service)
-    {
-        $this->service = $service;
-    }
+class SliderImagesController extends Controller {
 
     public function list()
     {
         return $this->jsonResponse(
-            $this->service->sliderImages()
+            SliderImage::query()
+                ->orderBy("order")
+                ->get()
         );
     }
 
@@ -30,17 +24,15 @@ class SliderImagesController extends Controller
             'title' => 'required|string',
             'text' => 'required|string',
             'order' => 'required|integer',
+            'active' => 'required|boolean'
         ]);
 
-        $result = $this->service->create($data);
-        if ($result) {
-            return $this->jsonResponse($result, 201);
-        }
+        $result = SliderImage::query()->create($data);
 
-        return ErrorMessagesConstant::badAttempt();
+        return $this->jsonResponse($result, 201);
     }
 
-    public function edit($id, Request $request)
+    public function edit(SliderImage $image, Request $request)
     {
         $data = $request->validate([
             'image' => ['required', 'regex:(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'],
@@ -50,23 +42,15 @@ class SliderImagesController extends Controller
             'active' => 'required|boolean',
         ]);
 
-        $result = $this->service->edit($id, $data);
+        $image->update($data);
 
-        if ($result) {
-            return $this->jsonResponse($result);
-        }
-
-        return ErrorMessagesConstant::badAttempt();
+        return $this->jsonResponse($image);
     }
 
-    public function delete($id)
+    public function delete(SliderImage $image)
     {
-        $result = $this->service->delete($id);
+        $image->delete();
 
-        if ($result) {
-            return $this->successResponse();
-        }
-
-        return ErrorMessagesConstant::badAttempt();
+        return $this->successResponse();
     }
 }

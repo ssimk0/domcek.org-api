@@ -24,14 +24,14 @@ class ParticipantController extends Controller
     public function register(Request $request, $eventId)
     {
         $data = $request->validate([
-            'volunteerTypeId' => 'integer',
-            'note' => 'string',
+            'volunteerTypeId' => 'nullable|integer',
+            'note' => 'nullable|string',
             'transportIn' => 'required|string',
             'transportOut' => 'required|string',
             'audioVisualKnowledgeAgreement' => 'required|accepted',
             'GDPRRegistration' => 'required|accepted',
             'priceId' => 'required|integer',
-            'wantBeAnimatorOnPZ' => 'boolean',
+            'wantBeAnimatorOnPZ' => 'nullable|boolean',
         ]);
 
         $result = $this->service->create($data, $eventId);
@@ -46,7 +46,7 @@ class ParticipantController extends Controller
     public function userEdit(Request $request, $eventId)
     {
         $data = $request->validate([
-            'note' => 'string',
+            'note' => 'nullable|string',
             'transportIn' => 'required|string',
             'transportOut' => 'required|string',
         ]);
@@ -145,8 +145,8 @@ class ParticipantController extends Controller
     public function sync(Request $request)
     {
         $data = $request->validate([
-            'participants' => 'array',
-            'wrong-payments' => 'array',
+            'participants' => 'nullable|array',
+            'wrong-payments' => 'nullable|array',
         ]);
 
         $result = $this->service->sync($data, $request->event_id);
@@ -161,11 +161,11 @@ class ParticipantController extends Controller
     public function edit(Request $request, $participantId, $eventId)
     {
         $data = $request->validate([
-            'volunteerTypeId' => 'integer',
-            'paid' => 'integer',
-            'adminNote' => 'string',
-            'group_name' => 'integer',
-            'userId' => 'integer',
+            'volunteerTypeId' => 'nullable|integer',
+            'paid' => 'nullable|integer',
+            'adminNote' => 'nullable|string',
+            'group_name' => 'nullable|integer',
+            'userId' => 'nullable|integer',
             'isLeader' => 'bool',
         ]);
 
@@ -181,13 +181,13 @@ class ParticipantController extends Controller
     public function list(Request $request, $eventId)
     {
         $filters = $request->validate([
-            'filter' => 'string',
-            'volunteer' => 'string',
-            'sortBy' => 'string',
-            'sortDesc' => 'string',
-            'group' => 'string',
-            'type' => 'string',
-            'variant' => 'integer',
+            'filter' => 'nullable|string',
+            'volunteer' => 'nullable|string',
+            'sortBy' => 'nullable|string',
+            'sortDesc' => 'nullable|string',
+            'group' => 'nullable|string',
+            'type' => 'nullable|string',
+            'variant' => 'nullable|integer',
         ]);
 
         $list = $this->service->list($eventId, $filters);

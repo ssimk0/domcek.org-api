@@ -22,7 +22,7 @@ class EventController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string',
-            'theme' => 'string',
+            'theme' => 'nullable|string',
             'type' => 'required|string',
             'prices' => 'required|array',
             'startDate' => 'required|date_format:Y-m-d',
@@ -32,8 +32,8 @@ class EventController extends Controller
             'endVolunteerRegistration' => 'required|date_format:Y-m-d',
             'volunteerTypes' => 'required|array',
             'volunteerTypes.*' => 'required|integer',
-            'transportTimesIn' => 'array',
-            'transportTimesOut' => 'array',
+            'transportTimesIn' => 'nullable|array',
+            'transportTimesOut' => 'nullable|array',
         ]);
 
         $result = $this->service->createEvent($data);
@@ -49,16 +49,16 @@ class EventController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string',
-            'theme' => 'string',
+            'theme' => 'nullable|string',
             'startDate' => 'required|date_format:Y-m-d',
             'endDate' => 'required|date_format:Y-m-d',
             'startRegistration' => 'required|date_format:Y-m-d',
             'endRegistration' => 'required|date_format:Y-m-d',
             'endVolunteerRegistration' => 'required|date_format:Y-m-d',
-            'volunteerTypes' => 'array',
-            'volunteerTypes.*' => 'integer',
-            'transportTimesIn' => 'array',
-            'transportTimesOut' => 'array',
+            'volunteerTypes' => 'nullable|array',
+            'volunteerTypes.*' => 'nullable|integer',
+            'transportTimesIn' => 'nullable|array',
+            'transportTimesOut' => 'nullable|array',
         ]);
 
         $result = $this->service->editEvent($data, $id);
@@ -73,8 +73,8 @@ class EventController extends Controller
     public function list(Request $request)
     {
         $data = $request->validate([
-            'size' => 'integer',
-            'filter' => 'string',
+            'size' => 'nullable|integer',
+            'filter' => 'nullable|string',
         ]);
 
         return $this->jsonResponse($this->service->eventList(

@@ -19,8 +19,8 @@ class VolunteerController extends Controller
     public function edit(Request $request, $id)
     {
         $data = $request->validate([
-            'volunteerTypeId' => 'integer',
-            'isLeader' => 'boolean',
+            'volunteerTypeId' => 'nullable|integer',
+            'isLeader' => 'nullable|boolean',
         ]);
 
         $result = $this->service->editVolunteer($data, $id);

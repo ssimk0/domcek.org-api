@@ -9,4 +9,5 @@ class Group extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    protected $table = "events_group";
 }
