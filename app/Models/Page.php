@@ -25,7 +25,7 @@ class Page extends Model
 
     public function children()
     {
-        return $this->hasMany(Page::class, 'parent_id')->orderBy("order");
+        return $this->hasMany(Page::class, 'parent_id')->where("active", 1)->orderBy("order");
     }
 
     public function parent()
