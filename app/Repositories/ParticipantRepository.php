@@ -233,6 +233,18 @@ class ParticipantRepository extends Repository
             ->count();
     }
 
+    public function getCountPayedForEvent($event_ids) {
+        return DB::table(TableConstants::PARTICIPANTS)
+            ->leftJoin(TableConstants::PAYMENTS, function ($join) {
+                $join->on(TableConstants::PAYMENTS.'.user_id', TableConstants::PARTICIPANTS.'.user_id');
+                $join->on(TableConstants::PAYMENTS.'.event_id', TableConstants::PARTICIPANTS.'.event_id');
+            })
+            ->whereIn(TableConstants::PARTICIPANTS.'.event_id', $event_ids)
+            ->where('subscribed', true)
+            ->where('paid', ">", 0)
+            ->count();
+    }
+
     public function unsubscribeToEvent($eventId, $userId)
     {
         /// NEED TEST
