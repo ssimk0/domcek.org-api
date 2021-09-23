@@ -3,7 +3,7 @@
 Milý/á {{ $userName }},
 
 prihlásenie na {{ $eventName }} prebehlo úspešne. <br/>
-##Až keď zaplatíš a máš potvrdenú platbu mailom tak si oficiálne prihlásený a máš zaistené ubytovanie !!!
+### !!! Až keď zaplatíš a máš potvrdenú platbu mailom si oficiálne prihlásený. !!!
 
 @component('mail::panel')
 Údaje pre platbu zálohy:
@@ -25,17 +25,27 @@ Zálohu, resp. účastnícky poplatok je potrebné uhradiť najneskôr týždeň
 
 Prosím, ulož si do mobilu <strong>QR kód</strong>, ktorý nájdeš v prílohe tohto e-mailu (alebo po prihlásení na stránke <a href="https://domcek.org">www.domcek.org</a>, v sekcii "Moje prihlásenia").
 
-A vezmi si so sebou aj <strong>potvrdenie o platbe</strong>  pre prípad, že systém nedokáže spárovať tvoju platbu.
+Z dôvodu pretrvávajúcich pandemických opatrení je púť <strong>LEN PRE PLNE ZAOČKOVANÝCH</strong>,  nezabudni si so sebou vziať <strong>COVID PASS.</strong>
+Ak si ešte <strong>nedovŕšil 18 rokov</strong> nezabudni na <strong>potvrdenie od rodiča</strong>, ktoré ti tu prikladáme.
+Taktiež si nezabudni zobrať <strong>spacák a prezuvky.</strong>
+<strong>Celé stretnutie</strong> bude prebiehať vo <strong>Vysokej nad Uhom.</strong>
+<strong>Strava</strong> bude zabezpečená nasledovne:
 
-Ak zaplatíš poštovou poukážkou, určite so sebou prines aj ústrižok (stáva sa, že platby cez poštu neprejdú ani za týždeň). Ak máš možnosť uhradiť účastnícky poplatok cez internet banking, využi prosím túto možnosť.
-
-Ďakujeme za tvoje prihlásenie na púť a tešíme sa na teba!
+@component('mail::table')
+|         | Raňajky | Obed  | Večera             |
+| ------- |:-------:|:-----:| ------------------:|
+| Piatok  | -       | -     | z vlastných zásob  |
+| Sobota  | áno     | áno   |   áno              |
+| Nedeľa  | áno     | -     |   -                |
+@endcomponent
 
 V prípade, že chceš zmeniť svoje prihlásenie alebo sa chceš odhlásiť, môžeš tak urobiť na stránke <a href="https://domcek.org">www.domcek.org</a> v sekcii "Moje prihlásenia".
 
 V prípade, že sa z púte odhlásiš v termíne otvoreného prihlasovania, odoslaním mailu na <a href="mailto:domcek@domcek.org">domcek@domcek.org</a> môžeš požiadať o vrátenie vyplatenej zálohy.
 
 V prípade akýchkoľvek otázok nás môžeš kontaktovať na mailovú adresu <a href="mailto:pute@domcek.org">pute@domcek.org</a> alebo nám napíš na Domčekovkú FB stránku.
+
+Ďakujeme za tvoje prihlásenie na púť a tešíme sa na teba!
 
 </pre>
 
