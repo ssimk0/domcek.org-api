@@ -20,6 +20,7 @@ Záloha: {{ $deposit }} EUR (viac info o príspevkoch nájdeš tu: https://domce
 Správa pre prijímateľa: Príspevok na činnosť
 @endcomponent
 
+
 <pre style="color:black">
 Zálohu, resp. účastnícky poplatok je potrebné uhradiť najneskôr týždeň pred podujatím. Viac informácií nájdeš vo svojom profile.
 
