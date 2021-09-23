@@ -56,8 +56,7 @@ class RegistrationMail extends Mailable
                     'eventName' => $this->eventName,
                 ])
                 ->attach($this->qrCodePath)
-                ->attach("https://docs.google.com/document/d/1qGBY0WWa1GgPilfjsuyrTlZtxUGnjfhFwLzmk8QWqMo/edit?usp=sharing")
-                ->attach('https://s3.nl-ams.scw.cloud/org.domcek/docs/Pre%20%C3%BA%C4%8Dastn%C3%ADkov%20mlad%C5%A1%C3%ADch%20ako%2018%20rokov.docx');
+                ->attach('https://s3.nl-ams.scw.cloud/org.domcek/docs/Potvrdenie%20rodi%C4%8Da.pdf');
         } else {
             return $this->markdown($template)
                 ->subject('Potvrdenie Prihlasenia')
@@ -69,7 +68,6 @@ class RegistrationMail extends Mailable
                     'userName' => $this->userName,
                     'eventName' => $this->eventName,
                 ])
-                ->attach("https://docs.google.com/document/d/1qGBY0WWa1GgPilfjsuyrTlZtxUGnjfhFwLzmk8QWqMo/edit?usp=sharing")
                 ->attach($this->qrCodePath);
         }
     }

@@ -20,6 +20,7 @@ Záloha: {{ $deposit }} EUR (viac info o príspevkoch nájdeš tu: https://domce
 Správa pre prijímateľa: Príspevok na činnosť
 @endcomponent
 
+
 <pre style="color:black">
 Zálohu, resp. účastnícky poplatok je potrebné uhradiť najneskôr týždeň pred podujatím. Viac informácií nájdeš vo svojom profile.
 
@@ -31,13 +32,12 @@ Taktiež si nezabudni zobrať <strong>spacák a prezuvky.</strong>
 <strong>Celé stretnutie</strong> bude prebiehať vo <strong>Vysokej nad Uhom.</strong>
 <strong>Strava</strong> bude zabezpečená nasledovne:
 
-@component('mail::table')
 |         | Raňajky | Obed  | Večera             |
-| ------- |:-------:|:-----:| ------------------:|
+| ------- |:-------:|:-----:|:------------------:|
 | Piatok  | -       | -     | z vlastných zásob  |
 | Sobota  | áno     | áno   |   áno              |
 | Nedeľa  | áno     | -     |   -                |
-@endcomponent
+
 
 V prípade, že chceš zmeniť svoje prihlásenie alebo sa chceš odhlásiť, môžeš tak urobiť na stránke <a href="https://domcek.org">www.domcek.org</a> v sekcii "Moje prihlásenia".
 
