@@ -92,6 +92,7 @@ class EventService extends Service
             $event->prices = $this->event->eventPrices([$event->id]);
             $event->volunteerTypes = $this->eventVolunteer->eventVolunteerTypes([$event->id]);
             $event->participantCount = $this->participant->getCountForEvent([$event->id]);
+            $event->payedParticipantCount = $this->participant->getCountPayedForEvent([$event->id]);
             $event->busInTimes = $this->event->getEventTransportTimes($event->id, 'in');
             $event->busOutTimes = $this->event->getEventTransportTimes($event->id, 'out');
         }
