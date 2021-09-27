@@ -6,7 +6,7 @@ prihlásenie na {{ $eventName }} prebehlo úspešne. <br/>
 ### !!! Až keď zaplatíš a máš potvrdenú platbu mailom si oficiálne prihlásený. !!!
 
 @component('mail::panel')
-Údaje pre platbu zálohy:
+Údaje pre platbu:
 
 Banka: Tatrabanka
 
@@ -14,15 +14,14 @@ IBAN účtu: SK52 1100 0000 0029 4304 5043
 
 Variabilný symbol: {{ $paymentNumber }} (tento VS je platný len a len pre teba a len na túto púť)
 
-Účastnícky poplatok: {{ $price }} EUR
-Záloha: {{ $deposit }} EUR (viac info o príspevkoch nájdeš tu: https://domcek.org/page/pute/prihlasovanie-6)
+Účastnícky prispevok: {{ $price }} EUR
 
 Správa pre prijímateľa: Príspevok na činnosť
 @endcomponent
 
 
 <pre style="color:black">
-Zálohu, resp. účastnícky poplatok je potrebné uhradiť najneskôr týždeň pred podujatím. Viac informácií nájdeš vo svojom profile.
+Ǔčastnícky prispevok je potrebné uhradiť najneskôr týždeň pred podujatím. Viac informácií nájdeš vo svojom profile.
 
 Prosím, ulož si do mobilu <strong>QR kód</strong>, ktorý nájdeš v prílohe tohto e-mailu (alebo po prihlásení na stránke <a href="https://domcek.org">www.domcek.org</a>, v sekcii "Moje prihlásenia").
 
@@ -32,13 +31,11 @@ Taktiež si nezabudni zobrať <strong>spacák a prezuvky.</strong>
 <strong>Celé stretnutie</strong> bude prebiehať vo <strong>Vysokej nad Uhom.</strong>
 <strong>Strava</strong> bude zabezpečená nasledovne:
 
-@component('mail::table')
 |         | Raňajky | Obed  | Večera             |
-| ------- |:-------:|:-----:| ------------------:|
+| ------- |:-------:|:-----:|:------------------:|
 | Piatok  | -       | -     | z vlastných zásob  |
 | Sobota  | áno     | áno   |   áno              |
 | Nedeľa  | áno     | -     |   -                |
-@endcomponent
 
 V prípade, že chceš zmeniť svoje prihlásenie alebo sa chceš odhlásiť, môžeš tak urobiť na stránke <a href="https://domcek.org">www.domcek.org</a> v sekcii "Moje prihlásenia".
 
