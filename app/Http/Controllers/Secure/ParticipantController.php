@@ -85,7 +85,7 @@ class ParticipantController extends Controller
     }
 
     // Admin unsubscribe user from event after registration
-    public function adminUnsubscribe(Request $request, $userId, $eventId)
+    public function adminUnsubscribe(Request $request, $eventId, $userId)
     {
         $result = $this->service->unsubscribe($eventId, $userId);
 
@@ -97,7 +97,7 @@ class ParticipantController extends Controller
     }
 
     // Admin unsubscribe user from event after registration
-    public function adminSubscribe(Request $request, $userId, $eventId)
+    public function adminSubscribe(Request $request, $eventId, $userId)
     {
         $result = $this->service->subscribe($eventId, $userId);
 
@@ -158,7 +158,7 @@ class ParticipantController extends Controller
         return ErrorMessagesConstant::badAttempt();
     }
 
-    public function edit(Request $request, $participantId, $eventId)
+    public function edit(Request $request, $eventId, $participantId)
     {
         $data = $request->validate([
             'volunteerTypeId' => 'nullable|integer',
