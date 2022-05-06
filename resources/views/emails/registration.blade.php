@@ -25,18 +25,18 @@ Správa pre prijímateľa: Príspevok na činnosť
 
 Prosím, ulož si do mobilu <strong>QR kód</strong>, ktorý nájdeš v prílohe tohto e-mailu (alebo po prihlásení na stránke <a href="https://domcek.org">www.domcek.org</a>, v sekcii "Moje prihlásenia").
 
-Z dôvodu pretrvávajúcich pandemických opatrení je púť <strong>LEN PRE PLNE ZAOČKOVANÝCH</strong>,  nezabudni si so sebou vziať <strong>COVID PASS.</strong>
-Ak si ešte <strong>nedovŕšil 18 rokov</strong> nezabudni na <strong>potvrdenie od rodiča</strong>, ktoré ti tu prikladáme.
-Taktiež si nezabudni zobrať <strong>spacák a prezuvky.</strong>
-<strong>Celé stretnutie</strong> bude prebiehať vo <strong>Vysokej nad Uhom.</strong>
-<strong>Strava</strong> bude zabezpečená nasledovne:
+Ak si ešte nedovŕšil <strong>18 rokov</strong> nezabudni na potvrdenie od rodiča, ktoré ti tu prikladáme.
+Taktiež si nezabudni zobrať spacák a prezuvky.
+Celé stretnutie bude prebiehať vo <strong>Vysokej nad Uhom</strong>.
+Strava bude zabezpečená nasledovne:
+
 
 |         | Raňajky | Obed  | Večera             |
 | ------- |:-------:|:-----:|:------------------:|
-| Piatok  | -       | -     | z vlastných zásob  |
-| Sobota  | áno     | áno   |   áno              |
-| Nedeľa  | áno     | -     |   -                |
+| Sobota  | -       | áno   |   áno              |
+| Nedeľa  | áno     | áno   |   -                |
 
+V sobotu na večeru Ťa pozývame priniesť niečo na spoločný stôl.
 
 V prípade, že chceš zmeniť svoje prihlásenie alebo sa chceš odhlásiť, môžeš tak urobiť na stránke <a href="https://domcek.org">www.domcek.org</a> v sekcii "Moje prihlásenia".
 

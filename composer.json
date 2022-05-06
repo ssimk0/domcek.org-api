@@ -14,14 +14,15 @@
         "albertcht/invisible-recaptcha": "^1.9.4",
         "barryvdh/laravel-snappy": "^0.4.8",
         "cviebrock/eloquent-sluggable": "8.*",
+        "endroid/qr-code": "^3.5.8",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
-        "endroid/qr-code": "^3.5.8",
         "intervention/image": "^2.5",
+        "laravel/framework": "8.*",
+        "laravel/tinker": "^2.7",
         "league/flysystem-aws-s3-v3": "^1.0.29",
         "sentry/sentry-laravel": "^2.3.0",
-        "tymon/jwt-auth": "^1.0.2",
-        "laravel/framework": "8.*"
+        "tymon/jwt-auth": "^1.0.2"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.5",
@@ -61,7 +62,10 @@
     "config": {
         "preferred-install": "dist",
         "sort-packages": true,
-        "optimize-autoloader": true
+        "optimize-autoloader": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true
+        }
     },
     "extra": {
         "laravel": {
