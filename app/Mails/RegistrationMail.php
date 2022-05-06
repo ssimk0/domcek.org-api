@@ -56,7 +56,7 @@ class RegistrationMail extends Mailable
                     'eventName' => $this->eventName,
                 ])
                 ->attach($this->qrCodePath)
-                ->attach('https://s3.nl-ams.scw.cloud/org.domcek/docs/Potvrdenie%20rodi%C4%8Da.pdf');
+                ->attach('https://s3.nl-ams.scw.cloud/org.domcek/docs/Potvrdenie%20rodic%CC%8Ca.pdf');
         } else {
             return $this->markdown($template)
                 ->subject('Potvrdenie Prihlasenia')
