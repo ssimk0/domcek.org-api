@@ -134,7 +134,7 @@ class ParticipantService extends Service
             $profile = $user->profile()->first();
             $qrCodePath = '/tmp/'.Str::random().'.png';
             $this->generateQrCode($eventId, $user->id, $qrCodePath);
-
+            // Mail::to($user->email)->send(new RegistrationMail(10, 15, 'Sebastian', '02/12/1994', '123', 'test', 'https://domcek.org/login?next=/user/registrations', 'https://s3.nl-ams.scw.cloud/org.domcek/docs/Potvrdenie%20rodic%CC%8Ca.pdf', false)
             Mail::to($user->email)->send(new RegistrationMail(
                 $eventPrice->deposit,
                 $eventPrice->need_pay,
