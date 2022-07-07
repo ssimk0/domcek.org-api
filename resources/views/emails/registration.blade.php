@@ -32,7 +32,9 @@ Strava bude zabezpečená nasledovne:
 @component('mail::table')
 |         | Raňajky | Obed  | Večera             |
 | ------- |:-------:|:-----:|:------------------:|
-| Sobota  | -       | áno   |   áno              |
+| Štvrtok | -       | -     |   áno              |
+| Piatok  | áno     | áno   |   áno              |
+| Sobota  | áno     | áno   |   áno              |
 | Nedeľa  | áno     | áno   |   -                |
 @endcomponent
 
