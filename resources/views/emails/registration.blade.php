@@ -32,13 +32,10 @@ Strava bude zabezpečená nasledovne:
 @component('mail::table')
 |         | Raňajky | Obed  | Večera             |
 | ------- |:-------:|:-----:|:------------------:|
-| Štvrtok | -       | -     |   áno              |
-| Piatok  | áno     | áno   |   áno              |
+| Piatok  | -       | -     |   áno              |
 | Sobota  | áno     | áno   |   áno              |
 | Nedeľa  | áno     | áno   |   -                |
 @endcomponent
-
-V sobotu na večeru Ťa pozývame priniesť niečo na spoločný stôl.
 
 V prípade, že chceš zmeniť svoje prihlásenie alebo sa chceš odhlásiť, môžeš tak urobiť na stránke <a href="https://domcek.org">www.domcek.org</a> v sekcii "Moje prihlásenia".
 
