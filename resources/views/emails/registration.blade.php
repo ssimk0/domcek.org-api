@@ -24,15 +24,17 @@ Správa pre prijímateľa: Príspevok na činnosť
 
 Prosím, ulož si do mobilu <strong>QR kód</strong>, ktorý nájdeš v prílohe tohto e-mailu (alebo po prihlásení na stránke <a href="https://domcek.org">www.domcek.org</a>, v sekcii "Moje prihlásenia").
 
-Ak si ešte nedovŕšil <strong>18 rokov</strong> nezabudni na potvrdenie od rodiča, ktoré ti tu prikladáme.
-Taktiež si nezabudni zobrať spacák a prezuvky.
 Celé stretnutie bude prebiehať vo <strong>Vysokej nad Uhom</strong>.
-Strava bude zabezpečená nasledovne:
+Nezabudni si zbaliť spacák a prezuvky.
+Ak si ešte nedovŕšil <strong>18 rokov</strong> nezabudni na potvrdenie od rodiča, ktoré ti tu prikladáme.
+
+V piatok je večera z vlastných zásob tak nezabudni priniesť niečo pod zub pre seba i blížneho.
+Ostatné dni bude strava zabezpečená nasledovne:
 
 @component('mail::table')
 |         | Raňajky | Obed  | Večera             |
 | ------- |:-------:|:-----:|:------------------:|
-| Piatok  | -       | -     |   áno              |
+| Piatok  | -       | -     |   -                |
 | Sobota  | áno     | áno   |   áno              |
 | Nedeľa  | áno     | áno   |   -                |
 @endcomponent
