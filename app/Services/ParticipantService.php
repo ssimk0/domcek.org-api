@@ -267,21 +267,24 @@ class ParticipantService extends Service
                     }
                 } catch (\Exception $e) {
                     $this->logError('Problem with register user ' + json_encode($user));
+                    if (app()->bound('sentry') && !config('app.debug')) {
+                        app('sentry')->captureException($e);
+                    }
                 }
             }
         }
 
-        foreach (Arr::get($data, 'wrong-payments', []) as $payment) {
-            $userId = Arr::get($payment, 'user_id', false);
-            if ($userId) {
-                try {
-                    $this->paymentRepository->edit($userId, $eventId, $payment['amount']);
-                    $this->paymentRepository->deleteWrongPaymentById($payment['id']);
-                } catch (\Exception $e) {
-                    $this->logError('Problem with edit payment ' + $payment['id'] + 'for user ' + $payment['user_id']);
-                }
-            }
-        }
+        //foreach (Arr::get($data, 'wrong-payments', []) as $payment) {
+        //    $userId = Arr::get($payment, 'user_id', false);
+        //    if ($userId) {
+        //        try {
+        //            $this->paymentRepository->edit($userId, $eventId, $payment['amount']);
+        //            $this->paymentRepository->deleteWrongPaymentById($payment['id']);
+        //        } catch (\Exception $e) {
+        //            $this->logError('Problem with edit payment ' + $payment['id'] + 'for user ' + $payment['user_id']);
+        //        }
+        //    }
+        //}
 
         return true;
     }
