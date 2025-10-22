@@ -30,9 +30,11 @@
         <server name="DB_CONNECTION" value="mysql"/>
         <server name="DB_USERNAME" value="root"/>
         <server name="DB_DATABASE" value="domcek"/>
-        <server name="DB_HOST" value="127.0.0.1"/>
+        <server name="DB_HOST" value="db"/>
         <server name="DB_PORT" value="3306"/>
-        <server name="DB_PASSWORD" value=""/>
+        <server name="DB_PASSWORD" value="root"/>
+        <env name="MYSQL_ATTR_SSL_CA" value="false"/>
+        <env name="MYSQL_ATTR_SSL_VERIFY_SERVER_CERT" value="false"/>
         <server name="FILESYSTEM_DRIVER" value="tmp" />
         <server name="FILESYSTEM_CLOUD" value="tmp" />
         <server name="MAIL_DRIVER" value="array"/>

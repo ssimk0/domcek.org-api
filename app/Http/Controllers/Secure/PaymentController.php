@@ -32,7 +32,7 @@ class PaymentController extends Controller
                 // do same stuff with the $line
                 $parsed = explode('|', $line);
 
-                if (count($parsed) > 1 && trim($parsed[4]) === 'Kredit') {
+                if (count($parsed) > 13 && isset($parsed[4]) && trim($parsed[4]) === 'Kredit') {
                     $parsedPayments[] = [
                         'paymentNumber' => trim($parsed[9]),
                         'iban' => trim($parsed[8]),

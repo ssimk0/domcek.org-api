@@ -1,0 +1,53 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: domcek-api
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - domcek-network
+    depends_on:
+      - db
+
+  nginx:
+    image: nginx:alpine
+    container_name: domcek-nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - domcek-network
+    depends_on:
+      - app
+
+  db:
+    image: mysql:8.0
+    container_name: domcek-db
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password --skip-ssl
+    environment:
+      MYSQL_DATABASE: domcek
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: root
+      MYSQL_USER: domcek
+    volumes:
+      - dbdata:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - domcek-network
+
+networks:
+  domcek-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local

@@ -27,7 +27,7 @@ class PaymentService extends Service
             if ($payment['paymentNumber']) {
                 $dbPayment = $this->repository->findByPaymentNumber($payment['paymentNumber'], $eventId);
 
-                if ($dbPayment && intval($dbPayment->paid) < intval($payment['amount'])) {
+                if ($dbPayment && (int)($dbPayment->paid ?? 0) < (int)($payment['amount'] ?? 0)) {
                     try {
                         $when = $when->addMinutes(1);
                         $user = $this->userRepository->findUserWithProfile($dbPayment->user_id);
@@ -36,7 +36,7 @@ class PaymentService extends Service
                         Mail::to($userEmail)
                             ->later($when, $mail);
 
-                        $this->repository->edit($dbPayment->user_id, $eventId, intval($payment['amount']));
+                        $this->repository->edit($dbPayment->user_id, $eventId, (int)($payment['amount'] ?? 0));
                     } catch (\Exception $e) {
                         $this->logError('Problem pri updatovani platby: '.json_encode($payment).' error: '.$e->getMessage().'trace: '.$e->getTraceAsString());
                     }

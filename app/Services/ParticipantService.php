@@ -211,7 +211,8 @@ class ParticipantService extends Service
 
     public function getUserPaymentNumber($eventId, $userId)
     {
-        return $this->paymentRepository->findByUserIdAndEventId($eventId, $userId)->payment_number;
+        $payment = $this->paymentRepository->findByUserIdAndEventId($eventId, $userId);
+        return $payment ? $payment->payment_number : null;
     }
 
     public function generateQrCode($eventId, $userId, $path)
@@ -266,7 +267,7 @@ class ParticipantService extends Service
                         }
                     }
                 } catch (\Exception $e) {
-                    $this->logError('Problem with register user ' + json_encode($user));
+                    $this->logError('Problem with register user ' . json_encode($user));
                     if (app()->bound('sentry') && !config('app.debug')) {
                         app('sentry')->captureException($e);
                     }

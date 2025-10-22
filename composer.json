@@ -9,7 +9,7 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^7.3|^8.0",
+        "php": "^7.3|^8.0|^8.1",
         "ext-json": "*",
         "albertcht/invisible-recaptcha": "^1.9.4",
         "barryvdh/laravel-snappy": "^0.4.8",

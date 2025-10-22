@@ -209,18 +209,18 @@ class EventService extends Service
         $stats['participants-female'],
         $stats['participants-male'],
         $stats['count-all'],
-        Arr::get($stats, 'ages.0')->count, Arr::get($stats, 'ages.0')->year ? Carbon::now()->year - Arr::get($stats, 'ages.0')->year : '',
-        Arr::get($stats, 'ages.1')->count, Arr::get($stats, 'ages.1')->year ? Carbon::now()->year - Arr::get($stats, 'ages.1')->year : '',
-        Arr::get($stats, 'ages.2')->count, Arr::get($stats, 'ages.2')->year ? Carbon::now()->year - Arr::get($stats, 'ages.2')->year : '',
-        Arr::get($stats, 'cities.0')->count, Arr::get($stats, 'cities.0')->city,
-        Arr::get($stats, 'cities.1')->count, Arr::get($stats, 'cities.1')->city,
-        Arr::get($stats, 'cities.2')->count, Arr::get($stats, 'cities.2')->city,
-        Arr::get($stats, 'names-female.0')->count, Arr::get($stats, 'names-female.0')->first_name,
-        Arr::get($stats, 'names-female.1')->count, Arr::get($stats, 'names-female.1')->first_name,
-        Arr::get($stats, 'names-female.2')->count, Arr::get($stats, 'names-female.2')->first_name,
-        Arr::get($stats, 'names-male.0')->count, Arr::get($stats, 'names-male.0')->first_name,
-        Arr::get($stats, 'names-male.1')->count, Arr::get($stats, 'names-male.1')->first_name,
-        Arr::get($stats, 'names-male.2')->count, Arr::get($stats, 'names-male.2')->first_name
+        Arr::get($stats, 'ages.0.count', 0), Arr::get($stats, 'ages.0.year') ? Carbon::now()->year - Arr::get($stats, 'ages.0.year') : '',
+        Arr::get($stats, 'ages.1.count', 0), Arr::get($stats, 'ages.1.year') ? Carbon::now()->year - Arr::get($stats, 'ages.1.year') : '',
+        Arr::get($stats, 'ages.2.count', 0), Arr::get($stats, 'ages.2.year') ? Carbon::now()->year - Arr::get($stats, 'ages.2.year') : '',
+        Arr::get($stats, 'cities.0.count', 0), Arr::get($stats, 'cities.0.city', ''),
+        Arr::get($stats, 'cities.1.count', 0), Arr::get($stats, 'cities.1.city', ''),
+        Arr::get($stats, 'cities.2.count', 0), Arr::get($stats, 'cities.2.city', ''),
+        Arr::get($stats, 'names-female.0.count', 0), Arr::get($stats, 'names-female.0.first_name', ''),
+        Arr::get($stats, 'names-female.1.count', 0), Arr::get($stats, 'names-female.1.first_name', ''),
+        Arr::get($stats, 'names-female.2.count', 0), Arr::get($stats, 'names-female.2.first_name', ''),
+        Arr::get($stats, 'names-male.0.count', 0), Arr::get($stats, 'names-male.0.first_name', ''),
+        Arr::get($stats, 'names-male.1.count', 0), Arr::get($stats, 'names-male.1.first_name', ''),
+        Arr::get($stats, 'names-male.2.count', 0), Arr::get($stats, 'names-male.2.first_name', '')
         );
     }
 
