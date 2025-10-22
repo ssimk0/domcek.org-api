@@ -38,7 +38,7 @@ class Page extends Model
         return 'slug';
     }
 
-    public function sluggable()
+    public function sluggable(): array
     {
         return [
             'slug' => [
