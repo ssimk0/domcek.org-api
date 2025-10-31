@@ -18,7 +18,7 @@ class NewsItem extends Model
 
     protected $hidden = ['image_file_name', 'image_file_size', 'image_content_type', 'image_updated_at'];
 
-    public function sluggable()
+    public function sluggable(): array
     {
         return [
             'slug' => [
