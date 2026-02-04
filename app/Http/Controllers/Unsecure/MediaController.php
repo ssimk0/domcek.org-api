@@ -7,12 +7,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class MediaController extends Controller
 {
     const SMALL = 'resized/small';
     const LARGE = 'reduced';
+
+    private ImageManager $imageManager;
+
+    public function __construct()
+    {
+        $this->imageManager = new ImageManager(new Driver());
+    }
 
     public function upload(Request $request)
     {
@@ -24,9 +32,9 @@ class MediaController extends Controller
         $largeFilePath = self::LARGE.'/'.$files['filename'];
         $smallFilePath = self::SMALL.'/'.$files['filename'];
 
-        Storage::cloud()->put($largeFilePath, $files['file']->__toString(), 'public');
+        Storage::cloud()->put($largeFilePath, $files['file'], 'public');
         if (Arr::has($files, 'thumb')) {
-            Storage::cloud()->put($smallFilePath, $files['thumb']->__toString(), 'public');
+            Storage::cloud()->put($smallFilePath, $files['thumb'], 'public');
         }
 
         return response()->json([
@@ -73,18 +81,22 @@ class MediaController extends Controller
         return array_merge($files, ['filename' => $fileNameToStore]);
     }
 
-    protected function resizeImage($file)
+    protected function resizeImage($file, $filename)
     {
-        $img = Image::make($file);
-        $width = $img->getWidth();
-        // Resize image
-        $large = $img->resize($width > 1920 ? 1920 : $width, null, function ($constraint) {
-            $constraint->aspectRatio();
-        })->orientate()->encode('jpg', 75);
+        $img = $this->imageManager->read($file->getRealPath());
+        $width = $img->width();
 
-        $thumb = Image::make($file)->resize(300, null, function ($constraint) {
-            $constraint->aspectRatio();
-        })->orientate()->encode('jpg', 75);
+        // Resize image - scaleDown maintains aspect ratio
+        $large = $img->scaleDown(width: $width > 1920 ? 1920 : $width)
+            ->orient()
+            ->toJpeg(quality: 75)
+            ->toString();
+
+        $thumb = $this->imageManager->read($file->getRealPath())
+            ->scaleDown(width: 300)
+            ->orient()
+            ->toJpeg(quality: 75)
+            ->toString();
 
         return ['file' => $large, 'thumb' => $thumb];
     }

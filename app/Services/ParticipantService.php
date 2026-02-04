@@ -9,9 +9,10 @@ use App\Repositories\ParticipantRepository;
 use App\Repositories\PaymentRepository;
 use App\Repositories\VolunteersRepository;
 use Carbon\Carbon;
-use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\Writer\PngWriter;
 use Exception;
-use function GuzzleHttp\json_encode;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -218,12 +219,14 @@ class ParticipantService extends Service
     public function generateQrCode($eventId, $userId, $path)
     {
         $paymentNumber = $this->getUserPaymentNumber($eventId, $userId);
-        $qrCode = new QrCode(base64_encode($paymentNumber));
-        $qrCode->setEncoding('UTF-8');
-        $qrCode->setWriterByName('png');
-        $qrCode->setSize(300);
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->data(base64_encode($paymentNumber))
+            ->encoding(new Encoding('UTF-8'))
+            ->size(300)
+            ->build();
 
-        $qrCode->writeFile($path);
+        $result->saveToFile($path);
     }
 
     public function detailedRegistrationList($eventId)

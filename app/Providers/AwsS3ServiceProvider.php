@@ -3,9 +3,10 @@
 namespace App\Providers;
 
 use Aws\S3\S3Client;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
-use League\Flysystem\AwsS3v3\AwsS3Adapter;
+use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
 use League\Flysystem\Filesystem;
 
 class AwsS3ServiceProvider extends ServiceProvider
@@ -28,7 +29,10 @@ class AwsS3ServiceProvider extends ServiceProvider
                 'endpoint' => $config['endpoint'],
             ]);
 
-            return new Filesystem(new AwsS3Adapter($client, $config['bucket_name']));
+            $adapter = new AwsS3V3Adapter($client, $config['bucket_name']);
+            $filesystem = new Filesystem($adapter);
+
+            return new FilesystemAdapter($filesystem, $adapter, $config);
         });
     }
 
