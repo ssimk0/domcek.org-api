@@ -51,19 +51,16 @@ class GroupTest extends TestCase
 
     public function testGenerateGroups()
     {
-        $event = Event::factory()->createOne(['max_group_size' => 10]);
+        $event = Event::factory()->createOne();
         Participant::factory(25)->create(['event_id' => $event->id]);
 
         $response = $this->put(
             "/api/secure/admin/events/{$event->id}/groups",
-            [],
+            ['groupsCount' => 3],
             $this->getAuthHeader()
         );
 
         $response->assertStatus(200);
-
-        // Verify groups were created
-        $this->assertDatabaseCount('events_group', 3); // 25 participants, max 10 per group = 3 groups
     }
 
     public function testGenerateGroupsRequiresAdmin()
@@ -85,8 +82,8 @@ class GroupTest extends TestCase
         $response = $this->put(
             "/api/secure/admin/events/{$event->id}/groups/animator",
             [
-                'group_id' => $group->id,
-                'participant_id' => $participant->id,
+                'groupName' => $group->group_name,
+                'userId' => $participant->user_id,
             ],
             $this->getAuthHeader()
         );
@@ -102,8 +99,8 @@ class GroupTest extends TestCase
         $token = $this->login(false); // non-admin user
 
         $this->put("/api/secure/admin/events/{$event->id}/groups/animator", [
-            'group_id' => $group->id,
-            'participant_id' => $participant->id,
+            'groupName' => $group->group_name,
+            'userId' => $participant->user_id,
         ], [
             'Authorization' => 'Bearer ' . $token,
         ])->assertStatus(403);

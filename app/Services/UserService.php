@@ -70,6 +70,7 @@ class UserService extends Service
             $tokenResult = $this->repository->findResetPasswordToken($token);
             $now = Carbon::now()->addHours(2);
             if ($tokenResult
+                && $tokenResult->created_at
                 && $now->greaterThanOrEqualTo($tokenResult->created_at)
             ) {
                 $user = $this->repository->findUserByEmail($tokenResult->email);

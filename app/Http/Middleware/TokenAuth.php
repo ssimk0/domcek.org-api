@@ -17,7 +17,7 @@ class TokenAuth
 
     public function handle($request, Closure $next, $type)
     {
-        $token = $request->token;
+        $token = $request->token ?? $request->header('X-API-TOKEN');
         if ($token) {
             $tokenData = $this->service->checkToken($type, $token);
             if ($tokenData && Carbon::now()->lessThanOrEqualTo($tokenData->valid_until)) {

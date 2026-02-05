@@ -36,7 +36,7 @@ class Controller extends BaseController
 
     protected function validateWithCaptcha(Request $request, $rules)
     {
-        if (env('APP_ENV') !== 'testing') {
+        if (!app()->environment('testing')) {
             $token = $request->input('g-recaptcha-response') ?? $request->input('recaptcha');
 
             if (empty($token)) {

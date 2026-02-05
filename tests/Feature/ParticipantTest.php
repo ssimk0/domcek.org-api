@@ -61,7 +61,7 @@ class ParticipantTest extends TestCase {
         $price->save();
         $token = $this->login();
 
-        $this->post('/api/secure/user/events/1', [
+        $this->post('/api/secure/user/events/' . $event->id, [
             'note' => 'test',
             'transportIn' => 'test',
             'transportOut' => 'test',
@@ -79,7 +79,7 @@ class ParticipantTest extends TestCase {
         $this->assertEquals($price->need_pay, $payment->need_pay);
         $this->assertEquals($price->id, $payment->event_price_id);
         $this->assertEquals('0', $payment->paid);
-        $this->assertEquals('1', $payment->event_id);
+        $this->assertEquals($event->id, $payment->event_id);
     }
 
     public function testLateRegisterParticipant()
@@ -119,7 +119,7 @@ class ParticipantTest extends TestCase {
         // test fee
         $this->assertEquals($price->need_pay + 5, $payment->need_pay);
         $this->assertEquals('0', $payment->paid);
-        $this->assertEquals('1', $payment->event_id);
+        $this->assertEquals($event->id, $payment->event_id);
     }
 
     public function testInStartDateRegisterParticipant()

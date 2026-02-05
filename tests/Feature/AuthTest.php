@@ -96,7 +96,8 @@ class AuthTest extends TestCase {
         $token = Str::random(10);
         DB::table('password_resets')->insert([
             'token' => $token,
-            'email' => $user->email
+            'email' => $user->email,
+            'created_at' => now(),
         ]);
 
         $this->postJson("/api/auth/reset-password", [

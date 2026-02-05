@@ -2,14 +2,32 @@
 
 namespace Tests\Feature;
 
+use App\Models\Event;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class BackupTest extends TestCase
 {
+    protected function createRegistrationToken(): string
+    {
+        $event = Event::factory()->createOne();
+        $token = Str::random(32);
+        DB::table('auth_tokens')->insert([
+            'token' => $token,
+            'type' => 'registration',
+            'valid_until' => Carbon::now()->addDays(1),
+            'event_id' => $event->id,
+        ]);
+        return $token;
+    }
+
     public function testBackupUploadWithParticipantsData()
     {
         Storage::fake('local');
+        $token = $this->createRegistrationToken();
 
         $participants = [
             ['id' => 1, 'name' => 'John Doe', 'email' => 'john@example.com'],
@@ -19,7 +37,7 @@ class BackupTest extends TestCase
         $response = $this->post('/api/registration/backup', [
             'participants' => $participants,
         ], [
-            'X-API-TOKEN' => env('REGISTRATION_TOKEN', 'test-token'),
+            'X-API-TOKEN' => $token,
         ]);
 
         $response->assertStatus(201)
@@ -39,6 +57,7 @@ class BackupTest extends TestCase
     public function testBackupUploadWithWrongPayments()
     {
         Storage::fake('local');
+        $token = $this->createRegistrationToken();
 
         $wrongPayments = [
             ['payment_number' => '12345', 'amount' => 50, 'reason' => 'Invalid number'],
@@ -48,7 +67,7 @@ class BackupTest extends TestCase
         $response = $this->post('/api/registration/backup', [
             'wrong-payments' => $wrongPayments,
         ], [
-            'X-API-TOKEN' => env('REGISTRATION_TOKEN', 'test-token'),
+            'X-API-TOKEN' => $token,
         ]);
 
         $response->assertStatus(201)
@@ -68,6 +87,7 @@ class BackupTest extends TestCase
     public function testBackupUploadWithBothData()
     {
         Storage::fake('local');
+        $token = $this->createRegistrationToken();
 
         $participants = [
             ['id' => 1, 'name' => 'John Doe'],
@@ -81,7 +101,7 @@ class BackupTest extends TestCase
             'participants' => $participants,
             'wrong-payments' => $wrongPayments,
         ], [
-            'X-API-TOKEN' => env('REGISTRATION_TOKEN', 'test-token'),
+            'X-API-TOKEN' => $token,
         ]);
 
         $response->assertStatus(201)
@@ -102,9 +122,10 @@ class BackupTest extends TestCase
     public function testBackupUploadWithEmptyData()
     {
         Storage::fake('local');
+        $token = $this->createRegistrationToken();
 
         $response = $this->post('/api/registration/backup', [], [
-            'X-API-TOKEN' => env('REGISTRATION_TOKEN', 'test-token'),
+            'X-API-TOKEN' => $token,
         ]);
 
         $response->assertStatus(201)
@@ -118,11 +139,12 @@ class BackupTest extends TestCase
     public function testBackupUploadValidatesParticipantsAsArray()
     {
         Storage::fake('local');
+        $token = $this->createRegistrationToken();
 
         $response = $this->post('/api/registration/backup', [
             'participants' => 'not an array',
         ], [
-            'X-API-TOKEN' => env('REGISTRATION_TOKEN', 'test-token'),
+            'X-API-TOKEN' => $token,
         ]);
 
         $response->assertStatus(422);
@@ -131,11 +153,12 @@ class BackupTest extends TestCase
     public function testBackupUploadValidatesWrongPaymentsAsArray()
     {
         Storage::fake('local');
+        $token = $this->createRegistrationToken();
 
         $response = $this->post('/api/registration/backup', [
             'wrong-payments' => 'not an array',
         ], [
-            'X-API-TOKEN' => env('REGISTRATION_TOKEN', 'test-token'),
+            'X-API-TOKEN' => $token,
         ]);
 
         $response->assertStatus(422);
