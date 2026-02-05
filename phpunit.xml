@@ -20,6 +20,7 @@
     </source>
     <php>
         <server name="APP_ENV" value="testing"/>
+        <server name="JWT_SECRET" value="Jv8tM3qK7nP2xR5wY9zA4cF6hL0iO1sU3bE8dG4jN7mQ2rT5vX0yZ"/>
         <server name="REPORT_MAIL" value="test@test.com"/>
         <server name="BCRYPT_ROUNDS" value="4"/>
         <server name="CACHE_DRIVER" value="array"/>
