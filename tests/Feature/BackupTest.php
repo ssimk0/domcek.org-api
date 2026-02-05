@@ -141,7 +141,7 @@ class BackupTest extends TestCase
         Storage::fake('local');
         $token = $this->createRegistrationToken();
 
-        $response = $this->post('/api/registration/backup', [
+        $response = $this->postJson('/api/registration/backup', [
             'participants' => 'not an array',
         ], [
             'X-API-TOKEN' => $token,
@@ -155,7 +155,7 @@ class BackupTest extends TestCase
         Storage::fake('local');
         $token = $this->createRegistrationToken();
 
-        $response = $this->post('/api/registration/backup', [
+        $response = $this->postJson('/api/registration/backup', [
             'wrong-payments' => 'not an array',
         ], [
             'X-API-TOKEN' => $token,

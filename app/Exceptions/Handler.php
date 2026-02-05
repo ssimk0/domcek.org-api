@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -54,5 +55,15 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         return parent::render($request, $exception);
+    }
+
+    /**
+     * Convert an authentication exception into a response.
+     * Override to return JSON for API requests instead of redirecting.
+     */
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        // Always return JSON for API routes (no login route exists)
+        return response()->json(['message' => 'Unauthenticated.'], 401);
     }
 }

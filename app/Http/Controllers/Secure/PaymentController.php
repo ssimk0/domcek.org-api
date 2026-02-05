@@ -18,6 +18,10 @@ class PaymentController extends Controller
 
     public function uploadTransferLog(Request $request, $eventId)
     {
+        $request->validate([
+            'file' => 'required|file',
+        ]);
+
         $log = $request->file('file')->openFile('r');
         $parsedPayments = [];
         $error = false;

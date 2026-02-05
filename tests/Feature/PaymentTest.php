@@ -107,11 +107,15 @@ class PaymentTest extends TestCase
             $this->getAuthHeader()
         );
 
-        // Verify only payment1 was updated
-        $payment1->refresh();
-        $payment2->refresh();
+        // Verify only payment1 was updated (use fresh query due to composite key)
+        $updatedPayment1 = Payment::where('user_id', $participant1->user_id)
+            ->where('event_id', $event->id)
+            ->first();
+        $updatedPayment2 = Payment::where('user_id', $participant2->user_id)
+            ->where('event_id', $event->id)
+            ->first();
 
-        $this->assertEquals(50, $payment1->paid);
-        $this->assertEquals(0, $payment2->paid);
+        $this->assertEquals(50, $updatedPayment1->paid);
+        $this->assertEquals(0, $updatedPayment2->paid);
     }
 }
