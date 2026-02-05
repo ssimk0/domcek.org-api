@@ -11,6 +11,7 @@ use App\Models\Volunteer;
 use App\Models\VolunteerType;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class ParticipantTest extends TestCase {
@@ -51,6 +52,8 @@ class ParticipantTest extends TestCase {
 
     public function testRegisterParticipant()
     {
+        Mail::fake();
+
         $event = Event::factory()->create();
         $price = new EventPrice([
             'event_id' => $event->id,
@@ -84,6 +87,8 @@ class ParticipantTest extends TestCase {
 
     public function testLateRegisterParticipant()
     {
+        Mail::fake();
+
         $event = new Event([
             'name' => 'test',
             'start_date' => Carbon::now()->addDays(1)->format('Y-m-d'),

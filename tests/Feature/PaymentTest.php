@@ -6,6 +6,7 @@ use App\Models\Event;
 use App\Models\Payment;
 use App\Models\Participant;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -63,7 +64,7 @@ class PaymentTest extends TestCase
     {
         $event = Event::factory()->createOne();
 
-        $response = $this->post(
+        $response = $this->postJson(
             "/api/secure/admin/events/{$event->id}/payments",
             [],
             $this->getAuthHeader()
@@ -75,6 +76,7 @@ class PaymentTest extends TestCase
     public function testPaymentProcessingMatchesCorrectParticipant()
     {
         Storage::fake('local');
+        Mail::fake();
 
         $event = Event::factory()->createOne();
 

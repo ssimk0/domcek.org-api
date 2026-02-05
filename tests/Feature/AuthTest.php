@@ -180,6 +180,8 @@ class AuthTest extends TestCase {
 
     public function testUserRegistration()
     {
+        Mail::fake();
+
         $this->postJson("/api/auth/register-user", [
             "email" => "test@test.com",
             "password" => "password",
