@@ -22,17 +22,11 @@ class AuthController extends Controller
     {
         $errMessage = ErrorMessagesConstant::WRONG_CREDENTIALS;
         try {
-            if (config('app.debug') || app()->environment('testing')) {
-                $data = $request->validate([
-                    'username' => 'required',
-                    'password' => 'required',
-                ]);
-            } else {
-                $data = $this->validateWithCaptcha($request, [
-                    'username' => 'required',
-                    'password' => 'required',
-                ]);
-            }
+            // TODO: re-enable recaptcha once config is verified
+            $data = $request->validate([
+                'username' => 'required',
+                'password' => 'required',
+            ]);
         } catch (\Exception $e) {
             $this->logDebug('Validation exception for login user: '.$e->getMessage());
 
