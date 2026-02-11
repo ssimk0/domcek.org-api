@@ -40,18 +40,23 @@ class Controller extends BaseController
             $token = $request->input('g-recaptcha-response') ?? $request->input('recaptcha');
 
             if (empty($token)) {
+                $this->logDebug('Recaptcha: no token in request. Input keys: '.implode(',', array_keys($request->all())));
                 throw ValidationException::withMessages([
                     'recaptcha' => ['The recaptcha field is required.'],
                 ]);
             }
 
+            $secret = config('services.recaptcha.secret');
+            $this->logDebug('Recaptcha: secret exists: '.(!empty($secret) ? 'yes' : 'no'));
+
             $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-                'secret' => config('services.recaptcha.secret'),
+                'secret' => $secret,
                 'response' => $token,
                 'remoteip' => $request->ip(),
             ]);
 
             $result = $response->json();
+            $this->logDebug('Recaptcha: google response: '.json_encode($result));
 
             if (!($result['success'] ?? false) || ($result['score'] ?? 0) < 0.5) {
                 throw ValidationException::withMessages([
