@@ -12,6 +12,10 @@ return [
     | to have a conventional place to find your various credentials.
     |
     */
+    'recaptcha' => [
+        'secret' => env('RECAPTCHA_SECRET_KEY'),
+    ],
+
     'ses' => [
         //'key'    => env('SES_KEY'),
         'key'    => env('SES_KEY'),

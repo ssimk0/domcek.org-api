@@ -46,7 +46,7 @@ class Controller extends BaseController
             }
 
             $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-                'secret' => env('RECAPTCHA_SECRET_KEY'),
+                'secret' => config('services.recaptcha.secret'),
                 'response' => $token,
                 'remoteip' => $request->ip(),
             ]);

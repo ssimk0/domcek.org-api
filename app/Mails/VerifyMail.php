@@ -24,7 +24,7 @@ class VerifyMail extends Mailable
         return $this->markdown('emails.verify-user')
             ->subject('Overenie emailu')
             ->with([
-                'url' => env('APP_URL')."/verify-email?token=$this->token&email=$this->email",
+                'url' => config('app.url')."/verify-email?token=$this->token&email=$this->email",
             ]);
     }
 }

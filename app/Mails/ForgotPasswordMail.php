@@ -27,7 +27,7 @@ class ForgotPasswordMail extends Mailable
         return $this->markdown('emails.forgot-password')
             ->subject('Zabudnute Heslo')
             ->with([
-                'url' => env('APP_URL').'/reset-password?token='.$this->token,
+                'url' => config('app.url').'/reset-password?token='.$this->token,
             ]);
     }
 }
